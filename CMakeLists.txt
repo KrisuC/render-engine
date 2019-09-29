@@ -3,6 +3,8 @@ project(render-lab)
 
 set(CMAKE_CXX_STANDARD 14)
 
+include_directories("${PROJECT_SOURCE_DIR}/include/")
+
 add_executable(lab src/main.cpp)
 
 # Below is the settings for third party libraries
