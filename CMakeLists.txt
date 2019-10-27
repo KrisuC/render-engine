@@ -4,6 +4,7 @@ project(render-lab)
 set(CMAKE_CXX_STANDARD 14)
 
 include_directories("${PROJECT_SOURCE_DIR}/include/")
+include_directories("${PROJECT_SOURCE_DIR}/scenes/")
 
 add_executable(lab src/main.cpp)
 
