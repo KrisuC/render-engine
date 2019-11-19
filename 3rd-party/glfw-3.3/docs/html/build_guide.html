@@ -165,7 +165,7 @@ With command-line on macOS</h2>
 <p>If you are using the dynamic GLFW library, which is named <code>libglfw.3.dylib</code>, do:</p>
 <div class="fragment"><div class="line">cc -o myprog myprog.c -lglfw -framework Cocoa -framework OpenGL -framework IOKit -framework CoreVideo</div></div><!-- fragment --><p>If you are using the static library, named <code>libglfw3.a</code>, substitute <code>-lglfw3</code> for <code>-lglfw</code>.</p>
 <p>Note that you do not add the <code>.framework</code> extension to a framework when linking against it from the command-line.</p>
-<p>The OpenGL framework contains both the OpenGL and GLU APIs, so there is nothing special to do when using GLU. Also note that even though your machine may have <code>libGL</code>-style OpenGL libraries, they are for use with the X Window System and will <em>not</em> work with the macOS native version of GLFW. </p>
+<p>The OpenGL framework contains both the OpenGL and GLU APIs, so there is nothing special to do when using GLU. Also note that even though your machine may have <code>libGL</code>-style OpenGL libraries, they are for use with the X GLFWWindow System and will <em>not</em> work with the macOS native version of GLFW. </p>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->
 <address class="footer">

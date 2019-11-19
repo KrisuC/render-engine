@@ -92,7 +92,7 @@ $(function() {
 <div class="textblock"><p>This guide introduces the basic concepts of GLFW and describes initialization, error handling and API guarantees and limitations. For a broad but shallow tutorial, see <a class="el" href="quick_guide.html">Getting started</a> instead. For details on a specific function in this category, see the <a class="el" href="group__init.html">Initialization, version and error reference</a>.</p>
 <p>There are also guides for the other areas of GLFW.</p>
 <ul>
-<li><a class="el" href="window_guide.html">Window guide</a></li>
+<li><a class="el" href="window_guide.html">GLFWWindow guide</a></li>
 <li><a class="el" href="context_guide.html">Context guide</a></li>
 <li><a class="el" href="vulkan_guide.html">Vulkan guide</a></li>
 <li><a class="el" href="monitor_guide.html">Monitor guide</a></li>
@@ -166,7 +166,7 @@ Coordinate systems</h1>
 <object type="image/svg+xml" data="spaces.svg" width="90%"></object>
 />
 <p>Both the virtual screen and the content area coordinate systems have the X-axis pointing to the right and the Y-axis pointing down.</p>
-<p>Window and monitor positions are specified as the position of the upper-left corners of their content areas relative to the virtual screen, while cursor positions are specified relative to a window's content area.</p>
+<p>GLFWWindow and monitor positions are specified as the position of the upper-left corners of their content areas relative to the virtual screen, while cursor positions are specified relative to a window's content area.</p>
 <p>Because the origin of the window's content area coordinate system is also the point from which the window position is specified, you can translate content area coordinates to the virtual screen by adding the window position. The window frame, when present, extends out from the content area but does not affect the window position.</p>
 <p>Almost all positions and sizes in GLFW are measured in screen coordinates relative to one of the two origins above. This includes cursor positions, window positions and sizes, window frame sizes, monitor positions and video mode resolutions.</p>
 <p>Two exceptions are the <a class="el" href="monitor_guide.html#monitor_size">monitor physical size</a>, which is measured in millimetres, and <a class="el" href="window_guide.html#window_fbsize">framebuffer size</a>, which is measured in pixels.</p>

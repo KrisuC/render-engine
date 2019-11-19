@@ -68,12 +68,12 @@ $(function() {
 <li class="level2"><a href="#moving_threads">Removal of threading functions</a></li>
 <li class="level2"><a href="#moving_image">Removal of image and texture loading</a></li>
 <li class="level2"><a href="#moving_stdcall">Removal of GLFWCALL macro</a></li>
-<li class="level2"><a href="#moving_window_handles">Window handle parameters</a></li>
+<li class="level2"><a href="#moving_window_handles">GLFWWindow handle parameters</a></li>
 <li class="level2"><a href="#moving_monitor">Explicit monitor selection</a></li>
 <li class="level2"><a href="#moving_autopoll">Removal of automatic event polling</a></li>
 <li class="level2"><a href="#moving_context">Explicit context management</a></li>
 <li class="level2"><a href="#moving_hidpi">Separation of window and framebuffer sizes</a></li>
-<li class="level2"><a href="#moving_window_close">Window closing changes</a></li>
+<li class="level2"><a href="#moving_window_close">GLFWWindow closing changes</a></li>
 <li class="level2"><a href="#moving_hints">Persistent window hints</a></li>
 <li class="level2"><a href="#moving_video_modes">Video mode enumeration</a></li>
 <li class="level2"><a href="#moving_char_up">Removal of character actions</a></li>
@@ -122,15 +122,15 @@ Removal of GLFWCALL macro</h2>
 <dl class="section user"><dt>Old syntax</dt><dd><div class="fragment"><div class="line"><span class="keywordtype">void</span> GLFWCALL callback_function(...);</div></div><!-- fragment --></dd></dl>
 <dl class="section user"><dt>New syntax</dt><dd><div class="fragment"><div class="line"><span class="keywordtype">void</span> callback_function(...);</div></div><!-- fragment --></dd></dl>
 <h2><a class="anchor" id="moving_window_handles"></a>
-Window handle parameters</h2>
-<p>Because GLFW 3 supports multiple windows, window handle parameters have been added to all window-related GLFW functions and callbacks. The handle of a newly created window is returned by <a class="el" href="group__window.html#ga5c336fddf2cbb5b92f65f10fb6043344">glfwCreateWindow</a> (formerly <code>glfwOpenWindow</code>). Window handles are pointers to the <a href="https://en.wikipedia.org/wiki/Opaque_data_type">opaque</a> type <a class="el" href="group__window.html#ga3c96d80d363e67d13a41b5d1821f3242">GLFWwindow</a>.</p>
-<dl class="section user"><dt>Old syntax</dt><dd><div class="fragment"><div class="line"><a class="code" href="group__window.html#ga5d877f09e968cef7a360b513306f17ff">glfwSetWindowTitle</a>(<span class="stringliteral">&quot;New Window Title&quot;</span>);</div></div><!-- fragment --></dd></dl>
-<dl class="section user"><dt>New syntax</dt><dd><div class="fragment"><div class="line"><a class="code" href="group__window.html#ga5d877f09e968cef7a360b513306f17ff">glfwSetWindowTitle</a>(window, <span class="stringliteral">&quot;New Window Title&quot;</span>);</div></div><!-- fragment --></dd></dl>
+GLFWWindow handle parameters</h2>
+<p>Because GLFW 3 supports multiple windows, window handle parameters have been added to all window-related GLFW functions and callbacks. The handle of a newly created window is returned by <a class="el" href="group__window.html#ga5c336fddf2cbb5b92f65f10fb6043344">glfwCreateWindow</a> (formerly <code>glfwOpenWindow</code>). GLFWWindow handles are pointers to the <a href="https://en.wikipedia.org/wiki/Opaque_data_type">opaque</a> type <a class="el" href="group__window.html#ga3c96d80d363e67d13a41b5d1821f3242">GLFWwindow</a>.</p>
+<dl class="section user"><dt>Old syntax</dt><dd><div class="fragment"><div class="line"><a class="code" href="group__window.html#ga5d877f09e968cef7a360b513306f17ff">glfwSetWindowTitle</a>(<span class="stringliteral">&quot;New GLFWWindow Title&quot;</span>);</div></div><!-- fragment --></dd></dl>
+<dl class="section user"><dt>New syntax</dt><dd><div class="fragment"><div class="line"><a class="code" href="group__window.html#ga5d877f09e968cef7a360b513306f17ff">glfwSetWindowTitle</a>(window, <span class="stringliteral">&quot;New GLFWWindow Title&quot;</span>);</div></div><!-- fragment --></dd></dl>
 <h2><a class="anchor" id="moving_monitor"></a>
 Explicit monitor selection</h2>
 <p>GLFW 3 provides support for multiple monitors. To request a full screen mode window, instead of passing <code>GLFW_FULLSCREEN</code> you specify which monitor you wish the window to use. The <a class="el" href="group__monitor.html#ga721867d84c6d18d6790d64d2847ca0b1">glfwGetPrimaryMonitor</a> function returns the monitor that GLFW 2 would have selected, but there are many other <a class="el" href="monitor_guide.html">monitor functions</a>. Monitor handles are pointers to the <a href="https://en.wikipedia.org/wiki/Opaque_data_type">opaque</a> type <a class="el" href="group__monitor.html#ga8d9efd1cde9426692c73fe40437d0ae3">GLFWmonitor</a>.</p>
 <dl class="section user"><dt>Old basic full screen</dt><dd><div class="fragment"><div class="line">glfwOpenWindow(640, 480, 8, 8, 8, 0, 24, 0, GLFW_FULLSCREEN);</div></div><!-- fragment --></dd></dl>
-<dl class="section user"><dt>New basic full screen</dt><dd><div class="fragment"><div class="line">window = <a class="code" href="group__window.html#ga5c336fddf2cbb5b92f65f10fb6043344">glfwCreateWindow</a>(640, 480, <span class="stringliteral">&quot;My Window&quot;</span>, <a class="code" href="group__monitor.html#ga721867d84c6d18d6790d64d2847ca0b1">glfwGetPrimaryMonitor</a>(), NULL);</div></div><!-- fragment --></dd></dl>
+<dl class="section user"><dt>New basic full screen</dt><dd><div class="fragment"><div class="line">window = <a class="code" href="group__window.html#ga5c336fddf2cbb5b92f65f10fb6043344">glfwCreateWindow</a>(640, 480, <span class="stringliteral">&quot;My GLFWWindow&quot;</span>, <a class="code" href="group__monitor.html#ga721867d84c6d18d6790d64d2847ca0b1">glfwGetPrimaryMonitor</a>(), NULL);</div></div><!-- fragment --></dd></dl>
 <dl class="section note"><dt>Note</dt><dd>The framebuffer bit depth parameters of <code>glfwOpenWindow</code> have been turned into <a class="el" href="window_guide.html#window_hints">window hints</a>, but as they have been given <a class="el" href="window_guide.html#window_hints_values">sane defaults</a> you rarely need to set these hints.</dd></dl>
 <h2><a class="anchor" id="moving_autopoll"></a>
 Removal of automatic event polling</h2>
@@ -143,11 +143,11 @@ Explicit context management</h2>
 <p>This means that you need to call <a class="el" href="group__context.html#ga1c04dc242268f827290fe40aa1c91157">glfwMakeContextCurrent</a> after creating a window before you can call any OpenGL functions.</p>
 <h2><a class="anchor" id="moving_hidpi"></a>
 Separation of window and framebuffer sizes</h2>
-<p>Window positions and sizes now use screen coordinates, which may not be the same as pixels on machines with high-DPI monitors. This is important as OpenGL uses pixels, not screen coordinates. For example, the rectangle specified with <code>glViewport</code> needs to use pixels. Therefore, framebuffer size functions have been added. You can retrieve the size of the framebuffer of a window with <a class="el" href="group__window.html#ga0e2637a4161afb283f5300c7f94785c9">glfwGetFramebufferSize</a> function. A framebuffer size callback has also been added, which can be set with <a class="el" href="group__window.html#ga3203461a5303bf289f2e05f854b2f7cf">glfwSetFramebufferSizeCallback</a>.</p>
+<p>GLFWWindow positions and sizes now use screen coordinates, which may not be the same as pixels on machines with high-DPI monitors. This is important as OpenGL uses pixels, not screen coordinates. For example, the rectangle specified with <code>glViewport</code> needs to use pixels. Therefore, framebuffer size functions have been added. You can retrieve the size of the framebuffer of a window with <a class="el" href="group__window.html#ga0e2637a4161afb283f5300c7f94785c9">glfwGetFramebufferSize</a> function. A framebuffer size callback has also been added, which can be set with <a class="el" href="group__window.html#ga3203461a5303bf289f2e05f854b2f7cf">glfwSetFramebufferSizeCallback</a>.</p>
 <dl class="section user"><dt>Old basic viewport setup</dt><dd><div class="fragment"><div class="line"><a class="code" href="group__window.html#gaeea7cbc03373a41fb51cfbf9f2a5d4c6">glfwGetWindowSize</a>(&amp;width, &amp;height);</div><div class="line">glViewport(0, 0, width, height);</div></div><!-- fragment --></dd></dl>
 <dl class="section user"><dt>New basic viewport setup</dt><dd><div class="fragment"><div class="line"><a class="code" href="group__window.html#ga0e2637a4161afb283f5300c7f94785c9">glfwGetFramebufferSize</a>(window, &amp;width, &amp;height);</div><div class="line">glViewport(0, 0, width, height);</div></div><!-- fragment --></dd></dl>
 <h2><a class="anchor" id="moving_window_close"></a>
-Window closing changes</h2>
+GLFWWindow closing changes</h2>
 <p>The <code>GLFW_OPENED</code> window parameter has been removed. As long as the window has not been destroyed, whether through <a class="el" href="group__window.html#gacdf43e51376051d2c091662e9fe3d7b2">glfwDestroyWindow</a> or <a class="el" href="group__init.html#gaaae48c0a18607ea4a4ba951d939f0901">glfwTerminate</a>, the window is "open".</p>
 <p>A user attempting to close a window is now just an event like any other. Unlike GLFW 2, windows and contexts created with GLFW 3 will never be destroyed unless you choose them to be. Each window now has a close flag that is set to <code>GLFW_TRUE</code> when the user attempts to close that window. By default, nothing else happens and the window stays visible. It is then up to you to either destroy the window, take some other action or ignore the request.</p>
 <p>You can query the close flag at any time with <a class="el" href="group__window.html#ga24e02fbfefbb81fc45320989f8140ab5">glfwWindowShouldClose</a> and set it at any time with <a class="el" href="group__window.html#ga49c449dde2a6f87d996f4daaa09d6708">glfwSetWindowShouldClose</a>.</p>
@@ -160,7 +160,7 @@ Window closing changes</h2>
 <h2><a class="anchor" id="moving_hints"></a>
 Persistent window hints</h2>
 <p>The <code>glfwOpenWindowHint</code> function has been renamed to <a class="el" href="group__window.html#ga7d9c8c62384b1e2821c4dc48952d2033">glfwWindowHint</a>.</p>
-<p>Window hints are no longer reset to their default values on window creation, but instead retain their values until modified by <a class="el" href="group__window.html#ga7d9c8c62384b1e2821c4dc48952d2033">glfwWindowHint</a> or <a class="el" href="group__window.html#gaa77c4898dfb83344a6b4f76aa16b9a4a">glfwDefaultWindowHints</a>, or until the library is terminated and re-initialized.</p>
+<p>GLFWWindow hints are no longer reset to their default values on window creation, but instead retain their values until modified by <a class="el" href="group__window.html#ga7d9c8c62384b1e2821c4dc48952d2033">glfwWindowHint</a> or <a class="el" href="group__window.html#gaa77c4898dfb83344a6b4f76aa16b9a4a">glfwDefaultWindowHints</a>, or until the library is terminated and re-initialized.</p>
 <h2><a class="anchor" id="moving_video_modes"></a>
 Video mode enumeration</h2>
 <p>Video mode enumeration is now per-monitor. The <a class="el" href="group__monitor.html#ga820b0ce9a5237d645ea7cbb4bd383458">glfwGetVideoModes</a> function now returns all available modes for a specific monitor instead of requiring you to guess how large an array you need. The <code>glfwGetDesktopMode</code> function, which had poorly defined behavior, has been replaced by <a class="el" href="group__monitor.html#gafc1bb972a921ad5b3bd5d63a95fc2d52">glfwGetVideoMode</a>, which returns the current mode of a monitor.</p>

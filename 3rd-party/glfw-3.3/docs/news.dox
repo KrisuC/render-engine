@@ -116,7 +116,7 @@ application.
 For more information see @ref window_attention.
 
 
-@subsubsection maximize_33 Window maximization callback
+@subsubsection maximize_33 GLFWWindow maximization callback
 
 GLFW now supports notifying the application that the window has been maximized
 @ref glfwSetWindowMaximizeCallback.  This is called both when the window was
@@ -171,7 +171,7 @@ area with the [GLFW_HOVERED](@ref GLFW_HOVERED_attrib) window attribute.  This
 attribute corresponds to the [cursor enter/leave](@ref cursor_enter) event.
 
 
-@subsubsection focusonshow_33 Window hint and attribute for input focus on show
+@subsubsection focusonshow_33 GLFWWindow hint and attribute for input focus on show
 
 GLFW now has the [GLFW_FOCUS_ON_SHOW](@ref GLFW_DECORATED_hint) window hint and
 attribute for controlling whether a window gets input focus when shown.  It is
@@ -310,7 +310,7 @@ Existing code should still work but further bug fixes will likely not be made.
 The callback will be removed in the next major version.
 
 
-@subsubsection clipboard_window_33 Window parameter to clipboard functions
+@subsubsection clipboard_window_33 GLFWWindow parameter to clipboard functions
 
 The window parameter of the clipboard functions @ref glfwGetClipboardString and
 @ref glfwSetClipboardString has been deprecated and is no longer used on any
@@ -488,25 +488,25 @@ Vulkan header inclusion can be selected with
 @ref GLFW_INCLUDE_VULKAN.
 
 
-@subsubsection news_32_setwindowmonitor Window mode switching
+@subsubsection news_32_setwindowmonitor GLFWWindow mode switching
 
 GLFW now supports switching between windowed and full screen modes and updating
 the monitor and desired resolution and refresh rate of full screen windows with
 @ref glfwSetWindowMonitor.
 
 
-@subsubsection news_32_maximize Window maxmimization support
+@subsubsection news_32_maximize GLFWWindow maxmimization support
 
 GLFW now supports window maximization with @ref glfwMaximizeWindow and the
 @ref GLFW_MAXIMIZED window hint and attribute.
 
 
-@subsubsection news_32_focus Window input focus control
+@subsubsection news_32_focus GLFWWindow input focus control
 
 GLFW now supports giving windows input focus with @ref glfwFocusWindow.
 
 
-@subsubsection news_32_sizelimits Window size limit support
+@subsubsection news_32_sizelimits GLFWWindow size limit support
 
 GLFW now supports setting both absolute and relative window size limits with
 @ref glfwSetWindowSizeLimits and @ref glfwSetWindowAspectRatio.
@@ -524,7 +524,7 @@ GLFW now supports waiting for events for a set amount of time with @ref
 glfwWaitEventsTimeout.
 
 
-@subsubsection news_32_icon Window icon support
+@subsubsection news_32_icon GLFWWindow icon support
 
 GLFW now supports setting the icon of windows with @ref glfwSetWindowIcon.
 
@@ -602,12 +602,12 @@ glfwWaitEvents to return.
 @see @ref events
 
 
-@subsubsection news_31_framesize Window frame size query
+@subsubsection news_31_framesize GLFWWindow frame size query
 
 GLFW now supports querying the size, on each side, of the frame around the
 content area of a window, with @ref glfwGetWindowFrameSize.
 
-@see [Window size](@ref window_size)
+@see [GLFWWindow size](@ref window_size)
 
 
 @subsubsection news_31_autoiconify Simultaneous multi-monitor rendering
@@ -779,24 +779,24 @@ glfwGetWindowUserPointer and set with @ref glfwSetWindowUserPointer, to make it
 easier to integrate GLFW into C++ code.
 
 
-@subsubsection news_30_iconifyfun Window iconification callback
+@subsubsection news_30_iconifyfun GLFWWindow iconification callback
 
 Each window now has a callback for iconification and restoration events,
 which is set with @ref glfwSetWindowIconifyCallback.
 
 
-@subsubsection news_30_wndposfun Window position callback
+@subsubsection news_30_wndposfun GLFWWindow position callback
 
 Each window now has a callback for position events, which is set with @ref
 glfwSetWindowPosCallback.
 
 
-@subsubsection news_30_wndpos Window position query
+@subsubsection news_30_wndpos GLFWWindow position query
 
 The position of a window can now be retrieved using @ref glfwGetWindowPos.
 
 
-@subsubsection news_30_focusfun Window focus callback
+@subsubsection news_30_focusfun GLFWWindow focus callback
 
 Each windows now has a callback for focus events, which is set with @ref
 glfwSetWindowFocusCallback.

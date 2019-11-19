@@ -4,17 +4,15 @@
 #include <cmath>
 
 #include "shader.hpp"
-#include "window_manage.hpp"
-#include "triangleTestR.hpp"
+#include "simpleWindow.hpp"
+#include "helloTriangle.hpp"
 
 int main() {
-    Window window(800, 600, "render lab");
+    SimpleWindow window(800, 600, "lab");
 
-    Renderer *renderer = new TriangleTestR();
+    Renderer *renderer = new TriangleTestRenderer();
     renderer->initContext();
 
-    // the 'render loop'
-    int i = 0;
     while (!window.shouldClose()) {
         window.processInput();
 
@@ -22,7 +20,6 @@ int main() {
 
         window.swapBuffers();
         window.pollEvents();
-        i++;
     }
     return 0;
 }

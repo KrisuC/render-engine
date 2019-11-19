@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.15"/>
-<title>GLFW: Window guide</title>
+<title>GLFW: GLFWWindow guide</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -60,17 +60,17 @@ $(function() {
 </div><!-- top -->
 <div class="PageDoc"><div class="header">
   <div class="headertitle">
-<div class="title">Window guide </div>  </div>
+<div class="title">GLFWWindow guide </div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="toc"><h3>Table of Contents</h3>
-<ul><li class="level1"><a href="#window_object">Window objects</a><ul><li class="level2"><a href="#window_creation">Window creation</a><ul><li class="level3"><a href="#window_full_screen">Full screen windows</a></li>
+<ul><li class="level1"><a href="#window_object">GLFWWindow objects</a><ul><li class="level2"><a href="#window_creation">GLFWWindow creation</a><ul><li class="level3"><a href="#window_full_screen">Full screen windows</a></li>
 <li class="level3"><a href="#window_windowed_full_screen">&quot;Windowed full screen&quot; windows</a></li>
 </ul>
 </li>
-<li class="level2"><a href="#window_destruction">Window destruction</a></li>
-<li class="level2"><a href="#window_hints">Window creation hints</a><ul><li class="level3"><a href="#window_hints_hard">Hard and soft constraints</a></li>
-<li class="level3"><a href="#window_hints_wnd">Window related hints</a></li>
+<li class="level2"><a href="#window_destruction">GLFWWindow destruction</a></li>
+<li class="level2"><a href="#window_hints">GLFWWindow creation hints</a><ul><li class="level3"><a href="#window_hints_hard">Hard and soft constraints</a></li>
+<li class="level3"><a href="#window_hints_wnd">GLFWWindow related hints</a></li>
 <li class="level3"><a href="#window_hints_fb">Framebuffer related hints</a></li>
 <li class="level3"><a href="#window_hints_mtr">Monitor related hints</a></li>
 <li class="level3"><a href="#window_hints_ctx">Context related hints</a></li>
@@ -81,25 +81,25 @@ $(function() {
 </li>
 </ul>
 </li>
-<li class="level1"><a href="#window_events">Window event processing</a></li>
-<li class="level1"><a href="#window_properties">Window properties and events</a><ul><li class="level2"><a href="#window_userptr">User pointer</a></li>
-<li class="level2"><a href="#window_close">Window closing and close flag</a></li>
-<li class="level2"><a href="#window_size">Window size</a></li>
+<li class="level1"><a href="#window_events">GLFWWindow event processing</a></li>
+<li class="level1"><a href="#window_properties">GLFWWindow properties and events</a><ul><li class="level2"><a href="#window_userptr">User pointer</a></li>
+<li class="level2"><a href="#window_close">GLFWWindow closing and close flag</a></li>
+<li class="level2"><a href="#window_size">GLFWWindow size</a></li>
 <li class="level2"><a href="#window_fbsize">Framebuffer size</a></li>
-<li class="level2"><a href="#window_scale">Window content scale</a></li>
-<li class="level2"><a href="#window_sizelimits">Window size limits</a></li>
-<li class="level2"><a href="#window_pos">Window position</a></li>
-<li class="level2"><a href="#window_title">Window title</a></li>
-<li class="level2"><a href="#window_icon">Window icon</a></li>
-<li class="level2"><a href="#window_monitor">Window monitor</a></li>
-<li class="level2"><a href="#window_iconify">Window iconification</a></li>
-<li class="level2"><a href="#window_maximize">Window maximization</a></li>
-<li class="level2"><a href="#window_hide">Window visibility</a></li>
-<li class="level2"><a href="#window_focus">Window input focus</a></li>
-<li class="level2"><a href="#window_attention">Window attention request</a></li>
-<li class="level2"><a href="#window_refresh">Window damage and refresh</a></li>
-<li class="level2"><a href="#window_transparency">Window transparency</a></li>
-<li class="level2"><a href="#window_attribs">Window attributes</a><ul><li class="level3"><a href="#window_attribs_wnd">Window related attributes</a></li>
+<li class="level2"><a href="#window_scale">GLFWWindow content scale</a></li>
+<li class="level2"><a href="#window_sizelimits">GLFWWindow size limits</a></li>
+<li class="level2"><a href="#window_pos">GLFWWindow position</a></li>
+<li class="level2"><a href="#window_title">GLFWWindow title</a></li>
+<li class="level2"><a href="#window_icon">GLFWWindow icon</a></li>
+<li class="level2"><a href="#window_monitor">GLFWWindow monitor</a></li>
+<li class="level2"><a href="#window_iconify">GLFWWindow iconification</a></li>
+<li class="level2"><a href="#window_maximize">GLFWWindow maximization</a></li>
+<li class="level2"><a href="#window_hide">GLFWWindow visibility</a></li>
+<li class="level2"><a href="#window_focus">GLFWWindow input focus</a></li>
+<li class="level2"><a href="#window_attention">GLFWWindow attention request</a></li>
+<li class="level2"><a href="#window_refresh">GLFWWindow damage and refresh</a></li>
+<li class="level2"><a href="#window_transparency">GLFWWindow transparency</a></li>
+<li class="level2"><a href="#window_attribs">GLFWWindow attributes</a><ul><li class="level3"><a href="#window_attribs_wnd">GLFWWindow related attributes</a></li>
 <li class="level3"><a href="#window_attribs_ctx">Context related attributes</a></li>
 <li class="level3"><a href="#window_attribs_fb">Framebuffer related attributes</a></li>
 </ul>
@@ -109,7 +109,7 @@ $(function() {
 <li class="level1"><a href="#buffer_swap">Buffer swapping</a></li>
 </ul>
 </div>
-<div class="textblock"><p>This guide introduces the window related functions of GLFW. For details on a specific function in this category, see the <a class="el" href="group__window.html">Window reference</a>. There are also guides for the other areas of GLFW.</p>
+<div class="textblock"><p>This guide introduces the window related functions of GLFW. For details on a specific function in this category, see the <a class="el" href="group__window.html">GLFWWindow reference</a>. There are also guides for the other areas of GLFW.</p>
 <ul>
 <li><a class="el" href="intro_guide.html">Introduction to the API</a></li>
 <li><a class="el" href="context_guide.html">Context guide</a></li>
@@ -118,11 +118,11 @@ $(function() {
 <li><a class="el" href="input_guide.html">Input guide</a></li>
 </ul>
 <h1><a class="anchor" id="window_object"></a>
-Window objects</h1>
+GLFWWindow objects</h1>
 <p>The <a class="el" href="group__window.html#ga3c96d80d363e67d13a41b5d1821f3242">GLFWwindow</a> object encapsulates both a window and a context. They are created with <a class="el" href="group__window.html#ga5c336fddf2cbb5b92f65f10fb6043344">glfwCreateWindow</a> and destroyed with <a class="el" href="group__window.html#gacdf43e51376051d2c091662e9fe3d7b2">glfwDestroyWindow</a>, or <a class="el" href="group__init.html#gaaae48c0a18607ea4a4ba951d939f0901">glfwTerminate</a>, if any remain. As the window and context are inseparably linked, the object pointer is used as both a context and window handle.</p>
 <p>To see the event stream provided to the various window related callbacks, run the <code>events</code> test program.</p>
 <h2><a class="anchor" id="window_creation"></a>
-Window creation</h2>
+GLFWWindow creation</h2>
 <p>A window and its OpenGL or OpenGL ES context are created with <a class="el" href="group__window.html#ga5c336fddf2cbb5b92f65f10fb6043344">glfwCreateWindow</a>, which returns a handle to the created window object. For example, this creates a 640 by 480 windowed mode window:</p>
 <div class="fragment"><div class="line"><a class="code" href="group__window.html#ga3c96d80d363e67d13a41b5d1821f3242">GLFWwindow</a>* window = <a class="code" href="group__window.html#ga5c336fddf2cbb5b92f65f10fb6043344">glfwCreateWindow</a>(640, 480, <span class="stringliteral">&quot;My Title&quot;</span>, NULL, NULL);</div></div><!-- fragment --><p>If window creation fails, <code>NULL</code> will be returned, so it is necessary to check the return value.</p>
 <p>The window handle is passed to all window related functions and is provided to along with all input events, so event handlers can tell which window received the event.</p>
@@ -157,15 +157,15 @@ Full screen windows</h3>
 <div class="fragment"><div class="line"><span class="keyword">const</span> <a class="code" href="structGLFWvidmode.html">GLFWvidmode</a>* mode = <a class="code" href="group__monitor.html#gafc1bb972a921ad5b3bd5d63a95fc2d52">glfwGetVideoMode</a>(monitor);</div><div class="line"></div><div class="line"><a class="code" href="group__window.html#ga7d9c8c62384b1e2821c4dc48952d2033">glfwWindowHint</a>(<a class="code" href="group__window.html#gaf78ed8e417dbcc1e354906cc2708c982">GLFW_RED_BITS</a>, mode-&gt;<a class="code" href="structGLFWvidmode.html#a6066c4ecd251098700062d3b735dba1b">redBits</a>);</div><div class="line"><a class="code" href="group__window.html#ga7d9c8c62384b1e2821c4dc48952d2033">glfwWindowHint</a>(<a class="code" href="group__window.html#gafba3b72638c914e5fb8a237dd4c50d4d">GLFW_GREEN_BITS</a>, mode-&gt;<a class="code" href="structGLFWvidmode.html#a292fdd281f3485fb3ff102a5bda43faa">greenBits</a>);</div><div class="line"><a class="code" href="group__window.html#ga7d9c8c62384b1e2821c4dc48952d2033">glfwWindowHint</a>(<a class="code" href="group__window.html#gab292ea403db6d514537b515311bf9ae3">GLFW_BLUE_BITS</a>, mode-&gt;<a class="code" href="structGLFWvidmode.html#af310977f58d2e3b188175b6e3d314047">blueBits</a>);</div><div class="line"><a class="code" href="group__window.html#ga7d9c8c62384b1e2821c4dc48952d2033">glfwWindowHint</a>(<a class="code" href="group__window.html#ga0f20825e6e47ee8ba389024519682212">GLFW_REFRESH_RATE</a>, mode-&gt;<a class="code" href="structGLFWvidmode.html#a791bdd6c7697b09f7e9c97054bf05649">refreshRate</a>);</div><div class="line"></div><div class="line"><a class="code" href="group__window.html#ga3c96d80d363e67d13a41b5d1821f3242">GLFWwindow</a>* window = <a class="code" href="group__window.html#ga5c336fddf2cbb5b92f65f10fb6043344">glfwCreateWindow</a>(mode-&gt;<a class="code" href="structGLFWvidmode.html#a698dcb200562051a7249cb6ae154c71d">width</a>, mode-&gt;<a class="code" href="structGLFWvidmode.html#ac65942a5f6981695517437a9d571d03c">height</a>, <span class="stringliteral">&quot;My Title&quot;</span>, monitor, NULL);</div></div><!-- fragment --><p>This also works for windowed mode windows that are made full screen.</p>
 <div class="fragment"><div class="line"><span class="keyword">const</span> <a class="code" href="structGLFWvidmode.html">GLFWvidmode</a>* mode = <a class="code" href="group__monitor.html#gafc1bb972a921ad5b3bd5d63a95fc2d52">glfwGetVideoMode</a>(monitor);</div><div class="line"></div><div class="line"><a class="code" href="group__window.html#ga81c76c418af80a1cce7055bccb0ae0a7">glfwSetWindowMonitor</a>(window, monitor, 0, 0, mode-&gt;<a class="code" href="structGLFWvidmode.html#a698dcb200562051a7249cb6ae154c71d">width</a>, mode-&gt;<a class="code" href="structGLFWvidmode.html#ac65942a5f6981695517437a9d571d03c">height</a>, mode-&gt;<a class="code" href="structGLFWvidmode.html#a791bdd6c7697b09f7e9c97054bf05649">refreshRate</a>);</div></div><!-- fragment --><p>Note that <a class="el" href="group__monitor.html#gafc1bb972a921ad5b3bd5d63a95fc2d52">glfwGetVideoMode</a> returns the <em>current</em> video mode of a monitor, so if you already have a full screen window on that monitor that you want to make windowed full screen, you need to have saved the desktop resolution before.</p>
 <h2><a class="anchor" id="window_destruction"></a>
-Window destruction</h2>
+GLFWWindow destruction</h2>
 <p>When a window is no longer needed, destroy it with <a class="el" href="group__window.html#gacdf43e51376051d2c091662e9fe3d7b2">glfwDestroyWindow</a>.</p>
-<div class="fragment"><div class="line"><a class="code" href="group__window.html#gacdf43e51376051d2c091662e9fe3d7b2">glfwDestroyWindow</a>(window);</div></div><!-- fragment --><p>Window destruction always succeeds. Before the actual destruction, all callbacks are removed so no further events will be delivered for the window. All windows remaining when <a class="el" href="group__init.html#gaaae48c0a18607ea4a4ba951d939f0901">glfwTerminate</a> is called are destroyed as well.</p>
+<div class="fragment"><div class="line"><a class="code" href="group__window.html#gacdf43e51376051d2c091662e9fe3d7b2">glfwDestroyWindow</a>(window);</div></div><!-- fragment --><p>GLFWWindow destruction always succeeds. Before the actual destruction, all callbacks are removed so no further events will be delivered for the window. All windows remaining when <a class="el" href="group__init.html#gaaae48c0a18607ea4a4ba951d939f0901">glfwTerminate</a> is called are destroyed as well.</p>
 <p>When a full screen window is destroyed, the original video mode of its monitor is restored, but the gamma ramp is left untouched.</p>
 <h2><a class="anchor" id="window_hints"></a>
-Window creation hints</h2>
+GLFWWindow creation hints</h2>
 <p>There are a number of hints that can be set before the creation of a window and context. Some affect the window itself, others affect the framebuffer or context. These hints are set to their default values each time the library is initialized with <a class="el" href="group__init.html#ga317aac130a235ab08c6db0834907d85e">glfwInit</a>. Integer value hints can be set individually with <a class="el" href="group__window.html#ga7d9c8c62384b1e2821c4dc48952d2033">glfwWindowHint</a> and string value hints with <a class="el" href="group__window.html#ga8cb2782861c9d997bcf2dea97f363e5f">glfwWindowHintString</a>. You can reset all at once to their defaults with <a class="el" href="group__window.html#gaa77c4898dfb83344a6b4f76aa16b9a4a">glfwDefaultWindowHints</a>.</p>
 <p>Some hints are platform specific. These are always valid to set on any platform but they will only affect their specific platform. Other platforms will ignore them. Setting these hints requires no platform specific headers or calls.</p>
-<dl class="section note"><dt>Note</dt><dd>Window hints need to be set before the creation of the window and context you wish to have the specified attributes. They function as additional arguments to <a class="el" href="group__window.html#ga5c336fddf2cbb5b92f65f10fb6043344">glfwCreateWindow</a>.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>GLFWWindow hints need to be set before the creation of the window and context you wish to have the specified attributes. They function as additional arguments to <a class="el" href="group__window.html#ga5c336fddf2cbb5b92f65f10fb6043344">glfwCreateWindow</a>.</dd></dl>
 <h3><a class="anchor" id="window_hints_hard"></a>
 Hard and soft constraints</h3>
 <p>Some window hints are hard constraints. These must match the available capabilities <em>exactly</em> for window and context creation to succeed. Hints that are not hard constraints are matched as closely as possible, but the resulting context and framebuffer may differ from what these hints requested.</p>
@@ -180,7 +180,7 @@ Hard and soft constraints</h3>
 <li><a class="el" href="window_guide.html#GLFW_OPENGL_PROFILE_hint">GLFW_OPENGL_PROFILE</a></li>
 </ul>
 <h3><a class="anchor" id="window_hints_wnd"></a>
-Window related hints</h3>
+GLFWWindow related hints</h3>
 <p><a class="anchor" id="GLFW_RESIZABLE_hint"></a><b>GLFW_RESIZABLE</b> specifies whether the windowed mode window will be resizable <em>by the user</em>. The window will still be resizable using the <a class="el" href="group__window.html#ga371911f12c74c504dd8d47d832d095cb">glfwSetWindowSize</a> function. Possible values are <code>GLFW_TRUE</code> and <code>GLFW_FALSE</code>. This hint is ignored for full screen and undecorated windows.</p>
 <p><a class="anchor" id="GLFW_VISIBLE_hint"></a><b>GLFW_VISIBLE</b> specifies whether the windowed mode window will be initially visible. Possible values are <code>GLFW_TRUE</code> and <code>GLFW_FALSE</code>. This hint is ignored for full screen windows.</p>
 <p><a class="anchor" id="GLFW_DECORATED_hint"></a><b>GLFW_DECORATED</b> specifies whether the windowed mode window will have window decorations such as a border, a close widget, etc. An undecorated window will not be resizable by the user but will still allow the user to generate close events on some platforms. Possible values are <code>GLFW_TRUE</code> and <code>GLFW_FALSE</code>. This hint is ignored for full screen windows.</p>
@@ -248,7 +248,7 @@ X11 specific window hints</h3>
 Supported and default values</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
-<th class="markdownTableHeadNone">Window hint  </th><th class="markdownTableHeadNone">Default value  </th><th class="markdownTableHeadNone">Supported values   </th></tr>
+<th class="markdownTableHeadNone">GLFWWindow hint  </th><th class="markdownTableHeadNone">Default value  </th><th class="markdownTableHeadNone">Supported values   </th></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">GLFW_RESIZABLE  </td><td class="markdownTableBodyNone"><code>GLFW_TRUE</code>  </td><td class="markdownTableBodyNone"><code>GLFW_TRUE</code> or <code>GLFW_FALSE</code>   </td></tr>
 <tr class="markdownTableRowEven">
@@ -333,22 +333,22 @@ Supported and default values</h3>
 <td class="markdownTableBodyNone">GLFW_X11_INSTANCE_NAME  </td><td class="markdownTableBodyNone"><code>""</code>  </td><td class="markdownTableBodyNone">An ASCII encoded <code>WM_CLASS</code> instance name   </td></tr>
 </table>
 <h1><a class="anchor" id="window_events"></a>
-Window event processing</h1>
+GLFWWindow event processing</h1>
 <p>See <a class="el" href="input_guide.html#events">Event processing</a>.</p>
 <h1><a class="anchor" id="window_properties"></a>
-Window properties and events</h1>
+GLFWWindow properties and events</h1>
 <h2><a class="anchor" id="window_userptr"></a>
 User pointer</h2>
 <p>Each window has a user pointer that can be set with <a class="el" href="group__window.html#ga3d2fc6026e690ab31a13f78bc9fd3651">glfwSetWindowUserPointer</a> and queried with <a class="el" href="group__window.html#ga17807ce0f45ac3f8bb50d6dcc59a4e06">glfwGetWindowUserPointer</a>. This can be used for any purpose you need and will not be modified by GLFW throughout the life-time of the window.</p>
 <p>The initial value of the pointer is <code>NULL</code>.</p>
 <h2><a class="anchor" id="window_close"></a>
-Window closing and close flag</h2>
+GLFWWindow closing and close flag</h2>
 <p>When the user attempts to close the window, for example by clicking the close widget or using a key chord like Alt+F4, the <em>close flag</em> of the window is set. The window is however not actually destroyed and, unless you watch for this state change, nothing further happens.</p>
 <p>The current state of the close flag is returned by <a class="el" href="group__window.html#ga24e02fbfefbb81fc45320989f8140ab5">glfwWindowShouldClose</a> and can be set or cleared directly with <a class="el" href="group__window.html#ga49c449dde2a6f87d996f4daaa09d6708">glfwSetWindowShouldClose</a>. A common pattern is to use the close flag as a main loop condition.</p>
 <div class="fragment"><div class="line"><span class="keywordflow">while</span> (!<a class="code" href="group__window.html#ga24e02fbfefbb81fc45320989f8140ab5">glfwWindowShouldClose</a>(window))</div><div class="line">{</div><div class="line">    render(window);</div><div class="line"></div><div class="line">    <a class="code" href="group__window.html#ga15a5a1ee5b3c2ca6b15ca209a12efd14">glfwSwapBuffers</a>(window);</div><div class="line">    <a class="code" href="group__window.html#ga37bd57223967b4211d60ca1a0bf3c832">glfwPollEvents</a>();</div><div class="line">}</div></div><!-- fragment --><p>If you wish to be notified when the user attempts to close a window, set a close callback.</p>
 <div class="fragment"><div class="line"><a class="code" href="group__window.html#gaade9264e79fae52bdb78e2df11ee8d6a">glfwSetWindowCloseCallback</a>(window, window_close_callback);</div></div><!-- fragment --><p>The callback function is called directly <em>after</em> the close flag has been set. It can be used for example to filter close requests and clear the close flag again unless certain conditions are met.</p>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> window_close_callback(<a class="code" href="group__window.html#ga3c96d80d363e67d13a41b5d1821f3242">GLFWwindow</a>* window)</div><div class="line">{</div><div class="line">    <span class="keywordflow">if</span> (!time_to_close)</div><div class="line">        <a class="code" href="group__window.html#ga49c449dde2a6f87d996f4daaa09d6708">glfwSetWindowShouldClose</a>(window, <a class="code" href="group__init.html#gac877fe3b627d21ef3a0a23e0a73ba8c5">GLFW_FALSE</a>);</div><div class="line">}</div></div><!-- fragment --><h2><a class="anchor" id="window_size"></a>
-Window size</h2>
+GLFWWindow size</h2>
 <p>The size of a window can be changed with <a class="el" href="group__window.html#ga371911f12c74c504dd8d47d832d095cb">glfwSetWindowSize</a>. For windowed mode windows, this sets the size, in <a class="el" href="intro_guide.html#coordinate_systems">screen coordinates</a> of the <em>content area</em> or <em>content area</em> of the window. The window system may impose limits on window size.</p>
 <div class="fragment"><div class="line"><a class="code" href="group__window.html#ga371911f12c74c504dd8d47d832d095cb">glfwSetWindowSize</a>(window, 640, 480);</div></div><!-- fragment --><p>For full screen windows, the specified size becomes the new resolution of the window's desired video mode. The video mode most closely matching the new desired video mode is set immediately. The window is resized to fit the resolution of the set video mode.</p>
 <p>If you wish to be notified when a window is resized, whether by the user, the system or your own code, set a size callback.</p>
@@ -365,7 +365,7 @@ Framebuffer size</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> framebuffer_size_callback(<a class="code" href="group__window.html#ga3c96d80d363e67d13a41b5d1821f3242">GLFWwindow</a>* window, <span class="keywordtype">int</span> width, <span class="keywordtype">int</span> height)</div><div class="line">{</div><div class="line">    glViewport(0, 0, width, height);</div><div class="line">}</div></div><!-- fragment --><p>There is also <a class="el" href="group__window.html#ga0e2637a4161afb283f5300c7f94785c9">glfwGetFramebufferSize</a> for directly retrieving the current size of the framebuffer of a window.</p>
 <div class="fragment"><div class="line"><span class="keywordtype">int</span> width, height;</div><div class="line"><a class="code" href="group__window.html#ga0e2637a4161afb283f5300c7f94785c9">glfwGetFramebufferSize</a>(window, &amp;width, &amp;height);</div><div class="line">glViewport(0, 0, width, height);</div></div><!-- fragment --><p>The size of a framebuffer may change independently of the size of a window, for example if the window is dragged between a regular monitor and a high-DPI one.</p>
 <h2><a class="anchor" id="window_scale"></a>
-Window content scale</h2>
+GLFWWindow content scale</h2>
 <p>The content scale for a window can be retrieved with <a class="el" href="group__window.html#gaf5d31de9c19c4f994facea64d2b3106c">glfwGetWindowContentScale</a>.</p>
 <div class="fragment"><div class="line"><span class="keywordtype">float</span> xscale, yscale;</div><div class="line"><a class="code" href="group__window.html#gaf5d31de9c19c4f994facea64d2b3106c">glfwGetWindowContentScale</a>(window, &amp;xscale, &amp;yscale);</div></div><!-- fragment --><p>The content scale is the ratio between the current DPI and the platform's default DPI. This is especially important for text and any UI elements. If the pixel dimensions of your UI scaled by this look appropriate on your machine then it should appear at a reasonable size on other machines regardless of their DPI and scaling settings. This relies on the system DPI and scaling settings being somewhat correct.</p>
 <p>On systems where each monitors can have its own content scale, the window content scale will depend on which monitor the system considers the window to be on.</p>
@@ -373,7 +373,7 @@ Window content scale</h2>
 <div class="fragment"><div class="line"><a class="code" href="group__window.html#gabf3622cde4c10fac35875e24992ec26d">glfwSetWindowContentScaleCallback</a>(window, window_content_scale_callback);</div></div><!-- fragment --><p>The callback function receives the new content scale of the window.</p>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> window_content_scale_callback(<a class="code" href="group__window.html#ga3c96d80d363e67d13a41b5d1821f3242">GLFWwindow</a>* window, <span class="keywordtype">float</span> xscale, <span class="keywordtype">float</span> yscale)</div><div class="line">{</div><div class="line">    set_interface_scale(xscale, yscale);</div><div class="line">}</div></div><!-- fragment --><p>On platforms where pixels and screen coordinates always map 1:1, the window will need to be resized to appear the same size when it is moved to a monitor with a different content scale. To have this done automatically both when the window is created and when its content scale later changes, set the <a class="el" href="window_guide.html#GLFW_SCALE_TO_MONITOR">GLFW_SCALE_TO_MONITOR</a> window hint.</p>
 <h2><a class="anchor" id="window_sizelimits"></a>
-Window size limits</h2>
+GLFWWindow size limits</h2>
 <p>The minimum and maximum size of the content area of a windowed mode window can be enforced with <a class="el" href="group__window.html#gac314fa6cec7d2d307be9963e2709cc90">glfwSetWindowSizeLimits</a>. The user may resize the window to any size and aspect ratio within the specified limits, unless the aspect ratio is also set.</p>
 <div class="fragment"><div class="line"><a class="code" href="group__window.html#gac314fa6cec7d2d307be9963e2709cc90">glfwSetWindowSizeLimits</a>(window, 200, 200, 400, 400);</div></div><!-- fragment --><p>To specify only a minimum size or only a maximum one, set the other pair to <code>GLFW_DONT_CARE</code>.</p>
 <div class="fragment"><div class="line"><a class="code" href="group__window.html#gac314fa6cec7d2d307be9963e2709cc90">glfwSetWindowSizeLimits</a>(window, 640, 480, <a class="code" href="glfw3_8h.html#a7a2edf2c18446833d27d07f1b7f3d571">GLFW_DONT_CARE</a>, <a class="code" href="glfw3_8h.html#a7a2edf2c18446833d27d07f1b7f3d571">GLFW_DONT_CARE</a>);</div></div><!-- fragment --><p>To disable size limits for a window, set them all to <code>GLFW_DONT_CARE</code>.</p>
@@ -382,24 +382,24 @@ Window size limits</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">int</span> width, height;</div><div class="line"><a class="code" href="group__window.html#gaeea7cbc03373a41fb51cfbf9f2a5d4c6">glfwGetWindowSize</a>(window, &amp;width, &amp;height);</div><div class="line"><a class="code" href="group__window.html#ga72ac8cb1ee2e312a878b55153d81b937">glfwSetWindowAspectRatio</a>(window, width, height);</div></div><!-- fragment --><p>To disable the aspect ratio limit for a window, set both terms to <code>GLFW_DONT_CARE</code>.</p>
 <p>You can have both size limits and aspect ratio set for a window, but the results are undefined if they conflict.</p>
 <h2><a class="anchor" id="window_pos"></a>
-Window position</h2>
+GLFWWindow position</h2>
 <p>The position of a windowed-mode window can be changed with <a class="el" href="group__window.html#ga1abb6d690e8c88e0c8cd1751356dbca8">glfwSetWindowPos</a>. This moves the window so that the upper-left corner of its content area has the specified <a class="el" href="intro_guide.html#coordinate_systems">screen coordinates</a>. The window system may put limitations on window placement.</p>
 <div class="fragment"><div class="line"><a class="code" href="group__window.html#ga1abb6d690e8c88e0c8cd1751356dbca8">glfwSetWindowPos</a>(window, 100, 100);</div></div><!-- fragment --><p>If you wish to be notified when a window is moved, whether by the user, the system or your own code, set a position callback.</p>
 <div class="fragment"><div class="line"><a class="code" href="group__window.html#ga2837d4d240659feb4268fcb6530a6ba1">glfwSetWindowPosCallback</a>(window, window_pos_callback);</div></div><!-- fragment --><p>The callback function receives the new position, in screen coordinates, of the upper-left corner of the content area when the window is moved.</p>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> window_pos_callback(<a class="code" href="group__window.html#ga3c96d80d363e67d13a41b5d1821f3242">GLFWwindow</a>* window, <span class="keywordtype">int</span> xpos, <span class="keywordtype">int</span> ypos)</div><div class="line">{</div><div class="line">}</div></div><!-- fragment --><p>There is also <a class="el" href="group__window.html#ga73cb526c000876fd8ddf571570fdb634">glfwGetWindowPos</a> for directly retrieving the current position of the content area of the window.</p>
 <div class="fragment"><div class="line"><span class="keywordtype">int</span> xpos, ypos;</div><div class="line"><a class="code" href="group__window.html#ga73cb526c000876fd8ddf571570fdb634">glfwGetWindowPos</a>(window, &amp;xpos, &amp;ypos);</div></div><!-- fragment --><h2><a class="anchor" id="window_title"></a>
-Window title</h2>
+GLFWWindow title</h2>
 <p>All GLFW windows have a title, although undecorated or full screen windows may not display it or only display it in a task bar or similar interface. You can set a UTF-8 encoded window title with <a class="el" href="group__window.html#ga5d877f09e968cef7a360b513306f17ff">glfwSetWindowTitle</a>.</p>
-<div class="fragment"><div class="line"><a class="code" href="group__window.html#ga5d877f09e968cef7a360b513306f17ff">glfwSetWindowTitle</a>(window, <span class="stringliteral">&quot;My Window&quot;</span>);</div></div><!-- fragment --><p>The specified string is copied before the function returns, so there is no need to keep it around.</p>
+<div class="fragment"><div class="line"><a class="code" href="group__window.html#ga5d877f09e968cef7a360b513306f17ff">glfwSetWindowTitle</a>(window, <span class="stringliteral">&quot;My GLFWWindow&quot;</span>);</div></div><!-- fragment --><p>The specified string is copied before the function returns, so there is no need to keep it around.</p>
 <p>As long as your source file is encoded as UTF-8, you can use any Unicode characters directly in the source.</p>
 <div class="fragment"><div class="line"><a class="code" href="group__window.html#ga5d877f09e968cef7a360b513306f17ff">glfwSetWindowTitle</a>(window, <span class="stringliteral">&quot;ラストエグザイル&quot;</span>);</div></div><!-- fragment --><p>If you are using C++11 or C11, you can use a UTF-8 string literal.</p>
 <div class="fragment"><div class="line"><a class="code" href="group__window.html#ga5d877f09e968cef7a360b513306f17ff">glfwSetWindowTitle</a>(window, u8<span class="stringliteral">&quot;This is always a UTF-8 string&quot;</span>);</div></div><!-- fragment --><h2><a class="anchor" id="window_icon"></a>
-Window icon</h2>
+GLFWWindow icon</h2>
 <p>Decorated windows have icons on some platforms. You can set this icon by specifying a list of candidate images with <a class="el" href="group__window.html#gadd7ccd39fe7a7d1f0904666ae5932dc5">glfwSetWindowIcon</a>.</p>
 <div class="fragment"><div class="line"><a class="code" href="structGLFWimage.html">GLFWimage</a> images[2];</div><div class="line">images[0] = load_icon(<span class="stringliteral">&quot;my_icon.png&quot;</span>);</div><div class="line">images[1] = load_icon(<span class="stringliteral">&quot;my_icon_small.png&quot;</span>);</div><div class="line"></div><div class="line"><a class="code" href="group__window.html#gadd7ccd39fe7a7d1f0904666ae5932dc5">glfwSetWindowIcon</a>(window, 2, images);</div></div><!-- fragment --><p>The image data is 32-bit, little-endian, non-premultiplied RGBA, i.e. eight bits per channel with the red channel first. The pixels are arranged canonically as sequential rows, starting from the top-left corner.</p>
 <p>To revert to the default window icon, pass in an empty image array.</p>
 <div class="fragment"><div class="line"><a class="code" href="group__window.html#gadd7ccd39fe7a7d1f0904666ae5932dc5">glfwSetWindowIcon</a>(window, 0, NULL);</div></div><!-- fragment --><h2><a class="anchor" id="window_monitor"></a>
-Window monitor</h2>
+GLFWWindow monitor</h2>
 <p>Full screen windows are associated with a specific monitor. You can get the handle for this monitor with <a class="el" href="group__window.html#gaeac25e64789974ccbe0811766bd91a16">glfwGetWindowMonitor</a>.</p>
 <div class="fragment"><div class="line"><a class="code" href="group__monitor.html#ga8d9efd1cde9426692c73fe40437d0ae3">GLFWmonitor</a>* monitor = <a class="code" href="group__window.html#gaeac25e64789974ccbe0811766bd91a16">glfwGetWindowMonitor</a>(window);</div></div><!-- fragment --><p>This monitor handle is one of those returned by <a class="el" href="group__monitor.html#ga3fba51c8bd36491d4712aa5bd074a537">glfwGetMonitors</a>.</p>
 <p>For windowed mode windows, this function returns <code>NULL</code>. This is how to tell full screen windows from windowed mode windows.</p>
@@ -407,7 +407,7 @@ Window monitor</h2>
 <div class="fragment"><div class="line"><span class="keyword">const</span> <a class="code" href="structGLFWvidmode.html">GLFWvidmode</a>* mode = <a class="code" href="group__monitor.html#gafc1bb972a921ad5b3bd5d63a95fc2d52">glfwGetVideoMode</a>(monitor);</div><div class="line"></div><div class="line"><a class="code" href="group__window.html#ga81c76c418af80a1cce7055bccb0ae0a7">glfwSetWindowMonitor</a>(window, monitor, 0, 0, mode-&gt;<a class="code" href="structGLFWvidmode.html#a698dcb200562051a7249cb6ae154c71d">width</a>, mode-&gt;<a class="code" href="structGLFWvidmode.html#ac65942a5f6981695517437a9d571d03c">height</a>, mode-&gt;<a class="code" href="structGLFWvidmode.html#a791bdd6c7697b09f7e9c97054bf05649">refreshRate</a>);</div></div><!-- fragment --><p>When making the window windowed, specify the desired position and size. The refresh rate argument is ignored.</p>
 <div class="fragment"><div class="line"><a class="code" href="group__window.html#ga81c76c418af80a1cce7055bccb0ae0a7">glfwSetWindowMonitor</a>(window, NULL, xpos, ypos, width, height, 0);</div></div><!-- fragment --><p>This restores any previous window settings such as whether it is decorated, floating, resizable, has size or aspect ratio limits, etc.. To restore a window that was originally windowed to its original size and position, save these before making it full screen and then pass them in as above.</p>
 <h2><a class="anchor" id="window_iconify"></a>
-Window iconification</h2>
+GLFWWindow iconification</h2>
 <p>Windows can be iconified (i.e. minimized) with <a class="el" href="group__window.html#ga1bb559c0ebaad63c5c05ad2a066779c4">glfwIconifyWindow</a>.</p>
 <div class="fragment"><div class="line"><a class="code" href="group__window.html#ga1bb559c0ebaad63c5c05ad2a066779c4">glfwIconifyWindow</a>(window);</div></div><!-- fragment --><p>When a full screen window is iconified, the original video mode of its monitor is restored until the user or application restores the window.</p>
 <p>Iconified windows can be restored with <a class="el" href="group__window.html#ga52527a5904b47d802b6b4bb519cdebc7">glfwRestoreWindow</a>. This function also restores windows from maximization.</p>
@@ -416,7 +416,7 @@ Window iconification</h2>
 <div class="fragment"><div class="line"><a class="code" href="group__window.html#gab1ea7263081c0e073b8d5b91d6ffd367">glfwSetWindowIconifyCallback</a>(window, window_iconify_callback);</div></div><!-- fragment --><p>The callback function receives changes in the iconification state of the window.</p>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> window_iconify_callback(<a class="code" href="group__window.html#ga3c96d80d363e67d13a41b5d1821f3242">GLFWwindow</a>* window, <span class="keywordtype">int</span> iconified)</div><div class="line">{</div><div class="line">    <span class="keywordflow">if</span> (iconified)</div><div class="line">    {</div><div class="line">        <span class="comment">// The window was iconified</span></div><div class="line">    }</div><div class="line">    <span class="keywordflow">else</span></div><div class="line">    {</div><div class="line">        <span class="comment">// The window was restored</span></div><div class="line">    }</div><div class="line">}</div></div><!-- fragment --><p>You can also get the current iconification state with <a class="el" href="group__window.html#gacccb29947ea4b16860ebef42c2cb9337">glfwGetWindowAttrib</a>.</p>
 <div class="fragment"><div class="line"><span class="keywordtype">int</span> iconified = <a class="code" href="group__window.html#gacccb29947ea4b16860ebef42c2cb9337">glfwGetWindowAttrib</a>(window, <a class="code" href="group__window.html#ga39d44b7c056e55e581355a92d240b58a">GLFW_ICONIFIED</a>);</div></div><!-- fragment --><h2><a class="anchor" id="window_maximize"></a>
-Window maximization</h2>
+GLFWWindow maximization</h2>
 <p>Windows can be maximized (i.e. zoomed) with <a class="el" href="group__window.html#ga3f541387449d911274324ae7f17ec56b">glfwMaximizeWindow</a>.</p>
 <div class="fragment"><div class="line"><a class="code" href="group__window.html#ga3f541387449d911274324ae7f17ec56b">glfwMaximizeWindow</a>(window);</div></div><!-- fragment --><p>Full screen windows cannot be maximized and passing a full screen window to this function does nothing.</p>
 <p>Maximized windows can be restored with <a class="el" href="group__window.html#ga52527a5904b47d802b6b4bb519cdebc7">glfwRestoreWindow</a>. This function also restores windows from iconification.</p>
@@ -425,7 +425,7 @@ Window maximization</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> window_maximize_callback(<a class="code" href="group__window.html#ga3c96d80d363e67d13a41b5d1821f3242">GLFWwindow</a>* window, <span class="keywordtype">int</span> maximized)</div><div class="line">{</div><div class="line">    <span class="keywordflow">if</span> (maximized)</div><div class="line">    {</div><div class="line">        <span class="comment">// The window was maximized</span></div><div class="line">    }</div><div class="line">    <span class="keywordflow">else</span></div><div class="line">    {</div><div class="line">        <span class="comment">// The window was restored</span></div><div class="line">    }</div><div class="line">}</div></div><!-- fragment --><p>You can also get the current maximization state with <a class="el" href="group__window.html#gacccb29947ea4b16860ebef42c2cb9337">glfwGetWindowAttrib</a>.</p>
 <div class="fragment"><div class="line"><span class="keywordtype">int</span> maximized = <a class="code" href="group__window.html#gacccb29947ea4b16860ebef42c2cb9337">glfwGetWindowAttrib</a>(window, <a class="code" href="group__window.html#gad8ccb396253ad0b72c6d4c917eb38a03">GLFW_MAXIMIZED</a>);</div></div><!-- fragment --><p>By default, newly created windows are not maximized. You can change this behavior by setting the <a class="el" href="window_guide.html#GLFW_MAXIMIZED_hint">GLFW_MAXIMIZED</a> window hint before creating the window.</p>
 <div class="fragment"><div class="line"><a class="code" href="group__window.html#ga7d9c8c62384b1e2821c4dc48952d2033">glfwWindowHint</a>(<a class="code" href="group__window.html#gad8ccb396253ad0b72c6d4c917eb38a03">GLFW_MAXIMIZED</a>, <a class="code" href="group__init.html#ga2744fbb29b5631bb28802dbe0cf36eba">GLFW_TRUE</a>);</div></div><!-- fragment --><h2><a class="anchor" id="window_hide"></a>
-Window visibility</h2>
+GLFWWindow visibility</h2>
 <p>Windowed mode windows can be hidden with <a class="el" href="group__window.html#ga49401f82a1ba5f15db5590728314d47c">glfwHideWindow</a>.</p>
 <div class="fragment"><div class="line"><a class="code" href="group__window.html#ga49401f82a1ba5f15db5590728314d47c">glfwHideWindow</a>(window);</div></div><!-- fragment --><p>This makes the window completely invisible to the user, including removing it from the task bar, dock or window list. Full screen windows cannot be hidden and calling <a class="el" href="group__window.html#ga49401f82a1ba5f15db5590728314d47c">glfwHideWindow</a> on a full screen window does nothing.</p>
 <p>Hidden windows can be shown with <a class="el" href="group__window.html#ga61be47917b72536a148300f46494fc66">glfwShowWindow</a>.</p>
@@ -434,7 +434,7 @@ Window visibility</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">int</span> visible = <a class="code" href="group__window.html#gacccb29947ea4b16860ebef42c2cb9337">glfwGetWindowAttrib</a>(window, <a class="code" href="group__window.html#gafb3cdc45297e06d8f1eb13adc69ca6c4">GLFW_VISIBLE</a>);</div></div><!-- fragment --><p>By default, newly created windows are visible. You can change this behavior by setting the <a class="el" href="window_guide.html#GLFW_VISIBLE_hint">GLFW_VISIBLE</a> window hint before creating the window.</p>
 <div class="fragment"><div class="line"><a class="code" href="group__window.html#ga7d9c8c62384b1e2821c4dc48952d2033">glfwWindowHint</a>(<a class="code" href="group__window.html#gafb3cdc45297e06d8f1eb13adc69ca6c4">GLFW_VISIBLE</a>, <a class="code" href="group__init.html#gac877fe3b627d21ef3a0a23e0a73ba8c5">GLFW_FALSE</a>);</div></div><!-- fragment --><p>Windows created hidden are completely invisible to the user until shown. This can be useful if you need to set up your window further before showing it, for example moving it to a specific location.</p>
 <h2><a class="anchor" id="window_focus"></a>
-Window input focus</h2>
+GLFWWindow input focus</h2>
 <p>Windows can be given input focus and brought to the front with <a class="el" href="group__window.html#ga873780357abd3f3a081d71a40aae45a1">glfwFocusWindow</a>.</p>
 <div class="fragment"><div class="line"><a class="code" href="group__window.html#ga873780357abd3f3a081d71a40aae45a1">glfwFocusWindow</a>(window);</div></div><!-- fragment --><p>Keep in mind that it can be very disruptive to the user when a window is forced to the top. For a less disruptive way of getting the user's attention, see <a class="el" href="window_guide.html#window_attention">attention requests</a>.</p>
 <p>If you wish to be notified when a window gains or loses input focus, whether by the user, system or your own code, set a focus callback.</p>
@@ -442,19 +442,19 @@ Window input focus</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> window_focus_callback(<a class="code" href="group__window.html#ga3c96d80d363e67d13a41b5d1821f3242">GLFWwindow</a>* window, <span class="keywordtype">int</span> focused)</div><div class="line">{</div><div class="line">    <span class="keywordflow">if</span> (focused)</div><div class="line">    {</div><div class="line">        <span class="comment">// The window gained input focus</span></div><div class="line">    }</div><div class="line">    <span class="keywordflow">else</span></div><div class="line">    {</div><div class="line">        <span class="comment">// The window lost input focus</span></div><div class="line">    }</div><div class="line">}</div></div><!-- fragment --><p>You can also get the current input focus state with <a class="el" href="group__window.html#gacccb29947ea4b16860ebef42c2cb9337">glfwGetWindowAttrib</a>.</p>
 <div class="fragment"><div class="line"><span class="keywordtype">int</span> focused = <a class="code" href="group__window.html#gacccb29947ea4b16860ebef42c2cb9337">glfwGetWindowAttrib</a>(window, <a class="code" href="group__window.html#ga54ddb14825a1541a56e22afb5f832a9e">GLFW_FOCUSED</a>);</div></div><!-- fragment --><p>By default, newly created windows are given input focus. You can change this behavior by setting the <a class="el" href="window_guide.html#GLFW_FOCUSED_hint">GLFW_FOCUSED</a> window hint before creating the window.</p>
 <div class="fragment"><div class="line"><a class="code" href="group__window.html#ga7d9c8c62384b1e2821c4dc48952d2033">glfwWindowHint</a>(<a class="code" href="group__window.html#ga54ddb14825a1541a56e22afb5f832a9e">GLFW_FOCUSED</a>, <a class="code" href="group__init.html#gac877fe3b627d21ef3a0a23e0a73ba8c5">GLFW_FALSE</a>);</div></div><!-- fragment --><h2><a class="anchor" id="window_attention"></a>
-Window attention request</h2>
+GLFWWindow attention request</h2>
 <p>If you wish to notify the user of an event without interrupting, you can request attention with <a class="el" href="group__window.html#ga2f8d59323fc4692c1d54ba08c863a703">glfwRequestWindowAttention</a>.</p>
 <div class="fragment"><div class="line"><a class="code" href="group__window.html#ga2f8d59323fc4692c1d54ba08c863a703">glfwRequestWindowAttention</a>(window);</div></div><!-- fragment --><p>The system will highlight the specified window, or on platforms where this is not supported, the application as a whole. Once the user has given it attention, the system will automatically end the request.</p>
 <h2><a class="anchor" id="window_refresh"></a>
-Window damage and refresh</h2>
+GLFWWindow damage and refresh</h2>
 <p>If you wish to be notified when the contents of a window is damaged and needs to be refreshed, set a window refresh callback.</p>
 <div class="fragment"><div class="line"><a class="code" href="group__window.html#ga4569b76e8ac87c55b53199e6becd97eb">glfwSetWindowRefreshCallback</a>(m_handle, window_refresh_callback);</div></div><!-- fragment --><p>The callback function is called when the contents of the window needs to be refreshed.</p>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> window_refresh_callback(<a class="code" href="group__window.html#ga3c96d80d363e67d13a41b5d1821f3242">GLFWwindow</a>* window)</div><div class="line">{</div><div class="line">    draw_editor_ui(window);</div><div class="line">    <a class="code" href="group__window.html#ga15a5a1ee5b3c2ca6b15ca209a12efd14">glfwSwapBuffers</a>(window);</div><div class="line">}</div></div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>On compositing window systems such as Aero, Compiz or Aqua, where the window contents are saved off-screen, this callback might only be called when the window or framebuffer is resized.</dd></dl>
 <h2><a class="anchor" id="window_transparency"></a>
-Window transparency</h2>
+GLFWWindow transparency</h2>
 <p>GLFW supports two kinds of transparency for windows; framebuffer transparency and whole window transparency. A single window may not use both methods. The results of doing this are undefined.</p>
 <p>Both methods require the platform to support it and not every version of every platform GLFW supports does this, so there are mechanisms to check whether the window really is transparent.</p>
-<p>Window framebuffers can be made transparent on a per-pixel per-frame basis with the <a class="el" href="window_guide.html#GLFW_TRANSPARENT_FRAMEBUFFER_hint">GLFW_TRANSPARENT_FRAMEBUFFER</a> window hint.</p>
+<p>GLFWWindow framebuffers can be made transparent on a per-pixel per-frame basis with the <a class="el" href="window_guide.html#GLFW_TRANSPARENT_FRAMEBUFFER_hint">GLFW_TRANSPARENT_FRAMEBUFFER</a> window hint.</p>
 <div class="fragment"><div class="line"><a class="code" href="group__window.html#ga7d9c8c62384b1e2821c4dc48952d2033">glfwWindowHint</a>(<a class="code" href="group__window.html#ga60a0578c3b9449027d683a9c6abb9f14">GLFW_TRANSPARENT_FRAMEBUFFER</a>, <a class="code" href="group__init.html#ga2744fbb29b5631bb28802dbe0cf36eba">GLFW_TRUE</a>);</div></div><!-- fragment --><p>If supported by the system, the window content area will be composited with the background using the framebuffer per-pixel alpha channel. This requires desktop compositing to be enabled on the system. It does not affect window decorations.</p>
 <p>You can check whether the window framebuffer was successfully made transparent with the <a class="el" href="window_guide.html#GLFW_TRANSPARENT_FRAMEBUFFER_attrib">GLFW_TRANSPARENT_FRAMEBUFFER</a> window attribute.</p>
 <div class="fragment"><div class="line"><span class="keywordflow">if</span> (<a class="code" href="group__window.html#gacccb29947ea4b16860ebef42c2cb9337">glfwGetWindowAttrib</a>(window, <a class="code" href="group__window.html#ga60a0578c3b9449027d683a9c6abb9f14">GLFW_TRANSPARENT_FRAMEBUFFER</a>))</div><div class="line">{</div><div class="line">    <span class="comment">// window framebuffer is currently transparent</span></div><div class="line">}</div></div><!-- fragment --><p>GLFW comes with an example that enabled framebuffer transparency called <code>gears</code>.</p>
@@ -464,21 +464,21 @@ Window transparency</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">float</span> opacity = <a class="code" href="group__window.html#gad09f0bd7a6307c4533b7061828480a84">glfwGetWindowOpacity</a>(window);</div></div><!-- fragment --><p>If the system does not support whole window transparency, this function always returns one.</p>
 <p>GLFW comes with a test program that lets you control whole window transparency at run-time called <code>opacity</code>.</p>
 <h2><a class="anchor" id="window_attribs"></a>
-Window attributes</h2>
+GLFWWindow attributes</h2>
 <p>Windows have a number of attributes that can be returned using <a class="el" href="group__window.html#gacccb29947ea4b16860ebef42c2cb9337">glfwGetWindowAttrib</a>. Some reflect state that may change as a result of user interaction, (e.g. whether it has input focus), while others reflect inherent properties of the window (e.g. what kind of border it has). Some are related to the window and others to its OpenGL or OpenGL ES context.</p>
 <div class="fragment"><div class="line"><span class="keywordflow">if</span> (<a class="code" href="group__window.html#gacccb29947ea4b16860ebef42c2cb9337">glfwGetWindowAttrib</a>(window, <a class="code" href="group__window.html#ga54ddb14825a1541a56e22afb5f832a9e">GLFW_FOCUSED</a>))</div><div class="line">{</div><div class="line">    <span class="comment">// window has input focus</span></div><div class="line">}</div></div><!-- fragment --><p>The <a class="el" href="window_guide.html#GLFW_DECORATED_attrib">GLFW_DECORATED</a>, <a class="el" href="window_guide.html#GLFW_RESIZABLE_attrib">GLFW_RESIZABLE</a>, <a class="el" href="window_guide.html#GLFW_FLOATING_attrib">GLFW_FLOATING</a>, <a class="el" href="window_guide.html#GLFW_AUTO_ICONIFY_attrib">GLFW_AUTO_ICONIFY</a> and <a class="el" href="window_guide.html#GLFW_FOCUS_ON_SHOW_attrib">GLFW_FOCUS_ON_SHOW</a> window attributes can be changed with <a class="el" href="group__window.html#gace2afda29b4116ec012e410a6819033e">glfwSetWindowAttrib</a>.</p>
 <div class="fragment"><div class="line"><a class="code" href="group__window.html#gace2afda29b4116ec012e410a6819033e">glfwSetWindowAttrib</a>(window, <a class="code" href="group__window.html#gadba13c7a1b3aa40831eb2beedbd5bd1d">GLFW_RESIZABLE</a>, <a class="code" href="group__init.html#gac877fe3b627d21ef3a0a23e0a73ba8c5">GLFW_FALSE</a>);</div></div><!-- fragment --><h3><a class="anchor" id="window_attribs_wnd"></a>
-Window related attributes</h3>
-<p><a class="anchor" id="GLFW_FOCUSED_attrib"></a><b>GLFW_FOCUSED</b> indicates whether the specified window has input focus. See <a class="el" href="window_guide.html#window_focus">Window input focus</a> for details.</p>
-<p><a class="anchor" id="GLFW_ICONIFIED_attrib"></a><b>GLFW_ICONIFIED</b> indicates whether the specified window is iconified. See <a class="el" href="window_guide.html#window_iconify">Window iconification</a> for details.</p>
-<p><a class="anchor" id="GLFW_MAXIMIZED_attrib"></a><b>GLFW_MAXIMIZED</b> indicates whether the specified window is maximized. See <a class="el" href="window_guide.html#window_maximize">Window maximization</a> for details.</p>
+GLFWWindow related attributes</h3>
+<p><a class="anchor" id="GLFW_FOCUSED_attrib"></a><b>GLFW_FOCUSED</b> indicates whether the specified window has input focus. See <a class="el" href="window_guide.html#window_focus">GLFWWindow input focus</a> for details.</p>
+<p><a class="anchor" id="GLFW_ICONIFIED_attrib"></a><b>GLFW_ICONIFIED</b> indicates whether the specified window is iconified. See <a class="el" href="window_guide.html#window_iconify">GLFWWindow iconification</a> for details.</p>
+<p><a class="anchor" id="GLFW_MAXIMIZED_attrib"></a><b>GLFW_MAXIMIZED</b> indicates whether the specified window is maximized. See <a class="el" href="window_guide.html#window_maximize">GLFWWindow maximization</a> for details.</p>
 <p><a class="anchor" id="GLFW_HOVERED_attrib"></a><b>GLFW_HOVERED</b> indicates whether the cursor is currently directly over the content area of the window, with no other windows between. See <a class="el" href="input_guide.html#cursor_enter">Cursor enter/leave events</a> for details.</p>
-<p><a class="anchor" id="GLFW_VISIBLE_attrib"></a><b>GLFW_VISIBLE</b> indicates whether the specified window is visible. See <a class="el" href="window_guide.html#window_hide">Window visibility</a> for details.</p>
+<p><a class="anchor" id="GLFW_VISIBLE_attrib"></a><b>GLFW_VISIBLE</b> indicates whether the specified window is visible. See <a class="el" href="window_guide.html#window_hide">GLFWWindow visibility</a> for details.</p>
 <p><a class="anchor" id="GLFW_RESIZABLE_attrib"></a><b>GLFW_RESIZABLE</b> indicates whether the specified window is resizable <em>by the user</em>. This can be set before creation with the <a class="el" href="window_guide.html#GLFW_RESIZABLE_hint">GLFW_RESIZABLE</a> window hint or after with <a class="el" href="group__window.html#gace2afda29b4116ec012e410a6819033e">glfwSetWindowAttrib</a>.</p>
 <p><a class="anchor" id="GLFW_DECORATED_attrib"></a><b>GLFW_DECORATED</b> indicates whether the specified window has decorations such as a border, a close widget, etc. This can be set before creation with the <a class="el" href="window_guide.html#GLFW_DECORATED_hint">GLFW_DECORATED</a> window hint or after with <a class="el" href="group__window.html#gace2afda29b4116ec012e410a6819033e">glfwSetWindowAttrib</a>.</p>
 <p><a class="anchor" id="GLFW_AUTO_ICONIFY_attrib"></a><b>GLFW_AUTO_ICONIFY</b> indicates whether the specified full screen window is iconified on focus loss, a close widget, etc. This can be set before creation with the <a class="el" href="window_guide.html#GLFW_AUTO_ICONIFY_hint">GLFW_AUTO_ICONIFY</a> window hint or after with <a class="el" href="group__window.html#gace2afda29b4116ec012e410a6819033e">glfwSetWindowAttrib</a>.</p>
 <p><a class="anchor" id="GLFW_FLOATING_attrib"></a><b>GLFW_FLOATING</b> indicates whether the specified window is floating, also called topmost or always-on-top. This can be set before creation with the <a class="el" href="window_guide.html#GLFW_FLOATING_hint">GLFW_FLOATING</a> window hint or after with <a class="el" href="group__window.html#gace2afda29b4116ec012e410a6819033e">glfwSetWindowAttrib</a>.</p>
-<p><a class="anchor" id="GLFW_TRANSPARENT_FRAMEBUFFER_attrib"></a><b>GLFW_TRANSPARENT_FRAMEBUFFER</b> indicates whether the specified window has a transparent framebuffer, i.e. the window contents is composited with the background using the window framebuffer alpha channel. See <a class="el" href="window_guide.html#window_transparency">Window transparency</a> for details.</p>
+<p><a class="anchor" id="GLFW_TRANSPARENT_FRAMEBUFFER_attrib"></a><b>GLFW_TRANSPARENT_FRAMEBUFFER</b> indicates whether the specified window has a transparent framebuffer, i.e. the window contents is composited with the background using the window framebuffer alpha channel. See <a class="el" href="window_guide.html#window_transparency">GLFWWindow transparency</a> for details.</p>
 <p><a class="anchor" id="GLFW_FOCUS_ON_SHOW_attrib"></a><b>GLFW_FOCUS_ON_SHOW</b> specifies whether the window will be given input focus when <a class="el" href="group__window.html#ga61be47917b72536a148300f46494fc66">glfwShowWindow</a> is called. This can be set before creation with the <a class="el" href="window_guide.html#GLFW_FOCUS_ON_SHOW_hint">GLFW_FOCUS_ON_SHOW</a> window hint or after with <a class="el" href="group__window.html#gace2afda29b4116ec012e410a6819033e">glfwSetWindowAttrib</a>.</p>
 <h3><a class="anchor" id="window_attribs_ctx"></a>
 Context related attributes</h3>

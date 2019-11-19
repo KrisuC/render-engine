@@ -276,9 +276,9 @@ GLFWAPI RRCrtc glfwGetX11Adapter(GLFWmonitor* monitor);
  */
 GLFWAPI RROutput glfwGetX11Monitor(GLFWmonitor* monitor);
 
-/*! @brief Returns the `Window` of the specified window.
+/*! @brief Returns the `GLFWWindow` of the specified window.
  *
- *  @return The `Window` of the specified window, or `None` if an
+ *  @return The `GLFWWindow` of the specified window, or `None` if an
  *  [error](@ref error_handling) occurred.
  *
  *  @thread_safety This function may be called from any thread.  Access is not
@@ -288,7 +288,7 @@ GLFWAPI RROutput glfwGetX11Monitor(GLFWmonitor* monitor);
  *
  *  @ingroup native
  */
-GLFWAPI Window glfwGetX11Window(GLFWwindow* window);
+GLFWAPI GLFWWindow glfwGetX11Window(GLFWwindow* window);
 
 /*! @brief Sets the current primary selection to the specified string.
  *

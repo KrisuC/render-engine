@@ -217,7 +217,7 @@ to pixels.
 Both the virtual screen and the content area coordinate systems have the X-axis
 pointing to the right and the Y-axis pointing down.
 
-Window and monitor positions are specified as the position of the upper-left
+GLFWWindow and monitor positions are specified as the position of the upper-left
 corners of their content areas relative to the virtual screen, while cursor
 positions are specified relative to a window's content area.
 

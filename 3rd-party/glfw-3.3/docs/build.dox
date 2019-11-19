@@ -380,7 +380,7 @@ against it from the command-line.
 
 The OpenGL framework contains both the OpenGL and GLU APIs, so there is nothing
 special to do when using GLU.  Also note that even though your machine may have
-`libGL`-style OpenGL libraries, they are for use with the X Window System and
+`libGL`-style OpenGL libraries, they are for use with the X GLFWWindow System and
 will _not_ work with the macOS native version of GLFW.
 
 */

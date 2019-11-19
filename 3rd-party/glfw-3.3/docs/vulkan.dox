@@ -200,7 +200,7 @@ there is no need to create a context.  You can disable context creation with the
 
 @code
 glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-GLFWwindow* window = glfwCreateWindow(640, 480, "Window Title", NULL, NULL);
+GLFWwindow* window = glfwCreateWindow(640, 480, "GLFWWindow Title", NULL, NULL);
 @endcode
 
 See @ref context_less for more information.
@@ -216,7 +216,7 @@ VkSurfaceKHR surface;
 VkResult err = glfwCreateWindowSurface(instance, window, NULL, &surface);
 if (err)
 {
-    // Window surface creation failed
+    // GLFWWindow surface creation failed
 }
 @endcode
 

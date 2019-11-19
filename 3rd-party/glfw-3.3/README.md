@@ -71,7 +71,7 @@ more information.
 ## System requirements
 
 GLFW supports Windows XP and later and macOS 10.8 and later.  Linux and other
-Unix-like systems running the X Window System are supported even without
+Unix-like systems running the X GLFWWindow System are supported even without
 a desktop environment or modern extensions, although some features require
 a running window or clipboard manager.  The OSMesa backend requires Mesa 6.3.
 
@@ -216,7 +216,7 @@ information on what to include when reporting a bug.
                   (#650,#1071)
 - [Win32] Bugfix: Returned key names did not match other platforms (#943)
 - [Win32] Bugfix: Undecorated windows did not maximize to workarea (#899)
-- [Win32] Bugfix: Window was resized twice when entering full screen (#1085)
+- [Win32] Bugfix: GLFWWindow was resized twice when entering full screen (#1085)
 - [Win32] Bugfix: The HID device notification was not unregistered (#1170)
 - [Win32] Bugfix: `glfwCreateWindow` activated window even with `GLFW_FOCUSED`
                   hint set to false (#1179,#1180)
@@ -228,7 +228,7 @@ information on what to include when reporting a bug.
 - [X11] Replaced `_GLFW_HAS_XF86VM` compile-time option with dynamic loading
 - [X11] Bugfix: `glfwGetVideoMode` would segfault on Cygwin/X
 - [X11] Bugfix: Dynamic X11 library loading did not use full sonames (#941)
-- [X11] Bugfix: Window creation on 64-bit would read past top of stack (#951)
+- [X11] Bugfix: GLFWWindow creation on 64-bit would read past top of stack (#951)
 - [X11] Bugfix: XDND support had multiple non-conformance issues (#968)
 - [X11] Bugfix: The RandR monitor path was disabled despite working RandR (#972)
 - [X11] Bugfix: IM-duplicated key events would leak at low polling rates (#747)
@@ -257,7 +257,7 @@ information on what to include when reporting a bug.
 - [Cocoa] Added support for loading a `MainMenu.nib` when available
 - [Cocoa] Disabled automatic window tabbing for created windows (#1250)
 - [Cocoa] Bugfix: Disabling window aspect ratio would assert (#852)
-- [Cocoa] Bugfix: Window creation failed to set first responder (#876,#883)
+- [Cocoa] Bugfix: GLFWWindow creation failed to set first responder (#876,#883)
 - [Cocoa] Bugfix: Removed use of deprecated `CGDisplayIOServicePort` function
                   (#165,#192,#508,#511)
 - [Cocoa] Bugfix: Disabled use of deprecated `CGDisplayModeCopyPixelEncoding`
@@ -274,8 +274,8 @@ information on what to include when reporting a bug.
 - [Cocoa] Bugfix: A hidden or disabled cursor would become visible when a user
                   notification was shown (#971,#1028)
 - [Cocoa] Bugfix: Some characters did not repeat due to Press and Hold (#1010)
-- [Cocoa] Bugfix: Window title was lost when full screen or undecorated (#1082)
-- [Cocoa] Bugfix: Window was resized twice when entering full screen (#1085)
+- [Cocoa] Bugfix: GLFWWindow title was lost when full screen or undecorated (#1082)
+- [Cocoa] Bugfix: GLFWWindow was resized twice when entering full screen (#1085)
 - [Cocoa] Bugfix: Duplicate size events were not filtered (#1085)
 - [Cocoa] Bugfix: Event polling did not initialize AppKit if necessary (#1218)
 - [Cocoa] Bugfix: OpenGL rendering was not visible before resize on early macOS

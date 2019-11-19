@@ -38,7 +38,7 @@ typedef id EGLNativeWindowType;
 #elif defined(_GLFW_X11)
  #define EGLAPIENTRY
 typedef Display* EGLNativeDisplayType;
-typedef Window EGLNativeWindowType;
+typedef GLFWWindow EGLNativeWindowType;
 #elif defined(_GLFW_WAYLAND)
  #define EGLAPIENTRY
 typedef struct wl_display* EGLNativeDisplayType;

@@ -245,7 +245,7 @@ struct _GLFWinitconfig
     } ns;
 };
 
-// Window configuration
+// GLFWWindow configuration
 //
 // Parameters relating to the creation of the window but not directly related
 // to the framebuffer.  This is used to pass window creation parameters from
@@ -360,13 +360,13 @@ struct _GLFWcontext
     _GLFW_OSMESA_CONTEXT_STATE;
 };
 
-// Window and context structure
+// GLFWWindow and context structure
 //
 struct _GLFWwindow
 {
     struct _GLFWwindow* next;
 
-    // Window settings and state
+    // GLFWWindow settings and state
     GLFWbool            resizable;
     GLFWbool            decorated;
     GLFWbool            autoIconify;

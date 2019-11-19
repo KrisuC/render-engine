@@ -73,13 +73,13 @@ $(function() {
 <li class="level3"><a href="#geterror_33">Error query</a></li>
 <li class="level3"><a href="#init_hints_33">Support for initialization hints</a></li>
 <li class="level3"><a href="#attention_33">User attention request</a></li>
-<li class="level3"><a href="#maximize_33">Window maximization callback</a></li>
+<li class="level3"><a href="#maximize_33">GLFWWindow maximization callback</a></li>
 <li class="level3"><a href="#workarea_33">Query for the monitor work area</a></li>
 <li class="level3"><a href="#transparency_33">Transparent windows and framebuffers</a></li>
 <li class="level3"><a href="#key_scancode_33">Query for the scancode of a key</a></li>
 <li class="level3"><a href="#center_cursor_33">Cursor centering window hint</a></li>
 <li class="level3"><a href="#cursor_hover_33">Mouse cursor hover window attribute</a></li>
-<li class="level3"><a href="#focusonshow_33">Window hint and attribute for input focus on show</a></li>
+<li class="level3"><a href="#focusonshow_33">GLFWWindow hint and attribute for input focus on show</a></li>
 <li class="level3"><a href="#device_userptr_33">Monitor and joystick user pointers</a></li>
 <li class="level3"><a href="#macos_nib_33">macOS menu bar from nib file</a></li>
 <li class="level3"><a href="#glext_33">Support for more context creation extensions</a></li>
@@ -96,7 +96,7 @@ $(function() {
 </ul>
 </li>
 <li class="level2"><a href="#deprecations_33">Deprecations in version 3.3</a><ul><li class="level3"><a href="#charmods_callback_33">Character with modifiers callback</a></li>
-<li class="level3"><a href="#clipboard_window_33">Window parameter to clipboard functions</a></li>
+<li class="level3"><a href="#clipboard_window_33">GLFWWindow parameter to clipboard functions</a></li>
 </ul>
 </li>
 <li class="level2"><a href="#removals_33">Removals in 3.3</a><ul><li class="level3"><a href="#macos_options_33">macOS specific CMake options and macros</a></li>
@@ -113,13 +113,13 @@ $(function() {
 </ul>
 </li>
 <li class="level1"><a href="#news_32">Release notes for 3.2</a><ul><li class="level2"><a href="#features_32">New features in version 3.2</a><ul><li class="level3"><a href="#news_32_vulkan">Support for Vulkan</a></li>
-<li class="level3"><a href="#news_32_setwindowmonitor">Window mode switching</a></li>
-<li class="level3"><a href="#news_32_maximize">Window maxmimization support</a></li>
-<li class="level3"><a href="#news_32_focus">Window input focus control</a></li>
-<li class="level3"><a href="#news_32_sizelimits">Window size limit support</a></li>
+<li class="level3"><a href="#news_32_setwindowmonitor">GLFWWindow mode switching</a></li>
+<li class="level3"><a href="#news_32_maximize">GLFWWindow maxmimization support</a></li>
+<li class="level3"><a href="#news_32_focus">GLFWWindow input focus control</a></li>
+<li class="level3"><a href="#news_32_sizelimits">GLFWWindow size limit support</a></li>
 <li class="level3"><a href="#news_32_keyname">Localized key names</a></li>
 <li class="level3"><a href="#news_32_waittimeout">Wait for events with timeout</a></li>
-<li class="level3"><a href="#news_32_icon">Window icon support</a></li>
+<li class="level3"><a href="#news_32_icon">GLFWWindow icon support</a></li>
 <li class="level3"><a href="#news_32_timer">Raw timer access</a></li>
 <li class="level3"><a href="#news_32_joystick">Joystick connection callback</a></li>
 <li class="level3"><a href="#news_32_noapi">Context-less windows</a></li>
@@ -133,7 +133,7 @@ $(function() {
 <li class="level1"><a href="#news_31">Release notes for 3.1</a><ul><li class="level2"><a href="#features_31">New features in version 3.1</a><ul><li class="level3"><a href="#news_31_cursor">Custom mouse cursor images</a></li>
 <li class="level3"><a href="#news_31_drop">Path drop event</a></li>
 <li class="level3"><a href="#news_31_emptyevent">Main thread wake-up</a></li>
-<li class="level3"><a href="#news_31_framesize">Window frame size query</a></li>
+<li class="level3"><a href="#news_31_framesize">GLFWWindow frame size query</a></li>
 <li class="level3"><a href="#news_31_autoiconify">Simultaneous multi-monitor rendering</a></li>
 <li class="level3"><a href="#news_31_floating">Floating windows</a></li>
 <li class="level3"><a href="#news_31_focused">Initially unfocused windows</a></li>
@@ -159,10 +159,10 @@ $(function() {
 <li class="level3"><a href="#news_30_hidpi">High-DPI support</a></li>
 <li class="level3"><a href="#news_30_error">Error callback</a></li>
 <li class="level3"><a href="#news_30_wndptr">Per-window user pointer</a></li>
-<li class="level3"><a href="#news_30_iconifyfun">Window iconification callback</a></li>
-<li class="level3"><a href="#news_30_wndposfun">Window position callback</a></li>
-<li class="level3"><a href="#news_30_wndpos">Window position query</a></li>
-<li class="level3"><a href="#news_30_focusfun">Window focus callback</a></li>
+<li class="level3"><a href="#news_30_iconifyfun">GLFWWindow iconification callback</a></li>
+<li class="level3"><a href="#news_30_wndposfun">GLFWWindow position callback</a></li>
+<li class="level3"><a href="#news_30_wndpos">GLFWWindow position query</a></li>
+<li class="level3"><a href="#news_30_focusfun">GLFWWindow focus callback</a></li>
 <li class="level3"><a href="#news_30_enterleave">Cursor enter/leave callback</a></li>
 <li class="level3"><a href="#news_30_wndtitle">Initial window title</a></li>
 <li class="level3"><a href="#news_30_hidden">Hidden windows</a></li>
@@ -196,11 +196,11 @@ Content scale queries for DPI-aware rendering</h3>
 <p>GLFW now provides content scales for windows and monitors, i.e. the ratio between their current DPI and the platform's default DPI, with <a class="el" href="group__window.html#gaf5d31de9c19c4f994facea64d2b3106c">glfwGetWindowContentScale</a> and <a class="el" href="group__monitor.html#gad3152e84465fa620b601265ebfcdb21b">glfwGetMonitorContentScale</a>.</p>
 <p>Changes of the content scale of a window can be received with the window content scale callback, set with <a class="el" href="group__window.html#gabf3622cde4c10fac35875e24992ec26d">glfwSetWindowContentScaleCallback</a>.</p>
 <p>The <a class="el" href="window_guide.html#GLFW_SCALE_TO_MONITOR">GLFW_SCALE_TO_MONITOR</a> window hint enables automatic resizing of a window by the content scale of the monitor it is placed, on platforms like Windows where this is necessary. This takes effect both on creation and when the window is moved between monitors. It is related to but different from <a class="el" href="window_guide.html#GLFW_COCOA_RETINA_FRAMEBUFFER_hint">GLFW_COCOA_RETINA_FRAMEBUFFER</a>.</p>
-<p>For more information see <a class="el" href="window_guide.html#window_scale">Window content scale</a>.</p>
+<p>For more information see <a class="el" href="window_guide.html#window_scale">GLFWWindow content scale</a>.</p>
 <h3><a class="anchor" id="setwindowattrib_33"></a>
 Support for updating window attributes</h3>
 <p>GLFW now supports changing the <a class="el" href="window_guide.html#GLFW_DECORATED_attrib">GLFW_DECORATED</a>, <a class="el" href="window_guide.html#GLFW_RESIZABLE_attrib">GLFW_RESIZABLE</a>, <a class="el" href="window_guide.html#GLFW_FLOATING_attrib">GLFW_FLOATING</a>, <a class="el" href="window_guide.html#GLFW_AUTO_ICONIFY_attrib">GLFW_AUTO_ICONIFY</a> and <a class="el" href="window_guide.html#GLFW_FOCUS_ON_SHOW_attrib">GLFW_FOCUS_ON_SHOW</a> attributes for existing windows with <a class="el" href="group__window.html#gace2afda29b4116ec012e410a6819033e">glfwSetWindowAttrib</a>.</p>
-<p>For more information see <a class="el" href="window_guide.html#window_attribs">Window attributes</a>.</p>
+<p>For more information see <a class="el" href="window_guide.html#window_attribs">GLFWWindow attributes</a>.</p>
 <h3><a class="anchor" id="raw_motion_33"></a>
 Support for raw mouse motion</h3>
 <p>GLFW now supports raw (unscaled and unaccelerated) mouse motion in disabled cursor mode with the <a class="el" href="input_guide.html#GLFW_RAW_MOUSE_MOTION">GLFW_RAW_MOUSE_MOTION</a> input mode. Raw mouse motion input is not yet implemented on macOS. Call <a class="el" href="group__input.html#gae4ee0dbd0d256183e1ea4026d897e1c2">glfwRawMouseMotionSupported</a> to check if GLFW can provide raw mouse motion on the current system.</p>
@@ -220,11 +220,11 @@ Support for initialization hints</h3>
 <h3><a class="anchor" id="attention_33"></a>
 User attention request</h3>
 <p>GLFW now supports requesting user attention with <a class="el" href="group__window.html#ga2f8d59323fc4692c1d54ba08c863a703">glfwRequestWindowAttention</a>. Where possible this calls attention to the specified window. On platforms like macOS it calls attention to the whole application.</p>
-<p>For more information see <a class="el" href="window_guide.html#window_attention">Window attention request</a>.</p>
+<p>For more information see <a class="el" href="window_guide.html#window_attention">GLFWWindow attention request</a>.</p>
 <h3><a class="anchor" id="maximize_33"></a>
-Window maximization callback</h3>
+GLFWWindow maximization callback</h3>
 <p>GLFW now supports notifying the application that the window has been maximized <a class="el" href="group__window.html#gaf8548ef61cb09150e09a6d33ddfa705e">glfwSetWindowMaximizeCallback</a>. This is called both when the window was maximized by the user and when it was done with <a class="el" href="group__window.html#ga3f541387449d911274324ae7f17ec56b">glfwMaximizeWindow</a>.</p>
-<p>For more information see <a class="el" href="window_guide.html#window_maximize">Window maximization</a>.</p>
+<p>For more information see <a class="el" href="window_guide.html#window_maximize">GLFWWindow maximization</a>.</p>
 <h3><a class="anchor" id="workarea_33"></a>
 Query for the monitor work area</h3>
 <p>GLFW now supports querying the work area of a monitor, i.e. the area not occupied by task bars or global menu bars, with <a class="el" href="group__monitor.html#ga7387a3bdb64bfe8ebf2b9e54f5b6c9d0">glfwGetMonitorWorkarea</a>. On platforms that lack this concept, the whole area of the monitor is returned.</p>
@@ -233,7 +233,7 @@ Query for the monitor work area</h3>
 Transparent windows and framebuffers</h3>
 <p>GLFW now supports the creation of windows with transparent framebuffers on systems with desktop compositing enabled with the <a class="el" href="group__window.html#ga60a0578c3b9449027d683a9c6abb9f14">GLFW_TRANSPARENT_FRAMEBUFFER</a> window hint and attribute. This hint must be set before window creation and leaves any window decorations opaque.</p>
 <p>GLFW now also supports whole window transparency with <a class="el" href="group__window.html#gad09f0bd7a6307c4533b7061828480a84">glfwGetWindowOpacity</a> and <a class="el" href="group__window.html#gac31caeb3d1088831b13d2c8a156802e9">glfwSetWindowOpacity</a>. This value controls the opacity of the whole window including decorations and unlike framebuffer transparency can be changed at any time after window creation.</p>
-<p>For more information see <a class="el" href="window_guide.html#window_transparency">Window transparency</a>.</p>
+<p>For more information see <a class="el" href="window_guide.html#window_transparency">GLFWWindow transparency</a>.</p>
 <h3><a class="anchor" id="key_scancode_33"></a>
 Query for the scancode of a key</h3>
 <p>GLFW now supports querying the platform dependent scancode of any physical key with <a class="el" href="group__input.html#ga67ddd1b7dcbbaff03e4a76c0ea67103a">glfwGetKeyScancode</a>.</p>
@@ -245,10 +245,10 @@ Cursor centering window hint</h3>
 Mouse cursor hover window attribute</h3>
 <p>GLFW now supports polling whether the cursor is hovering over the window content area with the <a class="el" href="window_guide.html#GLFW_HOVERED_attrib">GLFW_HOVERED</a> window attribute. This attribute corresponds to the <a class="el" href="input_guide.html#cursor_enter">cursor enter/leave</a> event.</p>
 <h3><a class="anchor" id="focusonshow_33"></a>
-Window hint and attribute for input focus on show</h3>
+GLFWWindow hint and attribute for input focus on show</h3>
 <p>GLFW now has the <a class="el" href="window_guide.html#GLFW_DECORATED_hint">GLFW_FOCUS_ON_SHOW</a> window hint and attribute for controlling whether a window gets input focus when shown. It is enabled by default. It applies both when creating an visible window with <a class="el" href="group__window.html#ga5c336fddf2cbb5b92f65f10fb6043344">glfwCreateWindow</a> and when showing it with <a class="el" href="group__window.html#ga61be47917b72536a148300f46494fc66">glfwShowWindow</a>.</p>
 <p>This is a workaround for GLFW 3.0 lacking <a class="el" href="group__window.html#ga873780357abd3f3a081d71a40aae45a1">glfwFocusWindow</a> and will be corrected in the next major version.</p>
-<p>For more information see <a class="el" href="window_guide.html#window_hide">Window visibility</a>.</p>
+<p>For more information see <a class="el" href="window_guide.html#window_hide">GLFWWindow visibility</a>.</p>
 <h3><a class="anchor" id="device_userptr_33"></a>
 Monitor and joystick user pointers</h3>
 <p>GLFW now supports setting and querying user pointers for connected monitors and joysticks with <a class="el" href="group__monitor.html#ga702750e24313a686d3637297b6e85fda">glfwSetMonitorUserPointer</a>, <a class="el" href="group__monitor.html#gac2d4209016b049222877f620010ed0d8">glfwGetMonitorUserPointer</a>, <a class="el" href="group__input.html#ga6b2f72d64d636b48a727b437cbb7489e">glfwSetJoystickUserPointer</a> and <a class="el" href="group__input.html#ga06290acb7ed23895bf26b8e981827ebd">glfwGetJoystickUserPointer</a>.</p>
@@ -298,7 +298,7 @@ Character with modifiers callback</h3>
 <p>The character with modifiers callback set with <a class="el" href="group__input.html#ga3f55ef5dc03a374e567f068b13c94afc">glfwSetCharModsCallback</a> has been deprecated and should if possible not be used.</p>
 <p>Existing code should still work but further bug fixes will likely not be made. The callback will be removed in the next major version.</p>
 <h3><a class="anchor" id="clipboard_window_33"></a>
-Window parameter to clipboard functions</h3>
+GLFWWindow parameter to clipboard functions</h3>
 <p>The window parameter of the clipboard functions <a class="el" href="group__input.html#ga5aba1d704d9ab539282b1fbe9f18bb94">glfwGetClipboardString</a> and <a class="el" href="group__input.html#gaba1f022c5eb07dfac421df34cdcd31dd">glfwSetClipboardString</a> has been deprecated and is no longer used on any platform. On platforms where the clipboard must be owned by a specific window, an internal helper window is used.</p>
 <p>Existing code should still work unless it depends on a specific window owning the clipboard. New code may pass <code>NULL</code> as the window argument. The parameter will be removed in a future release.</p>
 <h2><a class="anchor" id="removals_33"></a>
@@ -425,16 +425,16 @@ New features in version 3.2</h2>
 Support for Vulkan</h3>
 <p>GLFW now supports basic integration with Vulkan with <a class="el" href="group__vulkan.html#ga2e7f30931e02464b5bc8d0d4b6f9fe2b">glfwVulkanSupported</a>, <a class="el" href="group__vulkan.html#ga1abcbe61033958f22f63ef82008874b1">glfwGetRequiredInstanceExtensions</a>, <a class="el" href="group__vulkan.html#gadf228fac94c5fd8f12423ec9af9ff1e9">glfwGetInstanceProcAddress</a>, <a class="el" href="group__vulkan.html#gaff3823355cdd7e2f3f9f4d9ea9518d92">glfwGetPhysicalDevicePresentationSupport</a> and <a class="el" href="group__vulkan.html#ga1a24536bec3f80b08ead18e28e6ae965">glfwCreateWindowSurface</a>. Vulkan header inclusion can be selected with <a class="el" href="build_guide.html#GLFW_INCLUDE_VULKAN">GLFW_INCLUDE_VULKAN</a>.</p>
 <h3><a class="anchor" id="news_32_setwindowmonitor"></a>
-Window mode switching</h3>
+GLFWWindow mode switching</h3>
 <p>GLFW now supports switching between windowed and full screen modes and updating the monitor and desired resolution and refresh rate of full screen windows with <a class="el" href="group__window.html#ga81c76c418af80a1cce7055bccb0ae0a7">glfwSetWindowMonitor</a>.</p>
 <h3><a class="anchor" id="news_32_maximize"></a>
-Window maxmimization support</h3>
+GLFWWindow maxmimization support</h3>
 <p>GLFW now supports window maximization with <a class="el" href="group__window.html#ga3f541387449d911274324ae7f17ec56b">glfwMaximizeWindow</a> and the <a class="el" href="group__window.html#gad8ccb396253ad0b72c6d4c917eb38a03">GLFW_MAXIMIZED</a> window hint and attribute.</p>
 <h3><a class="anchor" id="news_32_focus"></a>
-Window input focus control</h3>
+GLFWWindow input focus control</h3>
 <p>GLFW now supports giving windows input focus with <a class="el" href="group__window.html#ga873780357abd3f3a081d71a40aae45a1">glfwFocusWindow</a>.</p>
 <h3><a class="anchor" id="news_32_sizelimits"></a>
-Window size limit support</h3>
+GLFWWindow size limit support</h3>
 <p>GLFW now supports setting both absolute and relative window size limits with <a class="el" href="group__window.html#gac314fa6cec7d2d307be9963e2709cc90">glfwSetWindowSizeLimits</a> and <a class="el" href="group__window.html#ga72ac8cb1ee2e312a878b55153d81b937">glfwSetWindowAspectRatio</a>.</p>
 <h3><a class="anchor" id="news_32_keyname"></a>
 Localized key names</h3>
@@ -443,7 +443,7 @@ Localized key names</h3>
 Wait for events with timeout</h3>
 <p>GLFW now supports waiting for events for a set amount of time with <a class="el" href="group__window.html#ga605a178db92f1a7f1a925563ef3ea2cf">glfwWaitEventsTimeout</a>.</p>
 <h3><a class="anchor" id="news_32_icon"></a>
-Window icon support</h3>
+GLFWWindow icon support</h3>
 <p>GLFW now supports setting the icon of windows with <a class="el" href="group__window.html#gadd7ccd39fe7a7d1f0904666ae5932dc5">glfwSetWindowIcon</a>.</p>
 <h3><a class="anchor" id="news_32_timer"></a>
 Raw timer access</h3>
@@ -481,9 +481,9 @@ Main thread wake-up</h3>
 <p>GLFW now provides the <a class="el" href="group__window.html#gab5997a25187e9fd5c6f2ecbbc8dfd7e9">glfwPostEmptyEvent</a> function for posting an empty event from another thread to the main thread event queue, causing <a class="el" href="group__window.html#ga554e37d781f0a997656c26b2c56c835e">glfwWaitEvents</a> to return.</p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="input_guide.html#events">Event processing</a></dd></dl>
 <h3><a class="anchor" id="news_31_framesize"></a>
-Window frame size query</h3>
+GLFWWindow frame size query</h3>
 <p>GLFW now supports querying the size, on each side, of the frame around the content area of a window, with <a class="el" href="group__window.html#ga1a9fd382058c53101b21cf211898f1f1">glfwGetWindowFrameSize</a>.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="window_guide.html#window_size">Window size</a></dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="window_guide.html#window_size">GLFWWindow size</a></dd></dl>
 <h3><a class="anchor" id="news_31_autoiconify"></a>
 Simultaneous multi-monitor rendering</h3>
 <p>GLFW now supports disabling auto-iconification of full screen windows with the <a class="el" href="window_guide.html#GLFW_AUTO_ICONIFY_hint">GLFW_AUTO_ICONIFY</a> window hint. This is intended for people building multi-monitor installations, where you need windows to stay in full screen despite losing input focus.</p>
@@ -555,16 +555,16 @@ Error callback</h3>
 Per-window user pointer</h3>
 <p>Each window now has a user-defined pointer, retrieved with <a class="el" href="group__window.html#ga17807ce0f45ac3f8bb50d6dcc59a4e06">glfwGetWindowUserPointer</a> and set with <a class="el" href="group__window.html#ga3d2fc6026e690ab31a13f78bc9fd3651">glfwSetWindowUserPointer</a>, to make it easier to integrate GLFW into C++ code.</p>
 <h3><a class="anchor" id="news_30_iconifyfun"></a>
-Window iconification callback</h3>
+GLFWWindow iconification callback</h3>
 <p>Each window now has a callback for iconification and restoration events, which is set with <a class="el" href="group__window.html#gab1ea7263081c0e073b8d5b91d6ffd367">glfwSetWindowIconifyCallback</a>.</p>
 <h3><a class="anchor" id="news_30_wndposfun"></a>
-Window position callback</h3>
+GLFWWindow position callback</h3>
 <p>Each window now has a callback for position events, which is set with <a class="el" href="group__window.html#ga2837d4d240659feb4268fcb6530a6ba1">glfwSetWindowPosCallback</a>.</p>
 <h3><a class="anchor" id="news_30_wndpos"></a>
-Window position query</h3>
+GLFWWindow position query</h3>
 <p>The position of a window can now be retrieved using <a class="el" href="group__window.html#ga73cb526c000876fd8ddf571570fdb634">glfwGetWindowPos</a>.</p>
 <h3><a class="anchor" id="news_30_focusfun"></a>
-Window focus callback</h3>
+GLFWWindow focus callback</h3>
 <p>Each windows now has a callback for focus events, which is set with <a class="el" href="group__window.html#ga25d1c584edb375d7711c5c3548ba711f">glfwSetWindowFocusCallback</a>.</p>
 <h3><a class="anchor" id="news_30_enterleave"></a>
 Cursor enter/leave callback</h3>

@@ -48,7 +48,7 @@ glfwCreateWindow, you can specify another window whose context the new one
 should share its objects (textures, vertex and element buffers, etc.) with.
 
 @code
-GLFWwindow* second_window = glfwCreateWindow(640, 480, "Second Window", NULL, first_window);
+GLFWwindow* second_window = glfwCreateWindow(640, 480, "Second GLFWWindow", NULL, first_window);
 @endcode
 
 Object sharing is implemented by the operating system and graphics driver.  On
@@ -196,7 +196,7 @@ it suppresses the development environment's OpenGL or OpenGL ES header.
 Finally you need to initialize glad once you have a suitable current context.
 
 @code
-window = glfwCreateWindow(640, 480, "My Window", NULL, NULL);
+window = glfwCreateWindow(640, 480, "My GLFWWindow", NULL, NULL);
 if (!window)
 {
     ...

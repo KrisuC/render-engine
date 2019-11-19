@@ -2,24 +2,27 @@
 // Created by Krisu on 2019-10-27.
 //
 
-#ifndef RENDER_LAB_TRIANGLETESTR_HPP
-#define RENDER_LAB_TRIANGLETESTR_HPP
+#ifndef RENDER_LAB_HELLOTRIANGLE_HPP
+#define RENDER_LAB_HELLOTRIANGLE_HPP
 
-#include <renderer.hpp>
+#include "renderer.hpp"
+#include "shader.hpp"
 
-class TriangleTestR : public Renderer {
+// This is the helloworld scnene in cg which output a single moving triangle
+class TriangleTestRenderer : public Renderer {
 public:
-    TriangleTestR() = default;
-    ~TriangleTestR() = default;
-    virtual void initContext() {
-        Shader shaderProgramObject = Shader("shaders/test.vs", "shaders/test.fs");
+    TriangleTestRenderer() = default;
+    ~TriangleTestRenderer() = default;
+    void initContext() override {
+        Shader shaderProgramObject = Shader("shaders/triangle.vert",
+                                            "shaders/triangle.frag");
         sp = shaderProgramObject.getID();
 
         float vertices[] = {
-                //    posision            color
-                -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
-                0.0f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
-                0.5, -0.5, 0.0f, 0.0f, 0.0f, 1.0f
+                // posision              color
+                -0.5f, -0.5f, 0.0f,     1.0f, 0.0f, 0.0f,
+                0.0f, 0.5f, 0.0f,       0.0f, 1.0f, 0.0f,
+                0.5, -0.5, 0.0f,        0.0f, 0.0f, 1.0f
         };
 
         glGenVertexArrays(1, &VAO);
@@ -38,7 +41,7 @@ public:
                 (void *)(3 * sizeof(float)));
         glEnableVertexAttribArray(1);
     }
-    virtual void render() {
+    void render() override {
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
@@ -57,8 +60,8 @@ public:
     }
 
 private:
-    unsigned int sp;
-    unsigned int VAO, VBO;
+    unsigned int sp = 0;
+    unsigned int VAO = 0, VBO = 0;
 };
 
-#endif //RENDER_LAB_TRIANGLETESTR_HPP
+#endif //RENDER_LAB_HELLOTRIANGLE_HPP

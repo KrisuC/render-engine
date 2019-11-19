@@ -120,7 +120,7 @@ context object
 GLFWwindow* window = glfwCreateWindow(640, 480, "My Title", NULL, NULL);
 if (!window)
 {
-    // Window or OpenGL context creation failed
+    // GLFWWindow or OpenGL context creation failed
 }
 @endcode
 
@@ -141,7 +141,7 @@ glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 GLFWwindow* window = glfwCreateWindow(640, 480, "My Title", NULL, NULL);
 if (!window)
 {
-    // Window or context creation failed
+    // GLFWWindow or context creation failed
 }
 @endcode
 

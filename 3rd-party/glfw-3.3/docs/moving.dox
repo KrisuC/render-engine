@@ -105,22 +105,22 @@ void callback_function(...);
 @endcode
 
 
-@subsection moving_window_handles Window handle parameters
+@subsection moving_window_handles GLFWWindow handle parameters
 
 Because GLFW 3 supports multiple windows, window handle parameters have been
 added to all window-related GLFW functions and callbacks.  The handle of
 a newly created window is returned by @ref glfwCreateWindow (formerly
-`glfwOpenWindow`).  Window handles are pointers to the
+`glfwOpenWindow`).  GLFWWindow handles are pointers to the
 [opaque](https://en.wikipedia.org/wiki/Opaque_data_type) type @ref GLFWwindow.
 
 @par Old syntax
 @code
-glfwSetWindowTitle("New Window Title");
+glfwSetWindowTitle("New GLFWWindow Title");
 @endcode
 
 @par New syntax
 @code
-glfwSetWindowTitle(window, "New Window Title");
+glfwSetWindowTitle(window, "New GLFWWindow Title");
 @endcode
 
 
@@ -140,7 +140,7 @@ glfwOpenWindow(640, 480, 8, 8, 8, 0, 24, 0, GLFW_FULLSCREEN);
 
 @par New basic full screen
 @code
-window = glfwCreateWindow(640, 480, "My Window", glfwGetPrimaryMonitor(), NULL);
+window = glfwCreateWindow(640, 480, "My GLFWWindow", glfwGetPrimaryMonitor(), NULL);
 @endcode
 
 @note The framebuffer bit depth parameters of `glfwOpenWindow` have been turned
@@ -189,7 +189,7 @@ a window before you can call any OpenGL functions.
 
 @subsection moving_hidpi Separation of window and framebuffer sizes
 
-Window positions and sizes now use screen coordinates, which may not be the same
+GLFWWindow positions and sizes now use screen coordinates, which may not be the same
 as pixels on machines with high-DPI monitors.  This is important as OpenGL uses
 pixels, not screen coordinates.  For example, the rectangle specified with
 `glViewport` needs to use pixels.  Therefore, framebuffer size functions have
@@ -210,7 +210,7 @@ glViewport(0, 0, width, height);
 @endcode
 
 
-@subsection moving_window_close Window closing changes
+@subsection moving_window_close GLFWWindow closing changes
 
 The `GLFW_OPENED` window parameter has been removed.  As long as the window has
 not been destroyed, whether through @ref glfwDestroyWindow or @ref
@@ -266,7 +266,7 @@ Quit from an in-game menu.
 
 The `glfwOpenWindowHint` function has been renamed to @ref glfwWindowHint.
 
-Window hints are no longer reset to their default values on window creation, but
+GLFWWindow hints are no longer reset to their default values on window creation, but
 instead retain their values until modified by @ref glfwWindowHint or @ref
 glfwDefaultWindowHints, or until the library is terminated and re-initialized.
 

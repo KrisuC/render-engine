@@ -281,7 +281,7 @@ GLFWAPI int glfwGetPhysicalDevicePresentationSupport(VkInstance instance,
     if (!_glfw.vk.extensions[0])
     {
         _glfwInputError(GLFW_API_UNAVAILABLE,
-                        "Vulkan: Window surface creation extensions not found");
+                        "Vulkan: GLFWWindow surface creation extensions not found");
         return GLFW_FALSE;
     }
 
@@ -310,14 +310,14 @@ GLFWAPI VkResult glfwCreateWindowSurface(VkInstance instance,
     if (!_glfw.vk.extensions[0])
     {
         _glfwInputError(GLFW_API_UNAVAILABLE,
-                        "Vulkan: Window surface creation extensions not found");
+                        "Vulkan: GLFWWindow surface creation extensions not found");
         return VK_ERROR_EXTENSION_NOT_PRESENT;
     }
 
     if (window->context.client != GLFW_NO_API)
     {
         _glfwInputError(GLFW_INVALID_VALUE,
-                        "Vulkan: Window surface creation requires the window to have the client API set to GLFW_NO_API");
+                        "Vulkan: GLFWWindow surface creation requires the window to have the client API set to GLFW_NO_API");
         return VK_ERROR_NATIVE_WINDOW_IN_USE_KHR;
     }
 
