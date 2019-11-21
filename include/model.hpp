@@ -23,7 +23,7 @@
 #include "mesh.hpp"
 
 unsigned int TextureFromFile(char const * path, const std::string & directory);
-unsigned int loadTexture(char const * path);
+unsigned int loadTexture(const std::string &path);
 
 class Model {
 public:
@@ -44,6 +44,9 @@ private:
     Mesh processMesh(aiMesh * mesh, const aiScene * scene);
 };
 
+namespace Primitive {
+    void renderSphere();
+}
 
 
 #endif //RENDER_LAB_MODEL_HPP

@@ -4,22 +4,20 @@
 #include <cmath>
 
 #include "shader.hpp"
-#include "simpleWindow.hpp"
+#include "glfw_window.hpp"
+
+// Test cases:
 #include "helloTriangle.hpp"
+#include "pbrMetalBall.hpp"
 
 int main() {
-    SimpleWindow window(800, 600, "lab");
+    GLFW_Window window(800, 600, "lab");
 
-    Renderer *renderer = new TriangleTestRenderer();
-    renderer->initContext();
+    Renderer *renderer = new PbrRenderer(window);
+//    Renderer *renderer = new TriangleTestRenderer();
 
     while (!window.shouldClose()) {
-        window.processInput();
-
         renderer->render();
-
-        window.swapBuffers();
-        window.pollEvents();
     }
     return 0;
 }

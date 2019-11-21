@@ -7,8 +7,11 @@
 
 class Renderer {
 public:
-    virtual void initContext() = 0;
     virtual void render() = 0;
+    virtual ~Renderer() = default;
+
+protected:
+    virtual void processInput() {};
 };
 
 #endif //RENDER_LAB_RENDERER_HPP

@@ -2,7 +2,6 @@
 #define shader_hpp
 
 #include <glad/glad.h>
-#include <GLFW/glfw3.h>
 
 #include <glm/glm.hpp>
 #include <string>
@@ -14,6 +13,7 @@ public:
     Shader(const GLchar *vertexPath,
            const GLchar *fragmentPath,
            const GLchar *geometryPath = nullptr);
+    Shader() = default;
     // use/activate the shader
     void use();
     // utility uniform functions
@@ -32,7 +32,7 @@ public:
 
 private:
     // the program id
-    unsigned int ID;
+    unsigned int ID = 0;
     // checking error
     void checkCompileErrors(GLuint shader, const std::string& type, std::string path);
 };
