@@ -11,11 +11,16 @@ class Application {
 public:
     Application();
     Application(int argc, char *argv[]);
-    void setSize(int w, int h);
+    ~Application();
+
+    void setWindowSize(int w, int h);
     int exec();
 
 protected:
+    void renderPass();
+    void renderInit();
 
+protected:
     GLFW_Window window;
 };
 

@@ -3,18 +3,34 @@
 //
 
 #include <Application.hpp>
+#include <Renderer.hpp>
 
-Application::Application() : window(800, 600) {
+Application::Application() : window() {}
 
-}
+Application::Application(int argc, char **argv) : window() {}
 
 int Application::exec() {
+    renderInit();
+    // The render loop
+    while (!window.shouldClose()) {
+        renderPass();
+    }
     return 0;
 }
 
-Application::Application(int argc, char **argv) {
+
+void Application::setWindowSize(int w, int h) {
+    window.setSize(w, h);
 }
 
-void Application::setSize(int w, int h) {
+Application::~Application() {
+
+}
+
+void Application::renderPass() {
+
+}
+
+void Application::renderInit() {
 
 }

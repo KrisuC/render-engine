@@ -5,9 +5,13 @@
 #ifndef RENDER_LAB_RENDERER_HPP
 #define RENDER_LAB_RENDERER_HPP
 
+#include <glad/glad.h>
 
 class Renderer {
-
+public:
+    Renderer() = default;
+    void drawScene();
+    void drawObject();
 };
 
 

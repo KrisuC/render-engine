@@ -1,3 +1,7 @@
+#include <utility>
+
+#include <utility>
+
 //
 // Created by Krisu on 2019-11-19.
 //
@@ -7,9 +11,9 @@
 Mesh::Mesh(std::vector <Vertex> vertices, std::vector<unsigned int> indices,
            std::vector <Texture> textures) {
 
-    this->vertices = vertices;
-    this->indices = indices;
-    this->textures = textures;
+    this->vertices = std::move(vertices);
+    this->indices = std::move(indices);
+    this->textures = std::move(textures);
 
     setupMesh();
 }
@@ -33,7 +37,7 @@ void Mesh::Draw(Shader shader) {
             exit(-1);
         }
         number = ss.str();
-        shader.setInt(("material." + name + number).c_str(), i);
+        shader.setInt("material." + name + number, i);
         glBindTexture(GL_TEXTURE_2D, textures[i].id);
     }
     glActiveTexture(GL_TEXTURE0);
@@ -52,21 +56,26 @@ void Mesh::setupMesh() {
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER,
+            vertices.size()*sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
 
     // buiding EBO using indices from mFaces[]
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+            indices.size()*sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
 
     // vertex positions
     glEnableVertexAttribArray(0); // parameter is the position.
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+            nullptr);
     // vertex normals
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)offsetof(Vertex, Normal));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+            (void *)offsetof(Vertex, Normal));
     // vertex texture coords
     glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)offsetof(Vertex, TexCoords));
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+            (void *)offsetof(Vertex, TexCoords));
 
     glBindVertexArray(0);
 }

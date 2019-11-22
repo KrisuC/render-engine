@@ -17,20 +17,17 @@
 #include <string>
 #include <sstream>
 
-#include "Shader.hpp"
+#include <Shader.hpp>
+#include <Texture.hpp>
 
-struct Vertex {
+class Vertex {
+public:
     glm::vec3 Position;
     glm::vec3 Normal;
     glm::vec2 TexCoords;
+
     glm::vec3 Tangent;
     glm::vec3 Bitangent;
-};
-
-struct Texture {
-    unsigned int id;
-    std::string type; // a diffuse texture or a specular texture
-    std::string path;
 };
 
 class Mesh {
@@ -38,6 +35,7 @@ public:
     Mesh(std::vector<Vertex> vertices,
          std::vector<unsigned int> indices,
          std::vector<Texture> textures);
+
     void Draw(Shader shader);
 
     // Render data:

@@ -22,25 +22,22 @@
 #include "Shader.hpp"
 #include "Mesh.hpp"
 
-unsigned int TextureFromFile(char const * path, const std::string & directory);
-unsigned int loadTexture(const std::string &path);
-
 class Model {
 public:
     std::vector<Mesh> meshes;
     std::vector<Texture> textures_loaded;
-    // functions:
+
     explicit Model (const std::string & path);
-    void Draw(Shader shader);
+    void Draw(const Shader &shader);
 
 private:
     std::string directory;
 
     void loadModel(const std::string &path);
     void processNode(aiNode * node, const aiScene * scene);
-    std::vector<Texture> loadMaterialTextures(aiMaterial * mat,
-                                              aiTextureType type,
-                                              const std::string& typeName);
+    std::vector<Texture>
+    loadMaterialTextures(aiMaterial * mat, aiTextureType type,
+                         const std::string& typeName);
     Mesh processMesh(aiMesh * mesh, const aiScene * scene);
 };
 

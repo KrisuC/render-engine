@@ -9,7 +9,7 @@ add_executable(lab
         src/GLFW_Window.cpp
         src/Model.cpp
         src/Mesh.cpp
-        src/Camera.cpp src/Renderer.cpp include/Renderer.hpp src/Application.cpp)
+        src/Camera.cpp src/Renderer.cpp include/Renderer.hpp src/Application.cpp src/Object.cpp include/Object.hpp src/Texture.cpp include/Texture.hpp)
 
 target_include_directories(lab PRIVATE ${PROJECT_SOURCE_DIR}/include)
 

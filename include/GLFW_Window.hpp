@@ -30,6 +30,8 @@ public:
 
     inline unsigned width() { return mWidth; }
     inline unsigned height() { return mHeight; }
+    inline
+    void setSize(int w, int h) { mWidth = w; mHeight = h; }
 
     inline bool keyPress(int key);
 
