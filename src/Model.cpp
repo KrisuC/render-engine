@@ -2,7 +2,7 @@
 // Created by Krisu on 2019-11-18.
 //
 
-#include "model.hpp"
+#include "Model.hpp"
 #include <stb_image.h>
 
 void Model::loadModel(const std::string &path) {

@@ -3,15 +3,15 @@ project(render-lab)
 
 set(CMAKE_CXX_STANDARD 14)
 
-include_directories("${PROJECT_SOURCE_DIR}/include")
-include_directories("${PROJECT_SOURCE_DIR}/test")
-
 add_executable(lab
         src/main.cpp
-        src/shader.cpp
-        src/glfw_window.cpp
-        src/model.cpp
-        src/mesh.cpp test/pbrMetalBall.hpp src/camera.cpp include/camera.hpp)
+        src/Shader.cpp
+        src/GLFW_Window.cpp
+        src/Model.cpp
+        src/Mesh.cpp
+        src/Camera.cpp src/Renderer.cpp include/Renderer.hpp src/Application.cpp)
+
+target_include_directories(lab PRIVATE ${PROJECT_SOURCE_DIR}/include)
 
 ###############################################################################
 # Below is the settings for 3rd party libraries

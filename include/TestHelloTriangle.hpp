@@ -2,17 +2,18 @@
 // Created by Krisu on 2019-10-27.
 //
 
-#ifndef RENDER_LAB_HELLOTRIANGLE_HPP
-#define RENDER_LAB_HELLOTRIANGLE_HPP
+#ifndef RENDER_LAB_TESTHELLOTRIANGLE_HPP
+#define RENDER_LAB_TESTHELLOTRIANGLE_HPP
 
-#include "renderer.hpp"
-#include "shader.hpp"
+#include <Application.hpp>
+#include <Shader.hpp>
+#include <Renderer.hpp>
 
 // This is the helloworld scnene in cg which output a single moving triangle
-class TriangleTestRenderer : public Renderer {
+class TriangleApp : public Renderer {
 public:
-    TriangleTestRenderer();
-    ~TriangleTestRenderer() = default;
+    TriangleApp();
+    ~TriangleApp() override = default;
     void render() override;
 
 private:
@@ -20,7 +21,7 @@ private:
     unsigned int VAO = 0, VBO = 0;
 };
 
-TriangleTestRenderer::TriangleTestRenderer() {
+TriangleApp::TriangleApp() {
     Shader shaderProgramObject = Shader("shaders/triangle.vert",
                                         "shaders/triangle.frag");
     sp = shaderProgramObject.getID();
@@ -49,7 +50,7 @@ TriangleTestRenderer::TriangleTestRenderer() {
     glEnableVertexAttribArray(1);
 }
 
-void TriangleTestRenderer::render() {
+void TriangleApp::render() {
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -67,4 +68,4 @@ void TriangleTestRenderer::render() {
     glBindVertexArray(0);
 }
 
-#endif //RENDER_LAB_HELLOTRIANGLE_HPP
+#endif //RENDER_LAB_TESTHELLOTRIANGLE_HPP

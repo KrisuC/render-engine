@@ -17,7 +17,7 @@
 #include <string>
 #include <sstream>
 
-#include "shader.hpp"
+#include "Shader.hpp"
 
 struct Vertex {
     glm::vec3 Position;

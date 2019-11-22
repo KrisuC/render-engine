@@ -1,24 +1,9 @@
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-#include <iostream>
-#include <cmath>
+#include <Application.hpp>
 
-#include "shader.hpp"
-#include "glfw_window.hpp"
+int main(int argc, char *argv[]) {
+    Application app(argc, argv);
+    app.setSize(1280, 720);
 
-// Test cases:
-#include "helloTriangle.hpp"
-#include "pbrMetalBall.hpp"
-
-int main() {
-    GLFW_Window window(800, 600, "lab");
-
-    Renderer *renderer = new PbrRenderer(window);
-//    Renderer *renderer = new TriangleTestRenderer();
-
-    while (!window.shouldClose()) {
-        renderer->render();
-    }
-    return 0;
+    return app.exec();
 }
 

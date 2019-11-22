@@ -2,25 +2,24 @@
 // Created by Krisu on 2019-11-19.
 //
 
-#ifndef RENDER_LAB_PBRMETALBALL_HPP
-#define RENDER_LAB_PBRMETALBALL_HPP
+#ifndef RENDER_LAB_TESTPBRMETALBALL_HPP
+#define RENDER_LAB_TESTPBRMETALBALL_HPP
 
 #include <string>
 #include <glad/glad.h>
+#include <Renderer.hpp>
+#include <Shader.hpp>
+#include <Model.hpp>
+#include <GLFW_Window.hpp>
+#include <Camera.hpp>
 
-#include "renderer.hpp"
-#include "shader.hpp"
-#include "model.hpp"
-#include "glfw_window.hpp"
-#include "camera.hpp"
-
-class PbrRenderer : public Renderer {
+class PbrApp : public Renderer {
 public:
-    explicit PbrRenderer(GLFW_Window &window);
+    explicit PbrApp(GLFW_Window &window);
     void render() override;
 
 private:
-    void processInput() override;
+    void processKeyboard() override;
 
 private:
     Shader shader;
@@ -38,7 +37,7 @@ private:
     float spacing = 2.5;
 };
 
-PbrRenderer::PbrRenderer(GLFW_Window &window) : window(window) {
+PbrApp::PbrApp(GLFW_Window &window) : window(window) {
     shader = Shader("./shaders/pbr.vert", "./shaders/pbr.frag");
     camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f));
 
@@ -81,8 +80,8 @@ PbrRenderer::PbrRenderer(GLFW_Window &window) : window(window) {
 
 }
 
-void PbrRenderer::render() {
-    processInput();
+void PbrApp::render() {
+    processKeyboard();
 
     float currentFrame = glfwGetTime();
     deltaTime = currentFrame - lastFrame;
@@ -110,46 +109,32 @@ void PbrRenderer::render() {
     glBindTexture(GL_TEXTURE_2D, ao);
 
     // render lights and set lights uniforms
-//    for (int i = 0; i < lightPositions.size(); i++) {
-//        glm::vec3 newPos = lightPositions[i] +
-//                           glm::vec3(sin(glfwGetTime() * 5.0) * 5.0, 0.0, 0.0);
-//        shader.setVec3("lightPositions[" + std::to_string(i) + "]", newPos);
-//        shader.setVec3("lightColors[" + std::to_string(i) + "]", lightColors[i]);
-//
-//        model = glm::translate(model, newPos);
-//        model = glm::scale(model, glm::vec3(0.5f));
-//        shader.setMat4("model", model);
-//        Primitive::renderSphere();
-//    }
+    for (int i = 0; i < lightPositions.size(); i++) {
+        glm::vec3 newPos = lightPositions[i] +
+                           glm::vec3(sin(glfwGetTime() * 5.0) * 5.0, 0.0, 0.0);
+        shader.setVec3("lightPositions[" + std::to_string(i) + "]", newPos);
+        shader.setVec3("lightColors[" + std::to_string(i) + "]", lightColors[i]);
+
+        model = glm::translate(model, newPos);
+        model = glm::scale(model, glm::vec3(0.5f));
+        shader.setMat4("model", model);
+        Primitive::renderSphere();
+    }
 
     shader.use();
-    shader.setMat4("model", glm::translate(glm::mat4(1.f), glm::vec3(0, 0, -10)));
+
+    model = glm::mat4(1.0f);
+    model = glm::translate(model, glm::vec3(0, 0, -10));
+    model = glm::rotate(model, window.getTime(),  glm::vec3(0, 1, 0));
+
+    shader.setMat4("model", model);
     Primitive::renderSphere();
-
-    // render the balls
-//    for (int row = 0; row < nrRows; row++) {
-//        shader.setFloat("metallic", (float)row / (float)nrRows);
-//        for (int col = 0; col < nrColumns; col++) {
-//            shader.setFloat("roughness",
-//                    glm::clamp((float)col / (float)nrColumns, 0.05f, 1.0f));
-//
-//            glm::vec3 pos = {
-//                    (float)(col - (float(nrColumns) / 2)) * spacing,
-//                    (float)(row - (float(nrRows) / 2)) * spacing,
-//                    0.0f
-//            };
-//            model = glm::translate(glm::mat4(), pos);
-//            shader.setMat4("model", model);
-//            Primitive::renderSphere();
-//        }
-//    }
-
 
     window.swapBuffers();
     window.pollEvents();
 }
 
-void PbrRenderer::processInput() {
+void PbrApp::processKeyboard() {
     // Keyboard
     if (window.keyPress(GLFW_KEY_ESCAPE)) {
         window.close();
@@ -162,10 +147,7 @@ void PbrRenderer::processInput() {
     } else if (window.keyPress(GLFW_KEY_D)) {
         camera.processKeyboard(RIGHT, deltaTime);
     }
-
-    // Mouse
-
 }
 
 
-#endif //RENDER_LAB_PBRMETALBALL_HPP
+#endif //RENDER_LAB_TESTPBRMETALBALL_HPP
