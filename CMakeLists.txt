@@ -6,7 +6,6 @@ set(CMAKE_CXX_STANDARD 14)
 add_executable(engine
         src/main.cpp
         src/Shader.cpp
-        src/GLFW_Window.cpp
         src/Model.cpp
         src/Mesh.cpp
         src/Camera.cpp src/Renderer.cpp include/Renderer.hpp src/Application.cpp src/Object.cpp include/Object.hpp src/Texture.cpp include/Texture.hpp)
@@ -51,6 +50,8 @@ add_subdirectory(./3rd-party/assimp/)
 target_link_libraries(engine assimp)
 
 ### imgui ###
+add_compile_definitions(IMGUI_IMPL_OPENGL_LOADER_GLAD)
+
 include_directories("${PROJECT_SOURCE_DIR}/3rd-party/imgui/")
 add_subdirectory(./3rd-party/imgui)
 

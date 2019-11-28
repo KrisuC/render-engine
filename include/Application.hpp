@@ -5,8 +5,6 @@
 #ifndef RENDER_LAB_APPLICATION_HPP
 #define RENDER_LAB_APPLICATION_HPP
 
-#include <GLFW_Window.hpp>
-
 // The base class of App
 class Application {
 public:
@@ -22,7 +20,6 @@ protected:
     virtual void renderInit();
 
 protected:
-    GLFW_Window window;
 };
 
 #endif //RENDER_LAB_APPLICATION_HPP

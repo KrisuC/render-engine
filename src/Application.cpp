@@ -5,22 +5,16 @@
 #include <Application.hpp>
 #include <Renderer.hpp>
 
-Application::Application() : window() {}
+Application::Application() {}
 
-Application::Application(int argc, char **argv) : window() {}
+Application::Application(int argc, char **argv) {}
 
 int Application::exec() {
-    renderInit();
-    // The render loop
-    while (!window.shouldClose()) {
-        renderPass();
-    }
-    return 0;
+
 }
 
 
 void Application::setWindowSize(int w, int h) {
-    window.setSize(w, h);
 }
 
 Application::~Application() {

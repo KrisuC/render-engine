@@ -50,30 +50,31 @@ std::vector<Texture> Model::loadMaterialTextures(
         aiMaterial *mat,
         aiTextureType type,
         const std::string &typeName) {
-
-    std::vector<Texture> textures;
-    for (unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
-        aiString str;
-        mat->GetTexture(type, i, &str);
-        bool skip = false;
-        for (auto &j : textures_loaded) {
-            if (std::strcmp(j.path.c_str(), str.C_Str()) == 0) {
-                textures.push_back(j);
-                skip = true;
-                break;
-            }
-        }
-        if (!skip) {
-            // not already loaded before
-            Texture texture;
-            texture.id = TextureFromFile(str.C_Str(), directory);
-            texture.type = typeName;
-            texture.path = str.C_Str();
-            textures.push_back(texture);
-            textures_loaded.push_back(texture);
-        }
-    }
-    return textures;
+//TODO
+//    std::vector<Texture> textures;
+//    for (unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
+//        aiString str;
+//        mat->GetTexture(type, i, &str);
+//        bool skip = false;
+//        for (auto &j : textures_loaded) {
+//            if (std::strcmp(j.path.c_str(), str.C_Str()) == 0) {
+//                textures.push_back(j);
+//                skip = true;
+//                break;
+//            }
+//        }
+//        if (!skip) {
+//            // not already loaded before
+//            Texture texture;
+//            texture.id = TextureFromFile(str.C_Str(), directory);
+//            texture.type = typeName;
+//            texture.path = str.C_Str();
+//            textures.push_back(texture);
+//            textures_loaded.push_back(texture);
+//        }
+//    }
+//    return textures;
+    return std::vector<Texture>();
 }
 
 Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene) {
