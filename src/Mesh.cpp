@@ -8,8 +8,9 @@
 
 #include "Mesh.hpp"
 
-Mesh::Mesh(std::vector <Vertex> vertices, std::vector<unsigned int> indices,
-           std::vector <Texture> textures) {
+Mesh::Mesh(std::vector<Vertex> vertices,
+           std::vector<unsigned int> indices,
+           std::vector<Texture> textures) {
 
     this->vertices = std::move(vertices);
     this->indices = std::move(indices);
@@ -18,7 +19,7 @@ Mesh::Mesh(std::vector <Vertex> vertices, std::vector<unsigned int> indices,
     setupMesh();
 }
 
-void Mesh::Draw(Shader shader) {
+void Mesh::draw(const Shader &shader) {
     unsigned int diffuseNr = 1;
     unsigned int specularNr = 1;
     for (unsigned int i = 0; i < textures.size(); i++) {
@@ -26,19 +27,19 @@ void Mesh::Draw(Shader shader) {
         // retrive texture number (the N in diffuse_textureN)
         std::stringstream ss;
         std::string number;
-        std::string name = textures[i].type;
-        if (name == "texture_diffuse")
+        std::string tag = textures[i].type();
+        if (tag == "texture_diffuse")
             ss << diffuseNr++;
-        else if (name == "texture_specular")
+        else if (tag == "texture_specular")
             ss << specularNr++;
         else {
-            std::cout << "Ues of undefined texture type " << name
+            std::cout << "Ues of undefined texture type " << tag
                       << " in method: \"draw\"\n" << std::endl;
             exit(-1);
         }
         number = ss.str();
-        shader.setInt("material." + name + number, i);
-        glBindTexture(GL_TEXTURE_2D, textures[i].id);
+        shader.setInt("material." + tag + number, i);
+        glBindTexture(GL_TEXTURE_2D, textures[i].id());
     }
     glActiveTexture(GL_TEXTURE0);
 
@@ -51,6 +52,7 @@ void Mesh::Draw(Shader shader) {
 void Mesh::setupMesh() {
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
+    // EBO store indices
     glGenBuffers(1, &EBO);
 
     glBindVertexArray(VAO);
@@ -59,23 +61,24 @@ void Mesh::setupMesh() {
     glBufferData(GL_ARRAY_BUFFER,
             vertices.size()*sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
 
-    // buiding EBO using indices from mFaces[]
+    // Buiding EBO using indices from mFaces[]
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER,
             indices.size()*sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
 
-    // vertex positions
+    // Vertex positions
     glEnableVertexAttribArray(0); // parameter is the position.
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
             nullptr);
-    // vertex normals
+    // Vertex normals
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
             (void *)offsetof(Vertex, Normal));
-    // vertex texture coords
+    // Vertex texture coords
     glEnableVertexAttribArray(2);
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
             (void *)offsetof(Vertex, TexCoords));
 
+    // Unbind
     glBindVertexArray(0);
 }

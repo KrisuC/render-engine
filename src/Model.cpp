@@ -42,7 +42,7 @@ Model::Model(const std::string &path) {
 
 void Model::Draw(const Shader &shader) {
     for (auto &mesh : meshes) {
-        mesh.Draw(shader);
+        mesh.draw(shader);
     }
 }
 

@@ -36,11 +36,10 @@ public:
          std::vector<unsigned int> indices,
          std::vector<Texture> textures);
 
-    void Draw(Shader shader);
+    void draw(const Shader &shader);
 
-    // Render data:
-    unsigned int VAO, VBO, EBO;
-    // Mesh data:
+public:
+    unsigned int VAO = 0, VBO = 0, EBO = 0;
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
     std::vector<Texture> textures;

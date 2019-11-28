@@ -7,6 +7,7 @@
 
 #include <GLFW_Window.hpp>
 
+// The base class of App
 class Application {
 public:
     Application();
@@ -17,8 +18,8 @@ public:
     int exec();
 
 protected:
-    void renderPass();
-    void renderInit();
+    virtual void renderPass();
+    virtual void renderInit();
 
 protected:
     GLFW_Window window;
