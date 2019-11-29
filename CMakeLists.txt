@@ -54,5 +54,5 @@ add_subdirectory(./3rd-party/assimp/)
 include_directories("${PROJECT_SOURCE_DIR}/3rd-party/imgui/")
 add_subdirectory(./3rd-party/imgui)
 
-#target_link_libraries(imgui glad glfw)
+target_link_libraries(imgui glad glfw)
 target_link_libraries(engine assimp imgui glad glfw stb_image glm)
