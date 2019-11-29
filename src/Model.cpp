@@ -50,7 +50,7 @@ std::vector<Texture> Model::loadMaterialTextures(
         aiMaterial *mat,
         aiTextureType type,
         const std::string &typeName) {
-//TODO
+//TODO: Fix Texture issues
 //    std::vector<Texture> textures;
 //    for (unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
 //        aiString str;
@@ -158,9 +158,9 @@ namespace Primitive {
                     float zPos = std::sin(xSegment * 2.0f * PI) *
                                  std::sin(ySegment * PI);
 
-                    positions.push_back(glm::vec3(xPos, yPos, zPos));
-                    uv.push_back(glm::vec2(xSegment, ySegment));
-                    normals.push_back(glm::vec3(xPos, yPos, zPos));
+                    positions.emplace_back(glm::vec3(xPos, yPos, zPos));
+                    uv.emplace_back(glm::vec2(xSegment, ySegment));
+                    normals.emplace_back(glm::vec3(xPos, yPos, zPos));
                 }
             }
 
@@ -187,11 +187,11 @@ namespace Primitive {
                 data.push_back(positions[i].x);
                 data.push_back(positions[i].y);
                 data.push_back(positions[i].z);
-                if (uv.size() > 0) {
+                if (!uv.empty()) {
                     data.push_back(uv[i].x);
                     data.push_back(uv[i].y);
                 }
-                if (normals.size() > 0) {
+                if (!normals.empty()) {
                     data.push_back(normals[i].x);
                     data.push_back(normals[i].y);
                     data.push_back(normals[i].z);
@@ -205,7 +205,7 @@ namespace Primitive {
             glBufferData(GL_ELEMENT_ARRAY_BUFFER,
                          indices.size() * sizeof(unsigned int), &indices[0],
                          GL_STATIC_DRAW);
-            float stride = (3 + 2 + 3) * sizeof(float);
+            int stride = (3 + 2 + 3) * sizeof(float);
             glEnableVertexAttribArray(0);
             glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, (void *) 0);
             glEnableVertexAttribArray(1);

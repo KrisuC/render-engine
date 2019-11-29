@@ -5,21 +5,22 @@
 #ifndef RENDER_LAB_APPLICATION_HPP
 #define RENDER_LAB_APPLICATION_HPP
 
+#include <GLFW/glfw3.h>
+
 // The base class of App
 class Application {
 public:
-    Application();
     Application(int argc, char *argv[]);
-    ~Application();
-
-    void setWindowSize(int w, int h);
     int exec();
 
-protected:
-    virtual void renderPass();
-    virtual void renderInit();
+private:
+    void renderPass();
+    void renderInit();
+    void cleanUp();
 
-protected:
+private:
+    bool applicationEnds = false;
+    GLFWwindow *window;
 };
 
 #endif //RENDER_LAB_APPLICATION_HPP
