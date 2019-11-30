@@ -9,12 +9,6 @@
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 
-// A hack that should not exisit
-// TODO: fix hack
-#undef __gl_h_
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-
 static void glfwErrorCallback(int error, const char *description) {
     std::cerr << "Glfw Error " << error << ": " << description << std::endl;
 }
@@ -114,6 +108,8 @@ void Application::renderPass() {
         }
         ImGui::End();
     }
+
+    
 
     ImGui::Render();
     int display_w, display_h;

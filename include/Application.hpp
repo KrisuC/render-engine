@@ -5,6 +5,8 @@
 #ifndef RENDER_LAB_APPLICATION_HPP
 #define RENDER_LAB_APPLICATION_HPP
 
+// when using glfw3, glad must be included
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 // The base class of App
