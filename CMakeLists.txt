@@ -11,10 +11,9 @@ add_executable(engine
         src/Model.cpp
         src/Mesh.cpp
         src/Camera.cpp
-        src/Renderer.cpp
         src/Application.cpp
         src/Object.cpp
-        src/Texture.cpp src/PbrRenderer.cpp)
+        src/Texture.cpp)
 
 target_include_directories(engine PRIVATE ${PROJECT_SOURCE_DIR}/include)
 

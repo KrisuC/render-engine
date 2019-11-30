@@ -5,10 +5,11 @@
 #ifndef RENDER_ENGINE_APPLICATION_HPP
 #define RENDER_ENGINE_APPLICATION_HPP
 
+#define scene
+
 // when using glfw3, glad must be included
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <PbrRenderer.hpp>
 #include <Shader.hpp>
 #include <Camera.hpp>
 #include <Texture.hpp>
@@ -18,11 +19,20 @@
 class Application {
 public:
     Application(int argc, char *argv[]);
-    int exec();
+    inline int exec() {
+        initializeContext();
+        initializeScene();
+        while (!applicationEnds) {
+            renderPass();
+        }
+        cleanUp();
+        return 0;
+    }
 
 private:
     void renderPass();
-    void initialize();
+    void initializeContext();
+    void initializeScene();
 
     void renderScene();
 
@@ -31,22 +41,24 @@ private:
 private:
     bool applicationEnds = false;
     GLFWwindow *window = nullptr;
-    PbrRenderer pbrRenderer;
 
-    struct Scene {
-        Shader shader;
-        float deltaTime = 0.0f;
-        float lastFrame = 0.0f;
-        Camera camera;
+private scene:
+    // Scnene configuration
+    Shader pbrShader;
+    Camera camera;
 
-        Texture albedo, normal, metallic, roughness, ao;
+    Texture albedo,
+            normal,
+            metallic,
+            roughness,
+            ao;
 
-        std::vector<glm::vec3> lightPositions, lightColors;
+    std::vector<glm::vec3> lightPositions;
+    std::vector<glm::vec3> lightColors;
 
-        int nrRows = 7;
-        int nrColumns = 7;
-        float spacing = 2.5;
-    };
+    int nrRows;
+    int nrColumns;
+    float spacing;
 };
 
 #endif //RENDER_ENGINE_APPLICATION_HPP
