@@ -1,3 +1,3 @@
-# render-lab
+# render-engine
 
-some graphics demos.
+A simple render engine written by myself
