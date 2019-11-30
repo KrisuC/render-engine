@@ -2,8 +2,8 @@
 // Created by Krisu on 2019-11-22.
 //
 
-#ifndef RENDER_LAB_OBJECT_HPP
-#define RENDER_LAB_OBJECT_HPP
+#ifndef RENDER_ENGINE_OBJECT_HPP
+#define RENDER_ENGINE_OBJECT_HPP
 
 #include <Shader.hpp>
 #include <Model.hpp>
@@ -12,12 +12,11 @@
 class Object {
 public:
     Object() = default;
-    void draw();
 
-private:
     std::unique_ptr<Shader> pShader;
     std::unique_ptr<Model> pModel;
+    std::vector<std::unique_ptr<Texture>> vpTextures;
 };
 
 
-#endif //RENDER_LAB_OBJECT_HPP
+#endif //RENDER_ENGINE_OBJECT_HPP

@@ -2,20 +2,28 @@
 // Created by Krisu on 2019-11-22.
 //
 
-#ifndef RENDER_LAB_TEXTURE_HPP
-#define RENDER_LAB_TEXTURE_HPP
+#ifndef RENDER_ENGINE_TEXTURE_HPP
+#define RENDER_ENGINE_TEXTURE_HPP
 
 #include <glad/glad.h>
 #include <string>
 
 class Texture {
 public:
-    explicit Texture(std::string path, std::string tag="diffuse");
+    Texture() = default;
+    explicit Texture(std::string textureFilePath,
+            std::string tag="diffuse");
 
-    unsigned bindTexture();
+    // Load texture from drive to memory, not bind to any texture
+    // object
     void loadTexture();
+    // Bind texture and return texture id
+    unsigned bindTexture();
+    // Free memory
+    void free();
 
-    inline unsigned id() { return textureID; };
+    // bindTexture() must be called before using
+    inline unsigned id() { assert(textureID != -1); return textureID; };
     inline std::string type() { return tag; }
 
     ~Texture();
@@ -29,4 +37,4 @@ private:
 };
 
 
-#endif //RENDER_LAB_TEXTURE_HPP
+#endif //RENDER_ENGINE_TEXTURE_HPP

@@ -7,6 +7,13 @@
 #include <Texture.hpp>
 #include <stb_image.h>
 
+Texture::Texture(std::string textureFilePath, std::string tag) :
+        filePath(std::move(textureFilePath)), tag(std::move(tag)) {
+    loadTexture();
+    bindTexture();
+}
+
+
 void Texture::loadTexture() {
     data = stbi_load(filePath.c_str(),
                      &width, &height, &nrComponents, 0);
@@ -29,7 +36,8 @@ unsigned Texture::bindTexture() {
         inFormat = GL_SRGB_ALPHA;
         outFormat = GL_RGBA;
     } else {
-        std::cerr << "Undefined texture format\n";;
+        std::cerr << "Undefined texture format: nrComponents = "
+                  << nrComponents << std::endl;
         exit(-1);
     }
 
@@ -49,9 +57,11 @@ unsigned Texture::bindTexture() {
     return textureID;
 }
 
-Texture::Texture(std::string path, std::string tag) :
-    filePath(std::move(path)), tag(std::move(tag)) {}
-
 Texture::~Texture() {
+    //free();
+}
+
+void Texture::free() {
     stbi_image_free(data);
+    data = nullptr;
 }

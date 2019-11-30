@@ -47,7 +47,7 @@ Shader::Shader(const char *vertexPath,
         }
     }
     catch(std::ifstream::failure &e) {
-        std::cout << "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ\n";
+        std::cerr << "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ\n";
         exit(-1);
     }
     const char * vShaderCode = vertexCode.c_str();

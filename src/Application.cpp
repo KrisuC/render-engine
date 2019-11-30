@@ -9,6 +9,9 @@
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 
+#include <Object.hpp>
+#include <PbrRenderer.hpp>
+
 static void glfwErrorCallback(int error, const char *description) {
     std::cerr << "Glfw Error " << error << ": " << description << std::endl;
 }
@@ -19,7 +22,7 @@ Application::Application(int argc, char **argv) {
 }
 
 int Application::exec() {
-    renderInit();
+    initialize();
     while (!applicationEnds) {
         renderPass();
     }
@@ -27,7 +30,7 @@ int Application::exec() {
     return 0;
 }
 
-void Application::renderInit() {
+void Application::initialize(){
     glfwSetErrorCallback(glfwErrorCallback);
     if (!glfwInit()) {
         exit(-1);
@@ -41,28 +44,31 @@ void Application::renderInit() {
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 
-   window = glfwCreateWindow(1280, 720, "Render engine", nullptr, nullptr);
-   if (!window) {
+    int width = 1280, height = 720;
+    window = glfwCreateWindow(width, height, "Render engine", nullptr, nullptr);
+    if (!window) {
        exit(-1);
-   }
+    }
 
-   glfwMakeContextCurrent(window);
-   glfwSwapInterval(1); // vsync
+    glfwMakeContextCurrent(window);
+    glfwSwapInterval(1); // vsync
 
-   if (gladLoadGL() == 0) {
+    if (gladLoadGL() == 0) {
        std::cerr << "Failed to initialize glad loader\n";
        exit(-1);
-   }
+    }
+    // Prepare scene rendering here
+    pbrRenderer.prepareScene();
 
-   // Setup ImGui context
-   IMGUI_CHECKVERSION();
-   ImGui::CreateContext();
-   ImGuiIO &io = ImGui::GetIO();
+    // Setup ImGui context
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO &io = ImGui::GetIO();
 
-   ImGui::StyleColorsDark();
+    ImGui::StyleColorsDark();
 
-   ImGui_ImplGlfw_InitForOpenGL(window, true);
-   ImGui_ImplOpenGL3_Init(glsl_version);
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init(glsl_version);
 }
 
 void Application::renderPass() {
@@ -109,14 +115,16 @@ void Application::renderPass() {
         ImGui::End();
     }
 
-    
-
     ImGui::Render();
     int display_w, display_h;
     glfwGetFramebufferSize(window, &display_w, &display_h);
     glViewport(0, 0, display_w, display_h);
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
+
+    // Rendering scene here
+    pbrRenderer.renderScene();
+
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
     glfwSwapBuffers(window);

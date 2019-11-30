@@ -2,8 +2,8 @@
 // Created by Krisu on 2019-11-19.
 //
 
-#ifndef RENDER_LAB_CAMERA_HPP
-#define RENDER_LAB_CAMERA_HPP
+#ifndef RENDER_ENGINE_CAMERA_HPP
+#define RENDER_ENGINE_CAMERA_HPP
 
 
 #include <glad/glad.h>
@@ -74,4 +74,4 @@ private:
     void updateCameraVectors();
 };
 
-#endif //RENDER_LAB_CAMERA_HPP
+#endif //RENDER_ENGINE_CAMERA_HPP

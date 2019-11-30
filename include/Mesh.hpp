@@ -2,8 +2,8 @@
 // Created by Krisu on 2019-11-19.
 //
 
-#ifndef RENDER_LAB_MESH_HPP
-#define RENDER_LAB_MESH_HPP
+#ifndef RENDER_ENGINE_MESH_HPP
+#define RENDER_ENGINE_MESH_HPP
 
 #include <glad/glad.h>
 
@@ -48,4 +48,4 @@ private:
     void setupMesh();
 };
 
-#endif //RENDER_LAB_MESH_HPP
+#endif //RENDER_ENGINE_MESH_HPP

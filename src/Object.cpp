@@ -4,6 +4,3 @@
 
 #include "Object.hpp"
 
-void Object::draw() {
-    pModel->Draw(*pShader);
-}
