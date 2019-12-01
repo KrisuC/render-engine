@@ -30,12 +30,11 @@ public:
     }
 
 private:
-    void renderPass();
     void initializeContext();
     void initializeScene();
-
+    void processKeyboard();
+    void renderPass();
     void renderScene();
-
     void cleanUp();
 
 private:
@@ -45,6 +44,8 @@ private:
 private scene:
     // Scnene configuration
     Shader pbrShader;
+    Shader equirectToCubemapShader;
+    Shader skyboxShader;
     Camera camera;
 
     Texture albedo,
@@ -56,9 +57,7 @@ private scene:
     std::vector<glm::vec3> lightPositions;
     std::vector<glm::vec3> lightColors;
 
-    int nrRows;
-    int nrColumns;
-    float spacing;
+    unsigned int envCubemap;
 };
 
 #endif //RENDER_ENGINE_APPLICATION_HPP

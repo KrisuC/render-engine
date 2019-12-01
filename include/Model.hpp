@@ -43,6 +43,7 @@ private:
 
 namespace Primitive {
     void renderSphere();
+    void renderCube();
 }
 
 

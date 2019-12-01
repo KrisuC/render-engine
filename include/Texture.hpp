@@ -12,7 +12,7 @@ class Texture {
 public:
     Texture() = default;
     explicit Texture(std::string textureFilePath,
-            std::string tag="diffuse");
+            std::string tag="");
 
     // Load texture from drive to memory, not bind to any texture
     // object
@@ -29,7 +29,9 @@ public:
     ~Texture();
 
 private:
-    unsigned char *data = nullptr;
+    // unsigned char (byte) for normal jpg
+    // float for hdr image
+    void *data = nullptr;
     std::string filePath;
     std::string tag;
     unsigned int textureID = -1;
