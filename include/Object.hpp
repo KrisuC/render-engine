@@ -11,11 +11,15 @@
 
 class Object {
 public:
-    Object() = default;
+    virtual void prepare() = 0;
+    virtual void render() = 0;
+    template <typename T>
+    void setShaderValue(std::string name, const T &value) {
 
-    std::unique_ptr<Shader> pShader;
-    std::unique_ptr<Model> pModel;
-    std::vector<std::unique_ptr<Texture>> vpTextures;
+    }
+
+public:
+    Shader shader;
 };
 
 

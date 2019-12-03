@@ -295,8 +295,8 @@ void Application::processKeyboard() {
     } else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
         camera.processKeyboard(RIGHT, deltaTime);
     } else if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
-        camera.processMouseMovement(deltaTime *  1000, 0);
-    } else if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
         camera.processMouseMovement(deltaTime * -1000, 0);
+    } else if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
+        camera.processMouseMovement(deltaTime *  1000, 0);
     }
 }
