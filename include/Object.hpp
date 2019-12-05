@@ -14,8 +14,8 @@ public:
     virtual void prepare() = 0;
     virtual void render() = 0;
     template <typename T>
-    void setShaderValue(std::string name, const T &value) {
-
+    inline void setShaderValue(const std::string &name, const T &value) {
+        shader.setValue(name, value);
     }
 
 public:

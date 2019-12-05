@@ -44,8 +44,11 @@ private:
 private scene:
     // Scnene configuration
     Shader pbrShader;
+    Shader pbrNTShader;
     Shader equirectToCubemapShader;
     Shader skyboxShader;
+    Shader irradianceShader;
+    Shader prefilterShader;
     Camera camera;
 
     Texture albedo,
@@ -58,6 +61,8 @@ private scene:
     std::vector<glm::vec3> lightColors;
 
     unsigned int envCubemap;
+    unsigned int irradianceMap;
+    unsigned int prefilterMap;
 };
 
 #endif //RENDER_ENGINE_APPLICATION_HPP

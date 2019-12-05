@@ -22,7 +22,7 @@ Mesh::Mesh(std::vector<Vertex> vertices,
 void Mesh::draw(const Shader &shader) {
     unsigned int diffuseNr = 1;
     unsigned int specularNr = 1;
-    for (unsigned int i = 0; i < textures.size(); i++) {
+    for (int i = 0; i < textures.size(); i++) {
         glActiveTexture(GL_TEXTURE0 + i); // active proprer texture unit before binding
         // retrive texture number (the N in diffuse_textureN)
         std::stringstream ss;
@@ -38,7 +38,7 @@ void Mesh::draw(const Shader &shader) {
             exit(-1);
         }
         number = ss.str();
-        shader.setInt("material." + tag + number, i);
+        shader.setValue("material." + tag + number, i);
         glBindTexture(GL_TEXTURE_2D, textures[i].id());
     }
     glActiveTexture(GL_TEXTURE0);

@@ -13,21 +13,20 @@
 class SceneGraph : public Object {
 public:
     SceneGraph() = default;
-    inline void appendObject(std::unique_ptr<Object> obj) { scene.push_back(obj); }
+    inline void appendObject(Object *obj) { scene.push_back(obj); }
     void prepare() override {
-        for (std::unique_ptr<Object> &objp : scene) {
+        for (Object *objp : scene) {
             objp->prepare();
         }
     }
     void render() override {
-        for (std::unique_ptr<Object> &objp : scene) {
+        for (Object *objp : scene) {
             objp->render();
         }
     }
 
-
 private:
-    std::vector<std::unique_ptr<Object>> scene;
+    std::vector<Object *> scene;
 };
 
 

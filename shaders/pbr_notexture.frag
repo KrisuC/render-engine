@@ -6,13 +6,12 @@ in vec3 WorldPos;
 in vec3 Normal;
 
 // material parameters
-uniform sampler2D albedoMap;
-uniform sampler2D normalMap;
-uniform sampler2D metallicMap;
-uniform sampler2D roughnessMap;
-uniform sampler2D aoMap;
+uniform vec3 albedo;
+uniform float metallic;
+uniform float roughness;
+uniform float ao;
 
-// IBL diffuse part
+// irraiance map for ibl
 uniform samplerCube irradianceMap;
 
 // lights
@@ -23,23 +22,7 @@ uniform vec3 camPos;
 
 const float PI = 3.14159265359;
 
-vec3 getNormalFromMap() {
-    vec3 tangentNormal = texture(normalMap, TexCoords).xyz * 2.0 - 1.0;
-
-    vec3 Q1 = dFdx(WorldPos);
-    vec3 Q2 = dFdy(WorldPos);
-    vec2 st1 = dFdx(TexCoords);
-    vec2 st2 = dFdy(TexCoords);
-
-    vec3 N = normalize(Normal);
-    vec3 T = normalize(Q1 * st2.t - Q2 * st1.t);
-    vec3 B = -normalize(cross(N, T));
-    mat3 TBN = mat3(T, B, N);
-
-    return normalize(TBN * tangentNormal);
-}
-
-// fresnel equation
+// Fresnel equation - computing how much part is specular light
 vec3 fresnelSchlick(float cosTheta, vec3 F0) {
     return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
 }
@@ -79,19 +62,14 @@ float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness) {
 }
 
 void main() {
-    vec3 albedo = texture(albedoMap, TexCoords).rgb;
-    float metallic = texture(metallicMap, TexCoords).r;
-    float roughness = texture(roughnessMap, TexCoords).r;
-    float ao = texture(aoMap, TexCoords).r;
-
-    vec3 N = getNormalFromMap();
+    vec3 N = normalize(Normal);
     vec3 V = normalize(camPos - WorldPos);
+    vec3 R = reflect(-V, N);
 
     vec3 F0 = vec3(0.04);
     F0 = mix(F0, albedo, metallic); // for non-metal, F0 is always 0.04
 
     vec3 Lo = vec3(0.0);
-    // iterate through all lights
     for (int i = 0; i < 4; i++) {
         vec3 L = normalize(lightPositions[i] - WorldPos);
         vec3 H = normalize(V + L); // half-way
@@ -101,24 +79,31 @@ void main() {
         vec3 radiance = lightColors[i] * attenuation;
 
         float NDF = DistributionGGX(N, H, roughness);
-        float G = GeometrySmith(N, V, L, roughness);
-        vec3 F = fresnelSchlick(max(dot(H, V), 0.0), F0);
+        float G   = GeometrySmith(N, V, L, roughness);
+        vec3  F   = fresnelSchlick(max(dot(H, V), 0.0), F0);
+
+        vec3 nominator    = NDF * G * F;
+        float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0);
+        vec3 specular = nominator / max(denominator, 0.001);
 
         vec3 kS = F; // energy of light get relected
         vec3 kD = vec3(1.0) - kS; // refracted
         kD *= 1.0 - metallic;
 
-        vec3 nominator = NDF * G * F;
-        float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0);
-        vec3 specular = nominator / max(denominator, 0.001);
-
         float NdotL = max(dot(N, L), 0.0);
         Lo += (kD * albedo / PI + specular) * radiance * NdotL; // no diffuse for metalic
     }
-    // vec3 ambient = vec3(0.03) * albedo * ao;
-    vec3 ambient = texture(irradianceMap, N).rgb * albedo * ao;
+    // using IBL as ambient lighting
+    vec3 kS = fresnelSchlick(max(dot(N, V), 0.0), F0);
+    vec3 kD = 1.0 - kS;
+    kD *= 1.0 - metallic;
+    vec3 irradiance = texture(irradianceMap, N).rgb;
+    vec3 diffuse    = irradiance * albedo;
+    vec3 ambient    = (kD * diffuse) * ao;
+
     vec3 color = ambient + Lo;
 
+    // HDR tone mapping
     color = color / (color + vec3(1.0)); // HDR
     color = pow(color, vec3(1.0 / 2.2)); // gamma
 
