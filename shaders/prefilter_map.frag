@@ -17,6 +17,19 @@ float RadicalInverse_Vdc(uint bits) {
     return float(bits) * 2.3283064365386963e-10; // / 0x100000000
 }
 
+float DistributionGGX(vec3 N, vec3 H, float roughness) {
+    float a = roughness*roughness;
+    float a2 = a*a;
+    float NdotH = max(dot(N, H), 0.0);
+    float NdotH2 = NdotH*NdotH;
+
+    float nom   = a2;
+    float denom = (NdotH2 * (a2 - 1.0) + 1.0);
+    denom = PI * denom * denom;
+
+    return nom / denom;
+}
+
 vec2 Hammersley(uint i, uint N) {
     return vec2(float(i) / float(N), RadicalInverse_Vdc(i));
 }
@@ -59,7 +72,20 @@ void main() {
 
         float NdotL = max(dot(N, L), 0.0);
         if (NdotL > 0.0) {
-            prefilteredColor += texture(environmentMap, L).rgb * NdotL;
+            // sample from environment's mip level map based on roughness & pdf
+            float D     = DistributionGGX(N, H, roughness);
+            float NdotH = max(dot(N, H), 0.0);
+            float HdotV = max(dot(N, V), 0.0);
+            float pdf   = D * NdotH / (4.0 * HdotV) + 0.0001;
+
+            float resolution = 512.0;
+            float saTexel    = 4.0 * PI / (6.0 * resolution * resolution);
+            float saSample   = 1.0 / (float(SAMPLE_COUNT) * pdf * 0.0001);
+
+            float mipLevel = (roughness == 0.0 ? 0.0 :
+                                                0.5 * log2(saSample / saTexel));
+
+            prefilteredColor += textureLod(environmentMap, L, mipLevel).rgb * NdotL;
             totalWeight      += NdotL;
         }
     }

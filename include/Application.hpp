@@ -49,6 +49,7 @@ private scene:
     Shader skyboxShader;
     Shader irradianceShader;
     Shader prefilterShader;
+    Shader brdfLUTShader;
     Camera camera;
 
     Texture albedo,
@@ -63,6 +64,7 @@ private scene:
     unsigned int envCubemap;
     unsigned int irradianceMap;
     unsigned int prefilterMap;
+    unsigned int brdfLUTTexture;
 };
 
 #endif //RENDER_ENGINE_APPLICATION_HPP

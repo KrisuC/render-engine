@@ -125,7 +125,7 @@ void Application::renderPass() {
 
 
 void Application::initializeScene() {
-    pbrShader = Shader("./shaders/pbr.vert", "./shaders/pbr.frag");
+    pbrShader = Shader("./shaders/pbr.vert", "./shaders/pbr_texture.frag");
     pbrNTShader = Shader("./shaders/pbr.vert",
                          "./shaders/pbr_notexture.frag");
     equirectToCubemapShader = Shader(
@@ -136,6 +136,7 @@ void Application::initializeScene() {
                               "./shaders/irradiance_convolution.frag");
     prefilterShader = Shader("./shaders/cubemap.vert",
                              "./shaders/prefilter_map.frag");
+    brdfLUTShader = Shader("./shaders/brdf.vert", "./shaders/brdf.frag");
 
     camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f));
 
@@ -160,13 +161,14 @@ void Application::initializeScene() {
 
     // convert equirectangular to cubemap
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
     glDepthFunc(GL_LEQUAL);
 
     unsigned int captureFBO, captureRBO;
     glGenFramebuffers(1, &captureFBO);
     glGenRenderbuffers(1, &captureRBO);
 
-    unsigned int dim = 4096;
+    unsigned int dim = 512;
 
     glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
     glBindRenderbuffer(GL_RENDERBUFFER, captureRBO);
@@ -188,6 +190,9 @@ void Application::initializeScene() {
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    // generate mipmaps
+    glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap);
+    glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
 
     glm::mat4 captureProjection
         = glm::perspective(glm::radians(90.f), 1.f, 0.1f, 10.f);
@@ -300,6 +305,28 @@ void Application::initializeScene() {
         }
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    // brdf precomte
+    glGenTextures(1, &brdfLUTTexture);
+
+    glBindTexture(GL_TEXTURE_2D, brdfLUTTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, 512, 512, 0, GL_RG, GL_FLOAT, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
+    glBindRenderbuffer(GL_RENDERBUFFER, captureFBO);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 512, 512);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+            GL_TEXTURE_2D, brdfLUTTexture, 0);
+
+    glViewport(0, 0, 512, 512);
+    brdfLUTShader.use();
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    Primitive::renderQuad();
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 
@@ -364,7 +391,16 @@ void Application::renderScene() {
     pbrNTShader.setValue("projection", projection);
     pbrNTShader.setValue("view", view);
     pbrNTShader.setValue("camPos", camera.Position);
-    pbrNTShader.setValue("irradianceMap", irradianceMap);
+    pbrNTShader.setValue("irradianceMap", 0);
+    pbrNTShader.setValue("prefilterMap", 1);
+    pbrNTShader.setValue("brdfLUT", 2);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, irradianceMap);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, prefilterMap);
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, brdfLUTTexture);
 
     int rows = 7, cols = 7;
     float spacing = 2.5;
@@ -391,8 +427,9 @@ void Application::renderScene() {
     skyboxShader.use();
     skyboxShader.setValue("view", view);
     skyboxShader.setValue("projection", projection);
+    skyboxShader.setValue("environmentMap", 0);
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, prefilterMap);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap);
     Primitive::renderCube();
 }
 
@@ -425,5 +462,9 @@ void Application::processKeyboard() {
         camera.processMouseMovement(deltaTime * -1000, 0);
     } else if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
         camera.processMouseMovement(deltaTime *  1000, 0);
+    } else if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS) {
+        camera.processMouseMovement(0, deltaTime * -1000);
+    } else if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS) {
+        camera.processMouseMovement(0, deltaTime *  1000);
     }
 }

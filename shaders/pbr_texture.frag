@@ -5,6 +5,8 @@ in vec2 TexCoords;
 in vec3 WorldPos;
 in vec3 Normal;
 
+uniform bool useTexture;
+
 // material parameters
 uniform sampler2D albedoMap;
 uniform sampler2D normalMap;
