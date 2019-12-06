@@ -125,15 +125,14 @@ void Application::renderPass() {
 
 
 void Application::initializeScene() {
-    pbrShader = Shader("./shaders/pbr.vert", "./shaders/pbr_texture.frag");
-    pbrNTShader = Shader("./shaders/pbr.vert",
-                         "./shaders/pbr_notexture.frag");
+    ctPbrShader = Shader("./shaders/cookTorrancePBR.vert",
+                         "./shaders/cookTorrancePBR.frag");
     equirectToCubemapShader = Shader(
             "./shaders/cubemap.vert",
-            "./shaders/equirectangular_to_cubemap.frag");
+            "./shaders/equirectangularToCubemap.frag");
     skyboxShader = Shader("./shaders/skybox.vert", "./shaders/skybox.frag");
     irradianceShader = Shader("./shaders/cubemap.vert",
-                              "./shaders/irradiance_convolution.frag");
+                              "./shaders/irradianceConvolution.frag");
     prefilterShader = Shader("./shaders/cubemap.vert",
                              "./shaders/prefilter_map.frag");
     brdfLUTShader = Shader("./shaders/brdf.vert", "./shaders/brdf.frag");
@@ -327,6 +326,25 @@ void Application::initializeScene() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     Primitive::renderQuad();
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    ctPbrShader.use();
+    ctPbrShader.setValue("albedoMap", 0);
+    ctPbrShader.setValue("normalMap", 1);
+    ctPbrShader.setValue("metallicMap", 2);
+    ctPbrShader.setValue("roughnessMap", 3);
+    ctPbrShader.setValue("aoMap", 4);
+    ctPbrShader.setValue("irradianceMap", 5);
+    ctPbrShader.setValue("prefilterMap", 6);
+    ctPbrShader.setValue("brdfLUT", 7);
+
+    glActiveTexture(GL_TEXTURE0);   glBindTexture(GL_TEXTURE_2D, albedo.id());
+    glActiveTexture(GL_TEXTURE1);   glBindTexture(GL_TEXTURE_2D, normal.id());
+    glActiveTexture(GL_TEXTURE2);   glBindTexture(GL_TEXTURE_2D, metallic.id());
+    glActiveTexture(GL_TEXTURE3);   glBindTexture(GL_TEXTURE_2D, roughness.id());
+    glActiveTexture(GL_TEXTURE4);   glBindTexture(GL_TEXTURE_2D, ao.id());
+    glActiveTexture(GL_TEXTURE5);   glBindTexture(GL_TEXTURE_CUBE_MAP, irradianceMap);
+    glActiveTexture(GL_TEXTURE6);   glBindTexture(GL_TEXTURE_CUBE_MAP, prefilterMap);
+    glActiveTexture(GL_TEXTURE7);   glBindTexture(GL_TEXTURE_2D, brdfLUTTexture);
 }
 
 
@@ -340,77 +358,43 @@ void Application::renderScene() {
     glfwGetWindowSize(window, &width, &height);
     static glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom),
                                             (float)width / height, 0.1f, 100.0f);
-
     glm::mat4 view = camera.GetViewMatrix();
 
-    pbrShader.use();
-    pbrShader.setValue("projection", projection);
-    pbrShader.setValue("view", view);
-    pbrShader.setValue("camPos", camera.Position);
-
-    pbrShader.setValue("albedoMap", 0);
-    pbrShader.setValue("normalMap", 1);
-    pbrShader.setValue("metallicMap", 2);
-    pbrShader.setValue("roughnessMap", 3);
-    pbrShader.setValue("aoMap", 4);
-
-    pbrShader.setValue("irradianceMap", irradianceMap);
-
-    glActiveTexture(GL_TEXTURE0);   glBindTexture(GL_TEXTURE_2D, albedo.id());
-    glActiveTexture(GL_TEXTURE1);   glBindTexture(GL_TEXTURE_2D, normal.id());
-    glActiveTexture(GL_TEXTURE2);   glBindTexture(GL_TEXTURE_2D, metallic.id());
-    glActiveTexture(GL_TEXTURE3);   glBindTexture(GL_TEXTURE_2D, roughness.id());
-    glActiveTexture(GL_TEXTURE4);   glBindTexture(GL_TEXTURE_2D, ao.id());
+    ctPbrShader.use();
+    ctPbrShader.setValue("projection", projection);
+    ctPbrShader.setValue("view", view);
+    ctPbrShader.setValue("camPos", camera.Position);
 
     // render lights and set lights uniforms
     assert(lightPositions.size() == lightColors.size());
     for (int i = 0; i < lightPositions.size(); i++) {
         glm::vec3 newPos = lightPositions[i] +
                            glm::vec3(sin(glfwGetTime() * 5.0) * 5.0, 0.0, 0.0);
-        pbrShader.use();
-        pbrShader.setValue("lightPositions[" + std::to_string(i) + "]", newPos);
-        pbrShader.setValue("lightColors[" + std::to_string(i) + "]",
-                           lightColors[i]);
-
-        pbrNTShader.use();
-        pbrNTShader.setValue("lightPositions[" + std::to_string(i) + "]",
-                           newPos);
-        pbrNTShader.setValue("lightColors[" + std::to_string(i) + "]",
+        ctPbrShader.use();
+        ctPbrShader.setValue("lightPositions[" + std::to_string(i) + "]", newPos);
+        ctPbrShader.setValue("lightColors[" + std::to_string(i) + "]",
                            lightColors[i]);
     }
 
-    pbrShader.use();
     auto model = glm::mat4(1.0f);
     model = glm::translate(model, glm::vec3(0, 0, -5));
     model = glm::rotate(model, (float)glfwGetTime(),  glm::vec3(0, 1, 0));
 
-    pbrShader.setValue("model", model);
+    ctPbrShader.setValue("model", model);
+    ctPbrShader.setValue("useTexture", true);
     Primitive::renderSphere();
 
-    pbrNTShader.use();
-    pbrNTShader.setValue("projection", projection);
-    pbrNTShader.setValue("view", view);
-    pbrNTShader.setValue("camPos", camera.Position);
-    pbrNTShader.setValue("irradianceMap", 0);
-    pbrNTShader.setValue("prefilterMap", 1);
-    pbrNTShader.setValue("brdfLUT", 2);
-
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, irradianceMap);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, prefilterMap);
-    glActiveTexture(GL_TEXTURE2);
-    glBindTexture(GL_TEXTURE_2D, brdfLUTTexture);
+    ctPbrShader.setValue("useTexture", false);
 
     int rows = 7, cols = 7;
     float spacing = 2.5;
 
-    pbrNTShader.setValue("albedo", 0.5f, 0.0f, 0.0f);
-    pbrNTShader.setValue("ao", 1.0f);
+    ctPbrShader.setValue("albedoVal", 0.5f, 0.0f, 0.0f);
+    ctPbrShader.setValue("aoVal", 1.0f);
     for (int row = 0; row < rows; row++) {
-        pbrNTShader.setValue("metallic", (float)row / rows);
+        ctPbrShader.setValue("metallicVal", (float)row / rows);
         for (int col = 0; col < cols; col++) {
-            pbrNTShader.setValue("roughness",
+            ctPbrShader.setValue("roughnessVal",
                     glm::clamp((float)col / cols, 0.05f, 1.0f));
 
             glm::vec3 pos = {
@@ -419,7 +403,7 @@ void Application::renderScene() {
                     -10.f
             };
             model = glm::translate(glm::mat4(1.f), pos);
-            pbrNTShader.setValue("model", model);
+            ctPbrShader.setValue("model", model);
             Primitive::renderSphere();
         }
     }

@@ -43,8 +43,7 @@ private:
 
 private scene:
     // Scnene configuration
-    Shader pbrShader;
-    Shader pbrNTShader;
+    Shader ctPbrShader;
     Shader equirectToCubemapShader;
     Shader skyboxShader;
     Shader irradianceShader;
