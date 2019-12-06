@@ -72,23 +72,25 @@ void Application::renderPass() {
     ImGui::NewFrame();
 
     static bool show_another_window = false;
-    static ImVec4 clear_color = ImVec4(0.1f, 0.1f, 0.1f, 1.0f);
+    static ImVec4 ball_color = ImVec4(0.1f, 0.1f, 0.1f, 1.0f);
     // A simple window
     {
         static float f = 0.0f;
         static int cnt = 0;
 
-        ImGui::Begin("Hello world!");
+        ImGui::Begin("Settings");
 
-        ImGui::Text("This is a label");
-        ImGui::Checkbox("Another window", &show_another_window);
+        ImGui::Text("Properties: ");
+        ImGui::Checkbox("Use Texture", &ui_useTexture);
 
-        ImGui::SliderFloat("f", &f, 0.0f, 1.0f);
-        ImGui::ColorEdit3("clear color", (float *)&clear_color);
+        ImGui::SliderFloat("Roughness", &ui_roughness, 0.001f, 1.0f);
+        ImGui::SliderFloat("Metallic", &ui_mettallic, 0.001f, 1.0f);
+        ImGui::ColorEdit3("Albedo", (float *)&ui_albedo.x);
 
         if (ImGui::Button("cnt plus plus")) {
             cnt++;
         }
+        ImGui::Checkbox("Show another window", &show_another_window);
         ImGui::SameLine();
         ImGui::Text("cnt = %d", cnt);
 
@@ -139,11 +141,11 @@ void Application::initializeScene() {
 
     camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f));
 
-    albedo=Texture("./resources/pbr/rustediron2_basecolor.png"),
-    normal=Texture("./resources/pbr/rustediron2_normal.png"),
-    metallic=Texture("./resources/pbr/rustediron2_metallic.png"),
-    roughness=Texture("./resources/pbr/rustediron2_roughness.png"),
-    ao=Texture("./resources/pbr/ao.png");
+    Texture albedo("./resources/pbr/rustediron2_basecolor.png");
+    Texture normal("./resources/pbr/rustediron2_normal.png");
+    Texture metallic("./resources/pbr/rustediron2_metallic.png");
+    Texture roughness("./resources/pbr/rustediron2_roughness.png");
+    Texture ao("./resources/pbr/ao.png");
 
     lightPositions = {
             {-10.0f,  10.0f, 0.0f},
@@ -380,16 +382,19 @@ void Application::renderScene() {
     model = glm::translate(model, glm::vec3(0, 0, -5));
     model = glm::rotate(model, (float)glfwGetTime(),  glm::vec3(0, 1, 0));
 
+    // First
     ctPbrShader.setValue("model", model);
-    ctPbrShader.setValue("useTexture", true);
+    ctPbrShader.setValue("roughnessVal", ui_roughness);
+    ctPbrShader.setValue("metallicVal", ui_mettallic);
+    ctPbrShader.setValue("albedoVal", ui_albedo);
+    ctPbrShader.setValue("useTexture", ui_useTexture);
     Primitive::renderSphere();
 
+    // Second
     ctPbrShader.setValue("useTexture", false);
-
     int rows = 7, cols = 7;
     float spacing = 2.5;
-
-    ctPbrShader.setValue("albedoVal", 0.5f, 0.0f, 0.0f);
+    ctPbrShader.setValue("albedoVal", 0.5, 0.0, 0.0);
     ctPbrShader.setValue("aoVal", 1.0f);
     for (int row = 0; row < rows; row++) {
         ctPbrShader.setValue("metallicVal", (float)row / rows);

@@ -14,19 +14,17 @@ public:
     explicit Texture(std::string textureFilePath,
             std::string tag="");
 
-    // Load texture from drive to memory, not bind to any texture
-    // object
+    inline unsigned id() { assert(textureID != -1); return textureID; };
+    inline std::string type() { return tag; }
+    ~Texture();
+
+protected:
+    // Load texture from drive to memory, not bind to any texture object
     void loadTexture();
     // Bind texture and return texture id
     unsigned bindTexture();
     // Free memory
     void free();
-
-    // bindTexture() must be called before using
-    inline unsigned id() { assert(textureID != -1); return textureID; };
-    inline std::string type() { return tag; }
-
-    ~Texture();
 
 private:
     // unsigned char (byte) for normal jpg

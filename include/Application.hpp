@@ -49,13 +49,8 @@ private scene:
     Shader irradianceShader;
     Shader prefilterShader;
     Shader brdfLUTShader;
-    Camera camera;
 
-    Texture albedo,
-            normal,
-            metallic,
-            roughness,
-            ao;
+    Camera camera;
 
     std::vector<glm::vec3> lightPositions;
     std::vector<glm::vec3> lightColors;
@@ -64,6 +59,12 @@ private scene:
     unsigned int irradianceMap;
     unsigned int prefilterMap;
     unsigned int brdfLUTTexture;
+
+    // GUI controls variables
+    glm::vec3 ui_albedo = {0, 0, 0};
+    float     ui_roughness = 0.001;
+    float     ui_mettallic = 0.001;
+    bool      ui_useTexture = false;
 };
 
 #endif //RENDER_ENGINE_APPLICATION_HPP

@@ -65,8 +65,6 @@ unsigned Texture::bindTexture() {
     glTexImage2D(GL_TEXTURE_2D, 0, inFormat, width, height, 0, outFormat,
                  texelType, data);
 
-    // glGenerateMipmap(GL_TEXTURE_2D);
-
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -76,10 +74,12 @@ unsigned Texture::bindTexture() {
 }
 
 Texture::~Texture() {
-    //free();
+    free();
 }
 
 void Texture::free() {
-    stbi_image_free(data);
-    data = nullptr;
+    if (data) {
+        stbi_image_free(data);
+        data = nullptr;
+    }
 }
