@@ -6,6 +6,7 @@
 #define RENDER_ENGINE_TEXTURE_HPP
 
 #include <glad/glad.h>
+#include <cassert>
 #include <string>
 
 class Texture {
