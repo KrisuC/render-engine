@@ -28,20 +28,21 @@ public:
     std::vector<Mesh> meshes;
     std::vector<Texture> textures_loaded;
 
-    explicit Model (const std::string &directory);
-    void Draw(const Shader &shader);
+    explicit Model(const std::string &directory);
+    void render();
 
 private:
     std::string directory;
 
     void loadModel(const std::string &path);
-    void processNode(aiNode * node, const aiScene * scene);
+    void processNode(aiNode *node, const aiScene *scene);
     std::vector<Texture>
-    loadMaterialTextures(aiMaterial * mat, aiTextureType type,
-                         const std::string& typeName);
-    Mesh processMesh(aiMesh * mesh, const aiScene * scene);
+    loadMaterialTextures(aiMaterial *mat, aiTextureType type,
+                         const std::string &typeName);
+    Mesh processMesh(aiMesh *mesh, const aiScene * scene);
 };
 
+// Rendering some fixed size primitive
 namespace Primitive {
     void renderSphere();
     void renderCube();

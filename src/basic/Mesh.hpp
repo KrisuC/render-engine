@@ -30,19 +30,19 @@ public:
     glm::vec3 Bitangent;
 };
 
+// Only respond for Triangular Meshes
+// Leave textures for others to concern
 class Mesh {
 public:
     Mesh(std::vector<Vertex> vertices,
-         std::vector<unsigned int> indices,
-         std::vector<Texture> textures);
+    std::vector<unsigned int> indices);
 
-    void draw(const Shader &shader);
+    void render();
 
 public:
     unsigned int VAO = 0, VBO = 0, EBO = 0;
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
-    std::vector<Texture> textures;
 
 private:
     void setupMesh();

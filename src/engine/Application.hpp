@@ -46,12 +46,13 @@ private:
     static std::string glsl_version;
 
 private:
-
+    // TODO: manage scene with scene graph
     // Scnene configuration
     Camera camera;
     std::vector<Light> lights;
     Skybox skybox;
     CookTorrancePbrObj ctPbrObj;
+
 
     // GUI controls variables
     struct {
@@ -59,6 +60,7 @@ private:
         float     roughness = 0.001;
         float     metallic = 0.001;
         bool      useTexture = false;
+        bool      useModel = false;
     } ui;
 };
 

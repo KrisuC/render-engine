@@ -12,6 +12,7 @@
 #include "basic/Model.hpp"
 #include "objects/CookTorrancePbrObj.hpp"
 #include "objects/Skybox.hpp"
+#include "Application.hpp"
 
 std::string Application::glsl_version;
 GLFWwindow *Application::window = nullptr;
@@ -87,6 +88,7 @@ void Application::renderPass() {
 
         ImGui::Text("Properties: ");
         ImGui::Checkbox("Use Texture", &ui.useTexture);
+        ImGui::Checkbox("Use Model", &ui.useModel);
 
         ImGui::SliderFloat("Roughness", &ui.roughness, 0.001f, 1.0f);
         ImGui::SliderFloat("Metallic", &ui.metallic, 0.001f, 1.0f);
@@ -145,6 +147,7 @@ void Application::initializeScene() {
     ctPbrObj.setIrradianceMap(skybox.getIrradianceMap());
     ctPbrObj.setBrdfLTUTexture(skybox.getBrdfLUTTexture());
     ctPbrObj.setPrefilterMap(skybox.getPrefilterMap());
+    ctPbrObj.addModel(new Model("./resources/meshes/dragon.obj"));
     ctPbrObj.prepare();
 }
 
@@ -187,9 +190,16 @@ void Application::renderScene() {
     ctPbrObj.setShaderUnif("metallicVal", ui.metallic);
     ctPbrObj.setShaderUnif("albedoVal", ui.albedo);
     ctPbrObj.setShaderUnif("useTexture", ui.useTexture);
+    if (ui.useModel) {
+        float s = 4.0f;
+        ctPbrObj.setShaderUnif("model",
+                glm::scale(model, glm::vec3(s, s, s)));
+    }
+    ctPbrObj.useModel(ui.useModel);
     ctPbrObj.render();
 
     // Second Part
+    ctPbrObj.useModel(false);
     ctPbrObj.setShaderUnif("useTexture", false);
     int rows = 7, cols = 7;
     float spacing = 2.5;

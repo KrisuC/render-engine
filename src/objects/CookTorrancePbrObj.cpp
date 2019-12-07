@@ -45,5 +45,9 @@ void CookTorrancePbrObj::prepare() {
 
 void CookTorrancePbrObj::render() {
     renderShader.use();
-    Primitive::renderSphere();
+    if (!use_model) {
+        Primitive::renderSphere();
+    } else {
+        model->render();
+    }
 }

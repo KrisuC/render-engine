@@ -5,6 +5,9 @@
 #include "Model.hpp"
 #include <stb_image.h>
 
+// loadModel -> processNode -> processMesh
+//                          -> processNode(child)
+
 void Model::loadModel(const std::string &path) {
     Assimp::Importer import;
     const aiScene *scene = import.ReadFile(path,
@@ -40,9 +43,10 @@ Model::Model(const std::string &directory) {
     loadModel(directory);
 }
 
-void Model::Draw(const Shader &shader) {
+void Model::render() {
+    // TODO: bind textures
     for (auto &mesh : meshes) {
-        mesh.draw(shader);
+        mesh.render();
     }
 }
 
@@ -50,7 +54,7 @@ std::vector<Texture> Model::loadMaterialTextures(
         aiMaterial *mat,
         aiTextureType type,
         const std::string &typeName) {
-//TODO: Fix Texture issues
+    //TODO: Fix Texture issues
     std::vector<Texture> textures;
     for (unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
         aiString str;
@@ -81,17 +85,13 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene) {
     for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
         Vertex vertex{};
         // process each vertex positions
-        glm::vec3 tempVector;
         // position:
-        tempVector.x = mesh->mVertices[i].x;
-        tempVector.y = mesh->mVertices[i].y;
-        tempVector.z = mesh->mVertices[i].z;
-        vertex.Position = tempVector;
+        vertex.Position = {mesh->mVertices[i].x, mesh->mVertices[i].y,
+                           mesh->mVertices[i].z};
         // normal:
-        tempVector.x = mesh->mNormals[i].x;
-        tempVector.y = mesh->mNormals[i].y;
-        tempVector.z = mesh->mNormals[i].z;
-        vertex.Normal = tempVector;
+        vertex.Normal = {mesh->mNormals[i].x, mesh->mNormals[i].y,
+                         mesh->mNormals[i].z};
+
         // texture coordinates
         if (mesh->mTextureCoords[0]) { // contain?
             glm::vec2 vec;
@@ -99,8 +99,9 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene) {
             vec.y = mesh->mTextureCoords[0][i].y;
 
             vertex.TexCoords = vec;
-        } else
+        } else {
             vertex.TexCoords = glm::vec2(0.0, 0.0f);
+        }
 
         vertices.push_back(vertex);
     }
@@ -111,18 +112,27 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene) {
             indices.push_back(face.mIndices[j]);
     }
 
+    // TODO: fix with pbr pipeline
     // process material
-    aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
-    std::vector<Texture> diffuseMaps = loadMaterialTextures(material,
-                                                            aiTextureType_DIFFUSE,
-                                                            "texture_diffuse");
-    textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-    std::vector<Texture> specularMaps = loadMaterialTextures(material,
-                                                             aiTextureType_SPECULAR,
-                                                             "texture_specular");
-    textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
-    return Mesh(vertices, indices, textures);
+//    aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
+//    std::vector<Texture> diffuseMaps = loadMaterialTextures(material,
+//                                                            aiTextureType_DIFFUSE,
+//                                                            "texture_diffuse");
+//    textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
+//    std::vector<Texture> specularMaps = loadMaterialTextures(material,
+//                                                             aiTextureType_SPECULAR,
+//                                                             "texture_specular");
+//    textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+    return Mesh(vertices, indices);
 }
+
+
+
+
+
+
+
+
 
 namespace Primitive {
     unsigned int sphereVAO = 0;
