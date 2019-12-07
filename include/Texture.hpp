@@ -12,10 +12,11 @@ class Texture {
 public:
     Texture() = default;
     explicit Texture(std::string textureFilePath,
-            std::string tag="");
+                     std::string tag="");
 
     inline unsigned id() { assert(textureID != -1); return textureID; };
-    inline std::string type() { return tag; }
+    inline const std::string& type() { return tag; }
+    inline const std::string& path() { return filePath; }
     ~Texture();
 
 protected:

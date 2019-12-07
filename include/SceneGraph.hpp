@@ -9,7 +9,7 @@
 #include <vector>
 #include <memory>
 
-// TODO: A better scene graph
+// TODO: A real Scene Graph
 class SceneGraph : public Object {
 public:
     SceneGraph() = default;

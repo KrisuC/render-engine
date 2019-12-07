@@ -13,7 +13,7 @@ add_executable(engine
         src/Camera.cpp
         src/Application.cpp
         src/Object.cpp
-        src/Texture.cpp src/SceneGraph.cpp include/SceneGraph.hpp src/CookTorrancePbrObj.cpp include/CookTorrancePbrObj.hpp src/Skybox.cpp include/Skybox.hpp)
+        src/Texture.cpp src/SceneGraph.cpp include/SceneGraph.hpp src/CookTorrancePbrObj.cpp include/CookTorrancePbrObj.hpp src/Skybox.cpp include/Skybox.hpp src/Light.cpp include/Light.hpp)
 
 target_include_directories(engine PRIVATE ${PROJECT_SOURCE_DIR}/include)
 
@@ -24,13 +24,9 @@ target_include_directories(engine PRIVATE ${PROJECT_SOURCE_DIR}/include)
 include_directories("${PROJECT_SOURCE_DIR}/3rd-party/glm-0.9.9.5/include/")
 add_subdirectory(./3rd-party/glm-0.9.9.5/)
 
-target_link_libraries(engine glm)
-
 # stb_image
 include_directories("${PROJECT_SOURCE_DIR}/3rd-party/stb_image/include/")
 add_subdirectory(./3rd-party/stb_image/)
-
-target_link_libraries(engine stb_image)
 
 # glfw
 include_directories("${PROJECT_SOURCE_DIR}/3rd-party/glfw-3.3/include/")

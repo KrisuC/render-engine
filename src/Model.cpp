@@ -36,8 +36,8 @@ void Model::processNode(aiNode *node, const aiScene *scene) {
     }
 }
 
-Model::Model(const std::string &path) {
-    loadModel(path);
+Model::Model(const std::string &directory) {
+    loadModel(directory);
 }
 
 void Model::Draw(const Shader &shader) {
@@ -51,30 +51,26 @@ std::vector<Texture> Model::loadMaterialTextures(
         aiTextureType type,
         const std::string &typeName) {
 //TODO: Fix Texture issues
-//    std::vector<Texture> textures;
-//    for (unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
-//        aiString str;
-//        mat->GetTexture(type, i, &str);
-//        bool skip = false;
-//        for (auto &j : textures_loaded) {
-//            if (std::strcmp(j.path.c_str(), str.C_Str()) == 0) {
-//                textures.push_back(j);
-//                skip = true;
-//                break;
-//            }
-//        }
-//        if (!skip) {
-//            // not already loaded before
-//            Texture texture;
-//            texture.id = TextureFromFile(str.C_Str(), directory);
-//            texture.type = typeName;
-//            texture.path = str.C_Str();
-//            textures.push_back(texture);
-//            textures_loaded.push_back(texture);
-//        }
-//    }
-//    return textures;
-    return std::vector<Texture>();
+    std::vector<Texture> textures;
+    for (unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
+        aiString str;
+        mat->GetTexture(type, i, &str);
+        bool skip = false;
+        for (auto &t : textures_loaded) {
+            if (std::strcmp(t.path().c_str(), str.C_Str()) == 0) {
+                textures.push_back(t);
+                skip = true;
+                break;
+            }
+        }
+        if (!skip) {
+            // not already loaded before
+            Texture texture(str.C_Str(), typeName);
+            textures.push_back(texture);
+            textures_loaded.push_back(texture);
+        }
+    }
+    return textures;
 }
 
 Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene) {

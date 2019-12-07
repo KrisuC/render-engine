@@ -5,8 +5,6 @@
 #ifndef RENDER_ENGINE_APPLICATION_HPP
 #define RENDER_ENGINE_APPLICATION_HPP
 
-#define scene
-
 // when using glfw3, glad must be included
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -14,13 +12,18 @@
 #include <Camera.hpp>
 #include <Texture.hpp>
 #include <glm/glm.hpp>
+#include <Skybox.hpp>
+#include <Light.hpp>
+#include <CookTorrancePbrObj.hpp>
 
 // The base class of App
 class Application {
 public:
     Application(int argc, char *argv[]);
+    static void initializeContext();
+
     inline int exec() {
-        initializeContext();
+        prepareUI();
         initializeScene();
         while (!applicationEnds) {
             renderPass();
@@ -30,41 +33,33 @@ public:
     }
 
 private:
-    void initializeContext();
     void initializeScene();
     void processKeyboard();
     void renderPass();
     void renderScene();
     void cleanUp();
+    void prepareUI();
 
 private:
     bool applicationEnds = false;
-    GLFWwindow *window = nullptr;
+    static GLFWwindow *window;
+    static std::string glsl_version;
 
-private scene:
+private:
+
     // Scnene configuration
-    Shader ctPbrShader;
-    Shader equirectToCubemapShader;
-    Shader skyboxShader;
-    Shader irradianceShader;
-    Shader prefilterShader;
-    Shader brdfLUTShader;
-
     Camera camera;
-
-    std::vector<glm::vec3> lightPositions;
-    std::vector<glm::vec3> lightColors;
-
-    unsigned int envCubemap;
-    unsigned int irradianceMap;
-    unsigned int prefilterMap;
-    unsigned int brdfLUTTexture;
+    std::vector<Light> lights;
+    Skybox skybox;
+    CookTorrancePbrObj ctPbrObj;
 
     // GUI controls variables
-    glm::vec3 ui_albedo = {0, 0, 0};
-    float     ui_roughness = 0.001;
-    float     ui_mettallic = 0.001;
-    bool      ui_useTexture = false;
+    struct {
+        glm::vec3 albedo = {0, 0, 0};
+        float     roughness = 0.001;
+        float     metallic = 0.001;
+        bool      useTexture = false;
+    } ui;
 };
 
 #endif //RENDER_ENGINE_APPLICATION_HPP

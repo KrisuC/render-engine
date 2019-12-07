@@ -14,15 +14,20 @@ public:
     CookTorrancePbrObj();
     void prepare() override;
     void render() override;
+    inline void setIrradianceMap(unsigned int map) { irradianceMap = map; }
+    inline void setPrefilterMap(unsigned int map) { prefilterMap = map; }
+    inline void setBrdfLTUTexture(unsigned int texture) { brdfLUTTexture = texture; }
 
 private:
-    Shader shader;
-
     Texture albedo;
     Texture normal;
     Texture metallic;
     Texture roughness;
     Texture ao;
+
+    unsigned int irradianceMap;
+    unsigned int prefilterMap;
+    unsigned int brdfLUTTexture;
 };
 
 
