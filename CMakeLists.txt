@@ -13,7 +13,11 @@ add_executable(engine
         src/basic/Camera.cpp
         src/engine/Application.cpp
         src/basic/Object.cpp
-        src/basic/Texture.cpp src/objects/SceneGraph.cpp src/objects/SceneGraph.hpp src/objects/CookTorrancePbrObj.cpp src/objects/CookTorrancePbrObj.hpp src/objects/Skybox.cpp src/objects/Skybox.hpp src/basic/Light.cpp src/basic/Light.hpp)
+        src/basic/Texture.cpp
+        src/objects/SceneGraph.cpp
+        src/objects/CookTorrancePbrObj.cpp
+        src/objects/Skybox.cpp
+        src/basic/Light.cpp)
 
 target_include_directories(engine PRIVATE ${PROJECT_SOURCE_DIR}/src)
 
