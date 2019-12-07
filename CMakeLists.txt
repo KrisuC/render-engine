@@ -5,19 +5,13 @@ project(render-engine)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(engine
-        src/engine/main.cpp
-        src/basic/Shader.cpp
-        src/basic/Model.cpp
-        src/basic/Mesh.cpp
-        src/basic/Camera.cpp
-        src/engine/Application.cpp
-        src/basic/Object.cpp
-        src/basic/Texture.cpp
-        src/objects/SceneGraph.cpp
-        src/objects/CookTorrancePbrObj.cpp
-        src/objects/Skybox.cpp
-        src/basic/Light.cpp)
+file(GLOB engine_src
+        "src/basic/*.cpp"
+        "src/engine/*.cpp"
+        "src/objects/*.cpp"
+)
+
+add_executable(engine ${engine_src})
 
 target_include_directories(engine PRIVATE ${PROJECT_SOURCE_DIR}/src)
 
