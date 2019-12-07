@@ -4,7 +4,7 @@
 
 #include <utility>
 #include <iostream>
-#include <Texture.hpp>
+#include "Texture.hpp"
 #include <stb_image.h>
 
 Texture::Texture(std::string textureFilePath, std::string tag) :

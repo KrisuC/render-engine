@@ -5,9 +5,9 @@
 #ifndef RENDER_ENGINE_COOKTORRANCEPBROBJ_HPP
 #define RENDER_ENGINE_COOKTORRANCEPBROBJ_HPP
 
-#include <Object.hpp>
-#include <Shader.hpp>
-#include <Mesh.hpp>
+#include "../basic/Object.hpp"
+#include "../basic/Shader.hpp"
+#include "../basic/Mesh.hpp"
 
 class CookTorrancePbrObj : public Object {
 public:

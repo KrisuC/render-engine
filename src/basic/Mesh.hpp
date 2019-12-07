@@ -17,8 +17,8 @@
 #include <string>
 #include <sstream>
 
-#include <Shader.hpp>
-#include <Texture.hpp>
+#include "Shader.hpp"
+#include "Texture.hpp"
 
 class Vertex {
 public:

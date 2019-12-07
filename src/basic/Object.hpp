@@ -5,7 +5,7 @@
 #ifndef RENDER_ENGINE_OBJECT_HPP
 #define RENDER_ENGINE_OBJECT_HPP
 
-#include <Shader.hpp>
+#include "Shader.hpp"
 
 class Object {
 public:

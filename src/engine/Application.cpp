@@ -2,20 +2,18 @@
 // Created by Krisu on 2019-11-22.
 //
 
-#include <Application.hpp>
 #include <iostream>
-#include <Model.hpp>
 
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 
-#include <glm/matrix.hpp>
+#include "engine/Application.hpp"
+#include "basic/Model.hpp"
+#include "objects/CookTorrancePbrObj.hpp"
+#include "objects/Skybox.hpp"
 
-#include <CookTorrancePbrObj.hpp>
-#include <Skybox.hpp>
-
-std::string Application::glsl_version = "";
+std::string Application::glsl_version;
 GLFWwindow *Application::window = nullptr;
 
 static void glfwErrorCallback(int error, const char *description) {

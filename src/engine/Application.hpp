@@ -8,13 +8,13 @@
 // when using glfw3, glad must be included
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <Shader.hpp>
-#include <Camera.hpp>
-#include <Texture.hpp>
+#include "../basic/Shader.hpp"
+#include "../basic/Camera.hpp"
+#include "../basic/Texture.hpp"
 #include <glm/glm.hpp>
-#include <Skybox.hpp>
-#include <Light.hpp>
-#include <CookTorrancePbrObj.hpp>
+#include "../objects/Skybox.hpp"
+#include "../basic/Light.hpp"
+#include "../objects/CookTorrancePbrObj.hpp"
 
 // The base class of App
 class Application {

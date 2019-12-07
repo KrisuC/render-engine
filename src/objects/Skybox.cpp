@@ -6,9 +6,9 @@
 #include <glm/matrix.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include <Skybox.hpp>
-#include <Texture.hpp>
-#include <Model.hpp>
+#include "Skybox.hpp"
+#include "../basic/Texture.hpp"
+#include "../basic/Model.hpp"
 
 void Skybox::prepare() {
     // convert equirectangular to cubemap

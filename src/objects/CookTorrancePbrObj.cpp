@@ -2,8 +2,8 @@
 // Created by Krisu on 2019-12-06.
 //
 
-#include <CookTorrancePbrObj.hpp>
-#include <Model.hpp>
+#include "CookTorrancePbrObj.hpp"
+#include "../basic/Model.hpp"
 
 CookTorrancePbrObj::CookTorrancePbrObj() :
     Object(Shader("./shaders/cookTorrancePBR.vert",

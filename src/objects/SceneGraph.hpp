@@ -5,7 +5,7 @@
 #ifndef RENDER_ENGINE_SCENEGRAPH_HPP
 #define RENDER_ENGINE_SCENEGRAPH_HPP
 
-#include <Object.hpp>
+#include "../basic/Object.hpp"
 #include <vector>
 #include <memory>
 

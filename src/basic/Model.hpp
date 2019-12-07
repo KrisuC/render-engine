@@ -20,8 +20,8 @@
 #include <cstdio>
 #include <string>
 
-#include <Shader.hpp>
-#include <Mesh.hpp>
+#include "Shader.hpp"
+#include "Mesh.hpp"
 
 class Model {
 public:

@@ -1,11 +1,8 @@
-#include <utility>
-
-#include <utility>
-
 //
 // Created by Krisu on 2019-11-19.
 //
 
+#include <utility>
 #include "Mesh.hpp"
 
 Mesh::Mesh(std::vector<Vertex> vertices,

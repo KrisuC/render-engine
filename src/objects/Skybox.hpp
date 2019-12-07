@@ -5,9 +5,9 @@
 #ifndef RENDER_ENGINE_SKYBOX_HPP
 #define RENDER_ENGINE_SKYBOX_HPP
 
-#include <Object.hpp>
-#include <Shader.hpp>
-#include <Texture.hpp>
+#include "../src/basic/Object.hpp"
+#include "../basic/Shader.hpp"
+#include "../basic/Texture.hpp"
 
 class Skybox : public Object {
 public:
