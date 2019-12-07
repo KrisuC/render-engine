@@ -1,6 +1,6 @@
 # render-engine
 
-A simple renderer written by myself.
+A simple renderer.
 
 To build and run on *nix systems:
 
