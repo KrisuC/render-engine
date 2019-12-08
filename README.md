@@ -2,7 +2,7 @@
 
 A simple renderer.
 
-To build and run on *nix systems:
+To build and run on *nix systems (macOS / Linux / FreeBSD):
 
 ```
 mkdir cmake-build
