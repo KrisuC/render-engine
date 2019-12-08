@@ -12,7 +12,9 @@ make -j16
 ./engine
 ```
 
+To build under windows, see:
 
+[a relative link](doc/How-to-build-under-M$ Windows.md)
 
 If you success, you will see something like these:
 
