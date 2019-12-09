@@ -2,6 +2,8 @@
 
 A simple renderer.
 
+## how to build
+
 To build and run on *nix systems (macOS / Linux / FreeBSD):
 
 ```
@@ -23,3 +25,13 @@ If you success, you will see something like these:
 ![screenshot3](doc/screenshot3.png)
 
 ![screenshot2](doc/screenshot2.png)
+
+
+## TODO list:
+
+- Scene graph
+- A message queue
+- Fix Texture to support PBR pipeline
+- Fix Mesh and Model
+- ...
+- More BxDF, more lighting models, yes, yes!
