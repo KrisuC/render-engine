@@ -2,11 +2,11 @@
 // Created by Krisu on 2019-12-06.
 //
 
-#include "CookTorrancePbrObj.hpp"
+#include "CookTorrancePbr.hpp"
 #include "../basic/Model.hpp"
 
-CookTorrancePbrObj::CookTorrancePbrObj() :
-    Object(Shader("./shaders/cookTorrancePBR.vert",
+CookTorrancePbr::CookTorrancePbr() :
+    RenderObject(Shader("./shaders/cookTorrancePBR.vert",
                   "./shaders/cookTorrancePBR.frag")),
     albedo("./resources/pbr/rustediron2_basecolor.png"),
     normal("./resources/pbr/rustediron2_normal.png"),
@@ -14,7 +14,7 @@ CookTorrancePbrObj::CookTorrancePbrObj() :
     roughness("./resources/pbr/rustediron2_roughness.png"),
     ao("./resources/pbr/ao.png") {}
 
-void CookTorrancePbrObj::prepare() {
+void CookTorrancePbr::prepare() {
     renderShader.use();
     renderShader.setValue("albedoMap", 0);
     renderShader.setValue("normalMap", 1);
@@ -43,7 +43,7 @@ void CookTorrancePbrObj::prepare() {
     glBindTexture(GL_TEXTURE_2D, brdfLUTTexture);
 }
 
-void CookTorrancePbrObj::render() {
+void CookTorrancePbr::render() {
     renderShader.use();
     if (!use_model) {
         Primitive::renderSphere();

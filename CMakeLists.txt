@@ -11,7 +11,7 @@ file(GLOB engine_src
         "src/objects/*.cpp"
 )
 
-add_executable(engine ${engine_src})
+add_executable(engine ${engine_src} src/basic/Transform.cpp src/basic/Transform.hpp src/objects/RenderObject.cpp src/objects/RenderObject.hpp)
 
 target_include_directories(engine PRIVATE ${PROJECT_SOURCE_DIR}/src)
 

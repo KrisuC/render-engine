@@ -2,17 +2,17 @@
 // Created by Krisu on 2019-12-06.
 //
 
-#ifndef RENDER_ENGINE_COOKTORRANCEPBROBJ_HPP
-#define RENDER_ENGINE_COOKTORRANCEPBROBJ_HPP
+#ifndef RENDER_ENGINE_COOKTORRANCEPBR_HPP
+#define RENDER_ENGINE_COOKTORRANCEPBR_HPP
 
-#include "basic/Object.hpp"
 #include "basic/Shader.hpp"
 #include "basic/Mesh.hpp"
 #include "basic/Model.hpp"
+#include "objects/RenderObject.hpp"
 
-class CookTorrancePbrObj : public Object {
+class CookTorrancePbr : public RenderObject {
 public:
-    CookTorrancePbrObj();
+    CookTorrancePbr();
     void prepare() override;
     void render() override;
 
@@ -39,4 +39,4 @@ private:
 };
 
 
-#endif //RENDER_ENGINE_COOKTORRANCEPBROBJ_HPP
+#endif //RENDER_ENGINE_COOKTORRANCEPBR_HPP

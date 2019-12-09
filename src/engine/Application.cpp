@@ -10,7 +10,7 @@
 
 #include "engine/Application.hpp"
 #include "basic/Model.hpp"
-#include "objects/CookTorrancePbrObj.hpp"
+#include "objects/CookTorrancePbr.hpp"
 #include "objects/Skybox.hpp"
 #include "Application.hpp"
 

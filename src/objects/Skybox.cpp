@@ -10,6 +10,24 @@
 #include "../basic/Texture.hpp"
 #include "../basic/Model.hpp"
 
+void Skybox::render() {
+    renderShader.use();
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap);
+    Primitive::renderCube();
+}
+
+Skybox::Skybox() :
+        Object(Shader("./shaders/skybox.vert", "./shaders/skybox.frag")),
+        equirectToCubemapShader("./shaders/cubemap.vert",
+                                "./shaders/equirectangularToCubemap.frag"),
+        irradianceShader("./shaders/cubemap.vert",
+                         "./shaders/irradianceConvolution.frag"),
+        prefilterShader("./shaders/cubemap.vert",
+                        "./shaders/prefilter_map.frag"),
+        brdfLUTShader("./shaders/brdf.vert", "./shaders/brdf.frag"),
+        hdrTexture("./resources/ibl/newport_loft.hdr", "hdr") { }
+
 void Skybox::prepare() {
     // convert equirectangular to cubemap
     glEnable(GL_DEPTH_TEST);
@@ -178,24 +196,5 @@ void Skybox::prepare() {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void Skybox::render() {
-    renderShader.use();
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap);
-    Primitive::renderCube();
-}
 
-Skybox::Skybox() :
-    Object(Shader("./shaders/skybox.vert", "./shaders/skybox.frag")),
-    equirectToCubemapShader("./shaders/cubemap.vert",
-                            "./shaders/equirectangularToCubemap.frag"),
-    irradianceShader("./shaders/cubemap.vert",
-                     "./shaders/irradianceConvolution.frag"),
-    prefilterShader("./shaders/cubemap.vert",
-                         "./shaders/prefilter_map.frag"),
-    brdfLUTShader("./shaders/brdf.vert", "./shaders/brdf.frag"),
-    hdrTexture("./resources/ibl/newport_loft.hdr", "hdr")
-    {
-
-}
 

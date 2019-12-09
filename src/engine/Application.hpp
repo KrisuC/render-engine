@@ -14,7 +14,7 @@
 #include <glm/glm.hpp>
 #include "../objects/Skybox.hpp"
 #include "../basic/Light.hpp"
-#include "../objects/CookTorrancePbrObj.hpp"
+#include "objects/CookTorrancePbr.hpp"
 
 // The base class of App
 class Application {
@@ -51,7 +51,7 @@ private:
     Camera camera;
     std::vector<Light> lights;
     Skybox skybox;
-    CookTorrancePbrObj ctPbrObj;
+    CookTorrancePbr ctPbrObj;
 
 
     // GUI controls variables

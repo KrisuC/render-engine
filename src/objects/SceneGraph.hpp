@@ -5,7 +5,8 @@
 #ifndef RENDER_ENGINE_SCENEGRAPH_HPP
 #define RENDER_ENGINE_SCENEGRAPH_HPP
 
-#include "../basic/Object.hpp"
+#include "basic/Object.hpp"
+#include "basic/Transform.hpp"
 #include <vector>
 #include <memory>
 
@@ -13,20 +14,25 @@
 class SceneGraph : public Object {
 public:
     SceneGraph() = default;
-    inline void appendObject(Object *obj) { scene.push_back(obj); }
+    inline void appendObject(Object *obj) {
+        scene.push_back(std::make_shared<Object>(obj));
+    }
     void prepare() override {
-        for (Object *objp : scene) {
+        for (auto &objp : scene) {
             objp->prepare();
         }
     }
     void render() override {
-        for (Object *objp : scene) {
+        for (auto &objp : scene) {
             objp->render();
         }
     }
 
 private:
-    std::vector<Object *> scene;
+    // A linear structure for now...
+    std::vector<std::shared_ptr<Object>> scene;
+    Transform view;
+    Transform projection;
 };
 
 
