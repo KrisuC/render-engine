@@ -7,8 +7,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "Skybox.hpp"
-#include "../basic/Texture.hpp"
-#include "../basic/Model.hpp"
+#include "basic/Texture.hpp"
+#include "basic/Model.hpp"
 
 void Skybox::render() {
     renderShader.use();

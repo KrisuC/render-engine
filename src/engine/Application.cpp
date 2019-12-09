@@ -133,7 +133,7 @@ void Application::renderPass() {
 
 
 
-void Application::initializeScene() {
+void Application::prepareScene() {
     camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f));
 
     lights = {
@@ -168,6 +168,8 @@ void Application::renderScene() {
     ctPbrObj.setShaderUnif("view", view);
     ctPbrObj.setShaderUnif("camPos", camera.Position);
 
+    // TODO: encapsulate light in scene graph as a global effets append to
+    //       certain nodes
     // render lights and set lights uniforms
     for (int i = 0; i < lights.size(); i++) {
         glm::vec3 newPos = lights[i].position +
@@ -185,6 +187,8 @@ void Application::renderScene() {
     model = glm::rotate(model, (float)glfwGetTime(),  glm::vec3(0, 1, 0));
 
     // First Part
+    // TODO: replace these dirty codes with a proper signal/slots or a
+    //       message queue
     ctPbrObj.setShaderUnif("model", model);
     ctPbrObj.setShaderUnif("roughnessVal", ui.roughness);
     ctPbrObj.setShaderUnif("metallicVal", ui.metallic);
@@ -205,6 +209,7 @@ void Application::renderScene() {
     float spacing = 2.5;
     ctPbrObj.setShaderUnif("albedoVal", 0.5, 0.0, 0.0);
     ctPbrObj.setShaderUnif("aoVal", 1.0f);
+    // TODO: replace these dirty scene generations with a better one
     for (int row = 0; row < rows; row++) {
         ctPbrObj.setShaderUnif("metallicVal", (float)row / rows);
         for (int col = 0; col < cols; col++) {

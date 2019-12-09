@@ -8,9 +8,9 @@
 #include "basic/Shader.hpp"
 #include "basic/Mesh.hpp"
 #include "basic/Model.hpp"
-#include "objects/RenderObject.hpp"
+#include "basic/Object.hpp"
 
-class CookTorrancePbr : public RenderObject {
+class CookTorrancePbr : public Object {
 public:
     CookTorrancePbr();
     void prepare() override;

@@ -8,13 +8,13 @@
 
 class Shader {
 public:
-    unsigned int getID();
     // constructor reads and builds the shader
     Shader(const GLchar *vertexPath,
            const GLchar *fragmentPath,
            const GLchar *geometryPath = nullptr);
     Shader() = default;
     // use/activate the shader
+    unsigned int getID();
     void use();
     // utility uniform functions
     void setValue(const std::string &name, bool value) const;
@@ -35,7 +35,8 @@ private:
     // the program id
     unsigned int id = 0;
     // checking error
-    void checkCompileErrors(GLuint shader, const std::string& type, std::string path);
+    void checkCompileErrors(GLuint shader, const std::string &type,
+                                           std::string path);
 };
 
 

@@ -24,16 +24,16 @@ public:
 
     inline int exec() {
         prepareUI();
-        initializeScene();
+        prepareScene();
         while (!applicationEnds) {
-            renderPass();
+            renderPass(); // renderScene()
         }
         cleanUp();
         return 0;
     }
 
 private:
-    void initializeScene();
+    void prepareScene();
     void processKeyboard();
     void renderPass();
     void renderScene();
@@ -46,7 +46,8 @@ private:
     static std::string glsl_version;
 
 private:
-    // TODO: manage scene with scene graph
+    // TODO: manage scene with scene graph. Obejects should be allocated
+    //       in prepareScene()
     // Scnene configuration
     Camera camera;
     std::vector<Light> lights;
