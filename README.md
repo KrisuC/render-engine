@@ -2,7 +2,7 @@
 
 A simple renderer.
 
-## how to build
+## How to build
 
 To build and run on *nix systems (macOS / Linux / FreeBSD):
 
@@ -36,7 +36,7 @@ If you success, you will see something like these:
 - imgui
 - stb_image
 
-Feature List:
+## Feature List:
 
 - Cook-Torrance BRDF
 - Basic transforms
