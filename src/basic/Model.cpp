@@ -54,6 +54,7 @@ std::vector<Texture> Model::loadMaterialTextures(
         aiMaterial *mat,
         aiTextureType type,
         const std::string &typeName) {
+
     //TODO: Fix Texture issues
     std::vector<Texture> textures;
     for (unsigned int i = 0; i < mat->GetTextureCount(type); i++) {

@@ -116,7 +116,7 @@ void main() {
 
     vec3 Lo = vec3(0.0);
     for (int i = 0; i < 4; i++) {
-        // per-light raiance
+        // Per-light raiance
         vec3 L = normalize(lightPositions[i] - WorldPos);
         vec3 H = normalize(V + L); // half-way
         float dist = length(lightPositions[i] - WorldPos);

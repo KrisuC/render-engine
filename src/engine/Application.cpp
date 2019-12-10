@@ -21,11 +21,6 @@ static void glfwErrorCallback(int error, const char *description) {
     std::cerr << "Glfw Error " << error << ": " << description << std::endl;
 }
 
-Application::Application(int argc, char **argv) {
-    // TODO:
-    // deal with arguments, if there is any
-}
-
 void Application::initializeContext(){
     // Setup ImGui context
     glfwSetErrorCallback(glfwErrorCallback);
@@ -134,6 +129,8 @@ void Application::renderPass() {
 
 
 void Application::prepareScene() {
+    // TODO: replace all these shits with a scene description files
+    //       and some function for generating scene graph
     camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f));
 
     lights = {
@@ -258,5 +255,9 @@ void Application::processKeyboard() {
     if_press_then(GLFW_KEY_E, camera.processMouseMovement(deltaTime *  1000, 0));
     if_press_then(GLFW_KEY_C, camera.processMouseMovement(0, deltaTime * -1000));
     if_press_then(GLFW_KEY_Z, camera.processMouseMovement(0, deltaTime *  1000));
+}
+
+void Application::processArgs(int argc, char **argv) {
+    // TODO: process programm arguments if there is any
 }
 

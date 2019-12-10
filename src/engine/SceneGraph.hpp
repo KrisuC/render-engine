@@ -20,33 +20,17 @@
 // SGNode(interior) : responsible for lights and other special effects
 // Obeject(leaf)    : real entity to be rendered
 
+// TODO: A method to construct a scene graph from a scene description
+//       file
 class SceneGraph {
 public:
     SceneGraph() = default;
-    inline void appendObject(Object *obj) {
-        scene.push_back(std::make_shared<Object>(obj));
-    }
-    void prepareObjects() {
-        for (auto &objp : scene) {
-            objp->setShaderUnif("projection", projection);
-            objp->prepare();
-        }
-    }
-    void renderObjects() {
-        for (auto &objp : scene) {
-            objp->render();
-        }
-    }
-    void updateView() {
-        for (auto &objp : scene) {
-            objp->setShaderUnif("view", view);
-        }
-    }
+
+    void prepareObjects();
+    void renderObjects();
+    void updateView();
 
 private:
-    // TODO: replace with a tree-like structure
-    std::vector<std::shared_ptr<Object>> scene;
-
     SGNode *root;
 
     Transform view;

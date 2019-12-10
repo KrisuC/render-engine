@@ -10,6 +10,7 @@
 int main(int argc, char *argv[]) {
     chdir("..");
     Application::initializeContext();
-    Application app(argc, argv);
+    Application &app = Application::instance();
+    app.processArgs(argc, argv);
     return app.exec();
 }

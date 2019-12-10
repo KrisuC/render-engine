@@ -8,13 +8,19 @@
 #include <vector>
 #include "basic/Light.hpp"
 #include "basic/Transform.hpp"
+#include "basic/Object.hpp"
 
 // A scene graph node
+// TODO: add specific post-effects, but how?
 class SGNode {
 public:
     SGNode() = default;
 
-private:
+    std::vector<Object> objects;
+
+    std::vector<SGNode> childs;
+    SGNode *parent;
+
     Transform localTranform;
     std::vector<Light> lights;
 };

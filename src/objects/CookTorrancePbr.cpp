@@ -6,7 +6,7 @@
 #include "../basic/Model.hpp"
 
 CookTorrancePbr::CookTorrancePbr() :
-    RenderObject(Shader("./shaders/cookTorrancePBR.vert",
+    Object(Shader("./shaders/cookTorrancePBR.vert",
                   "./shaders/cookTorrancePBR.frag")),
     albedo("./resources/pbr/rustediron2_basecolor.png"),
     normal("./resources/pbr/rustediron2_normal.png"),

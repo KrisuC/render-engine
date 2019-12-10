@@ -8,18 +8,24 @@
 // when using glfw3, glad must be included
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include "../basic/Shader.hpp"
-#include "../basic/Camera.hpp"
-#include "../basic/Texture.hpp"
 #include <glm/glm.hpp>
-#include "../objects/Skybox.hpp"
-#include "../basic/Light.hpp"
+
+#include "basic/Shader.hpp"
+#include "basic/Camera.hpp"
+#include "basic/Texture.hpp"
+#include "basic/Light.hpp"
+#include "objects/Skybox.hpp"
 #include "objects/CookTorrancePbr.hpp"
 
 // The base class of App
 class Application {
 public:
-    Application(int argc, char *argv[]);
+    // TODO: change to singleton
+    static Application &instance() {
+        static Application app;
+        return app;
+    }
+    void processArgs(int argc, char *argv[]);
     static void initializeContext();
 
     inline int exec() {
@@ -33,6 +39,8 @@ public:
     }
 
 private:
+    Application() = default;
+
     void prepareScene();
     void processKeyboard();
     void renderPass();
@@ -47,7 +55,7 @@ private:
 
 private:
     // TODO: manage scene with scene graph. Obejects should be allocated
-    //       in prepareScene()
+    //       in prepareScene() rather than insert here in application
     // Scnene configuration
     Camera camera;
     std::vector<Light> lights;
