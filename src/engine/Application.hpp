@@ -20,7 +20,6 @@
 // The base class of App
 class Application {
 public:
-    // TODO: change to singleton
     static Application &instance() {
         static Application app;
         return app;
