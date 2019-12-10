@@ -27,11 +27,35 @@ If you success, you will see something like these:
 ![screenshot2](doc/screenshot2.png)
 
 
+## Dependencies
+
+- glm
+- assimp
+- glfw
+- glad
+- imgui
+- stb_image
+
+Feature List:
+
+- Cook-Torrance BRDF
+- Basic transforms
+- Camera and  interaction
+- UI
+
 ## TODO list:
 
 - Scene graph
-- A message queue
+  - Acceleration data structure (BVH)
+    - View frustum culling
+  - External scene description File & Scene Parser
+- Shadow mapping
+- SSAO
+- Message queue (Signal/Slots)
 - Fix Texture to support PBR pipeline
 - Fix Mesh and Model
 - ...
+- Scripting Engine
+- General Purpose World/Scene Editor
 - More BxDF, more lighting models, yes, yes!
+
