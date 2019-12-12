@@ -9,6 +9,8 @@
 #include "basic/Transform.hpp"
 
 // Represents an entity in scene
+// TODO: make Object an entity that holds Mesh, Shaders, Transform,
+//       Textures.
 class Object {
 public:
     virtual void prepare() = 0;

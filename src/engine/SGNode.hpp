@@ -16,12 +16,13 @@ class SGNode {
 public:
     SGNode() = default;
 
-    std::vector<Object> objects;
+    std::vector<Object *> objects;
 
-    std::vector<SGNode> childs;
+    std::vector<SGNode *> childNodes;
     SGNode *parent;
 
-    Transform localTranform;
+    // If it's root, it may contain view, projection matrix?
+    Transform localTransform;
     std::vector<Light> lights;
 };
 

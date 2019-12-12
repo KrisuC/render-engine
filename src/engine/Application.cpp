@@ -12,7 +12,7 @@
 #include "basic/Model.hpp"
 #include "objects/CookTorrancePbr.hpp"
 #include "objects/Skybox.hpp"
-#include "Application.hpp"
+#include "engine/SceneGraph.hpp"
 
 std::string Application::glsl_version;
 GLFWwindow *Application::window = nullptr;
@@ -146,6 +146,17 @@ void Application::prepareScene() {
     ctPbrObj.setPrefilterMap(skybox.getPrefilterMap());
     ctPbrObj.addModel(new Model("./resources/meshes/dragon.obj"));
     ctPbrObj.prepare();
+
+    // Scene graph generation (by hand???)
+    SceneGraph sceneGraph{};
+    sceneGraph.setRoot(new SGNode());
+    // part 1
+    auto frontSphere = new CookTorrancePbr();
+    sceneGraph.root->objects.push_back(frontSphere);
+    // part 2
+    auto backSpheresGroup = new SGNode();
+    sceneGraph.root->childNodes.push_back(backSpheresGroup);
+    
 }
 
 

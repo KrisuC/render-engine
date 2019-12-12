@@ -26,15 +26,13 @@ class SceneGraph {
 public:
     SceneGraph() = default;
 
+    void setRoot(SGNode *root);
     void prepareObjects();
     void renderObjects();
     void updateView();
 
-private:
+public:
     SGNode *root;
-
-    Transform view;
-    Transform projection;
 };
 
 
