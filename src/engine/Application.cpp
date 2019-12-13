@@ -148,6 +148,7 @@ void Application::prepareScene() {
     ctPbrObj.prepare();
 
     // Scene graph generation (by hand???)
+    // TODO: auto scene graph construction from scene description file
     SceneGraph sceneGraph{};
     sceneGraph.setRoot(new SGNode());
     // part 1
@@ -156,7 +157,7 @@ void Application::prepareScene() {
     // part 2
     auto backSpheresGroup = new SGNode();
     sceneGraph.root->childNodes.push_back(backSpheresGroup);
-    
+
 }
 
 
