@@ -57,7 +57,6 @@ private:
     //       in prepareScene() rather than insert here in application
     // Scnene configuration
     Camera camera;
-    std::vector<Light> lights;
     Skybox skybox;
     CookTorrancePbr ctPbrObj;
 

@@ -133,7 +133,7 @@ void Application::prepareScene() {
     //       and some function for generating scene graph
     camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f));
 
-    lights = {
+    std::vector<Light> lights = {
             {{-10.0f,  10.0f, 0.0f}, {300.0f, 300.0f, 300.0f}},
             {{ 10.0f,  10.0f, 0.0f}, {300.0f, 300.0f, 300.0f}},
             {{-10.0f, -10.0f, 0.0f}, {300.0f, 300.0f, 300.0f}},
@@ -152,12 +152,30 @@ void Application::prepareScene() {
     SceneGraph sceneGraph{};
     sceneGraph.setRoot(new SGNode());
     // part 1
-    auto frontSphere = new CookTorrancePbr();
-    sceneGraph.root->objects.push_back(frontSphere);
+    auto sphere = new CookTorrancePbr();
+    sceneGraph.root->objects.push_back(sphere);
+    sceneGraph.root->localTransform =
+            Transform(glm::translate(glm::mat4(1.f), {0, 0, -5}));
     // part 2
     auto backSpheresGroup = new SGNode();
     sceneGraph.root->childNodes.push_back(backSpheresGroup);
-
+    backSpheresGroup->localTransform =
+            Transform(glm::translate(glm::mat4(1.f), {0, 0, -5}));
+    int rows = 7, cols = 7;
+    float spacing = 2.5;
+    for (int row = 0; row < rows; row++) {
+        for (int col = 0; col < cols; col++) {
+            glm::vec3 pos = {
+                    (float(col) - cols / 2.f) * spacing,
+                    (float(row) - rows / 2.f) * spacing,
+                    -10.f
+            };
+            auto lt = glm::translate(glm::mat4(1.f), pos);
+            auto sph = new CookTorrancePbr();
+            sph->setLocalTransform(lt);
+            backSpheresGroup->objects.push_back(sph);
+        }
+    }
 }
 
 

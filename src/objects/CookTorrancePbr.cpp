@@ -15,15 +15,15 @@ CookTorrancePbr::CookTorrancePbr() :
     ao("./resources/pbr/ao.png") {}
 
 void CookTorrancePbr::prepare() {
-    renderShader.use();
-    renderShader.setValue("albedoMap", 0);
-    renderShader.setValue("normalMap", 1);
-    renderShader.setValue("metallicMap", 2);
-    renderShader.setValue("roughnessMap", 3);
-    renderShader.setValue("aoMap", 4);
-    renderShader.setValue("irradianceMap", 5);
-    renderShader.setValue("prefilterMap", 6);
-    renderShader.setValue("brdfLUT", 7);
+    shader.use();
+    shader.setValue("albedoMap", 0);
+    shader.setValue("normalMap", 1);
+    shader.setValue("metallicMap", 2);
+    shader.setValue("roughnessMap", 3);
+    shader.setValue("aoMap", 4);
+    shader.setValue("irradianceMap", 5);
+    shader.setValue("prefilterMap", 6);
+    shader.setValue("brdfLUT", 7);
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, albedo.id());
@@ -44,7 +44,7 @@ void CookTorrancePbr::prepare() {
 }
 
 void CookTorrancePbr::render() {
-    renderShader.use();
+    shader.use();
     if (!use_model) {
         Primitive::renderSphere();
     } else {

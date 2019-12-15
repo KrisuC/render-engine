@@ -7,6 +7,7 @@
 
 #include "basic/Shader.hpp"
 #include "basic/Transform.hpp"
+#include "basic/Geometry.hpp"
 
 // Represents an entity in scene
 // TODO: make Object an entity that holds Mesh, Shaders, Transform,
@@ -18,7 +19,7 @@ public:
     virtual ~Object() = default;
 
 public:
-    explicit Object(const Shader &rs) : renderShader(rs) {}
+    explicit Object(const Shader &rs) : shader(rs) {}
 
     // setting local transformation relative to its parent
     inline void setLocalTransform(const glm::mat4 t) {
@@ -27,16 +28,17 @@ public:
 
     template <typename ...Args>
     inline void setShaderUnif(const std::string &name, Args &&...args) {
-        renderShader.use();
-        renderShader.setValue(name, std::forward<Args>(args) ...);
+        shader.use();
+        shader.setValue(name, std::forward<Args>(args) ...);
     }
 
 protected:
     // The shader that is respondsible for rendering the object
-    Shader renderShader;
+    Shader shader;
     // The world transformation of the current object is the parent's
     // world transformation multiplying the object's local transformation
     Transform localTransfrom;
+    Geometry geometry;
 };
 
 

@@ -19,7 +19,7 @@ public:
     std::vector<Object *> objects;
 
     std::vector<SGNode *> childNodes;
-    SGNode *parent;
+    SGNode *parent = nullptr;
 
     // If it's root, it may contain view, projection matrix?
     Transform localTransform;

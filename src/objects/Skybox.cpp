@@ -11,7 +11,7 @@
 #include "basic/Model.hpp"
 
 void Skybox::render() {
-    renderShader.use();
+    shader.use();
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap);
     Primitive::renderCube();
