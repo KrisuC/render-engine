@@ -14,6 +14,7 @@
 #include "basic/Camera.hpp"
 #include "basic/Texture.hpp"
 #include "basic/Light.hpp"
+#include "engine/SceneGraph.hpp"
 #include "objects/Skybox.hpp"
 #include "objects/CookTorrancePbr.hpp"
 
@@ -58,8 +59,7 @@ private:
     // Scnene configuration
     Camera camera;
     Skybox skybox;
-    CookTorrancePbr ctPbrObj;
-
+    SceneGraph sceneGraph;
 
     // GUI controls variables
     struct {

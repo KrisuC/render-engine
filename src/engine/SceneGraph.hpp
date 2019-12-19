@@ -10,6 +10,7 @@
 
 #include "basic/Object.hpp"
 #include "basic/Transform.hpp"
+#include "basic/Camera.hpp"
 #include "engine/SGNode.hpp"
 
 // SceneGraph -> Node -> Node -> Object
@@ -26,13 +27,14 @@ class SceneGraph {
 public:
     SceneGraph() = default;
 
-    void setRoot(SGNode *root);
-    void prepareObjects();
-    void renderObjects();
-    void updateView();
+    inline void setRoot(SGNode *root) { this->p_root = root; }
+    inline SGNode *root() { return p_root; }
 
-public:
-    SGNode *root;
+    void prepareScene();
+    void renderScene();
+
+private:
+    SGNode *p_root;
 };
 
 

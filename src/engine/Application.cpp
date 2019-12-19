@@ -51,6 +51,8 @@ void Application::initializeContext(){
     }
 }
 
+
+
 void Application::prepareUI() {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -132,37 +134,34 @@ void Application::prepareScene() {
     // TODO: replace all these shits with a scene description files
     //       and some function for generating scene graph
     camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f));
+    skybox.prepare();
 
+    // TODO: auto scene graph construction from scene description file
+    // Scene graph generation (by hand) for testing
     std::vector<Light> lights = {
             {{-10.0f,  10.0f, 0.0f}, {300.0f, 300.0f, 300.0f}},
             {{ 10.0f,  10.0f, 0.0f}, {300.0f, 300.0f, 300.0f}},
             {{-10.0f, -10.0f, 0.0f}, {300.0f, 300.0f, 300.0f}},
             {{ 10.0f, -10.0f, 0.0f}, {300.0f, 300.0f, 300.0f}},
     };
-    skybox.prepare();
 
-    ctPbrObj.setIrradianceMap(skybox.getIrradianceMap());
-    ctPbrObj.setBrdfLTUTexture(skybox.getBrdfLUTTexture());
-    ctPbrObj.setPrefilterMap(skybox.getPrefilterMap());
-    ctPbrObj.addModel(new Model("./resources/meshes/dragon.obj"));
-    ctPbrObj.prepare();
-
-    // Scene graph generation (by hand???)
-    // TODO: auto scene graph construction from scene description file
-    SceneGraph sceneGraph{};
     sceneGraph.setRoot(new SGNode());
+    // setting up lights
+    sceneGraph.root()->setLights(lights);
     // part 1
-    auto sphere = new CookTorrancePbr();
-    sceneGraph.root->objects.push_back(sphere);
-    sceneGraph.root->localTransform =
-            Transform(glm::translate(glm::mat4(1.f), {0, 0, -5}));
+    auto frontSphere = new CookTorrancePbr();
+    sceneGraph.root()->appendObjects(frontSphere);
+    sceneGraph.root()->setLocalTransform(
+            Transform(glm::translate(glm::mat4(1.f), {0, 0, -5})));
     // part 2
     auto backSpheresGroup = new SGNode();
-    sceneGraph.root->childNodes.push_back(backSpheresGroup);
-    backSpheresGroup->localTransform =
-            Transform(glm::translate(glm::mat4(1.f), {0, 0, -5}));
+    sceneGraph.root()->appendNodes(backSpheresGroup);
+    backSpheresGroup->setLocalTransform(
+            Transform(glm::translate(glm::mat4(1.f), {0, 0, -5})));
     int rows = 7, cols = 7;
     float spacing = 2.5;
+    backSpheresGroup->setGlobalShaderValue("albedoVal", 0.5, 0.0, 0.0);
+    backSpheresGroup->setGlobalShaderValue("aoVal", 1.0f);
     for (int row = 0; row < rows; row++) {
         for (int col = 0; col < cols; col++) {
             glm::vec3 pos = {
@@ -171,11 +170,16 @@ void Application::prepareScene() {
                     -10.f
             };
             auto lt = glm::translate(glm::mat4(1.f), pos);
-            auto sph = new CookTorrancePbr();
-            sph->setLocalTransform(lt);
-            backSpheresGroup->objects.push_back(sph);
+            auto backSphere = new CookTorrancePbr();
+            backSphere->setLocalTransform(Transform(lt));
+            backSphere->setShaderUnif("metallicVal", (float)row / rows);
+            backSphere->setShaderUnif("roughnessVal",
+                    glm::clamp((float)col / cols, 0.05f, 1.0f));
+            backSpheresGroup->appendObjects(backSphere);
         }
     }
+    sceneGraph.root()->updateLights();
+    sceneGraph.prepareScene();
 }
 
 
@@ -187,72 +191,14 @@ void Application::renderScene() {
 
     int width, height;
     glfwGetWindowSize(window, &width, &height);
-    static glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom),
+    glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom),
                                             (float)width / height, 0.1f, 100.0f);
     glm::mat4 view = camera.GetViewMatrix();
 
-    ctPbrObj.setShaderUnif("projection", projection);
-    ctPbrObj.setShaderUnif("view", view);
-    ctPbrObj.setShaderUnif("camPos", camera.Position);
-
-    // TODO: encapsulate light in scene graph as a global effets append to
-    //       certain nodes
-    // render lights and set lights uniforms
-    for (int i = 0; i < lights.size(); i++) {
-        glm::vec3 newPos = lights[i].position +
-                           glm::vec3(sin(glfwGetTime() * 5.0) * 5.0, 0.0, 0.0);
-        ctPbrObj.setShaderUnif(
-                "lightPositions[" + std::to_string(i) + "]",
-                newPos);
-        ctPbrObj.setShaderUnif(
-                "lightColors[" + std::to_string(i) + "]",
-                lights[i].color);
-    }
-
-    auto model = glm::mat4(1.0f);
-    model = glm::translate(model, glm::vec3(0, 0, -5));
-    model = glm::rotate(model, (float)glfwGetTime(),  glm::vec3(0, 1, 0));
-
-    // First Part
-    // TODO: replace these dirty codes with a proper signal/slots or a
-    //       message queue
-    ctPbrObj.setShaderUnif("model", model);
-    ctPbrObj.setShaderUnif("roughnessVal", ui.roughness);
-    ctPbrObj.setShaderUnif("metallicVal", ui.metallic);
-    ctPbrObj.setShaderUnif("albedoVal", ui.albedo);
-    ctPbrObj.setShaderUnif("useTexture", ui.useTexture);
-    if (ui.useModel) {
-        float s = 4.0f;
-        ctPbrObj.setShaderUnif("model",
-                glm::scale(model, glm::vec3(s, s, s)));
-    }
-    ctPbrObj.useModel(ui.useModel);
-    ctPbrObj.render();
-
-    // Second Part
-    ctPbrObj.useModel(false);
-    ctPbrObj.setShaderUnif("useTexture", false);
-    int rows = 7, cols = 7;
-    float spacing = 2.5;
-    ctPbrObj.setShaderUnif("albedoVal", 0.5, 0.0, 0.0);
-    ctPbrObj.setShaderUnif("aoVal", 1.0f);
-    // TODO: replace these dirty scene generations with a better one
-    for (int row = 0; row < rows; row++) {
-        ctPbrObj.setShaderUnif("metallicVal", (float)row / rows);
-        for (int col = 0; col < cols; col++) {
-            ctPbrObj.setShaderUnif("roughnessVal",
-                    glm::clamp((float)col / cols, 0.05f, 1.0f));
-
-            glm::vec3 pos = {
-                    (float(col) - cols / 2.f) * spacing,
-                    (float(row) - rows / 2.f) * spacing,
-                    -10.f
-            };
-            model = glm::translate(glm::mat4(1.f), pos);
-            ctPbrObj.setShaderUnif("model", model);
-            ctPbrObj.render();
-        }
-    }
+    sceneGraph.root()->setGlobalShaderValue("projection", projection);
+    sceneGraph.root()->setGlobalShaderValue("view", view);
+    sceneGraph.root()->setGlobalShaderValue("camPos", camera.Position);
+    sceneGraph.renderScene();
 
     skybox.setShaderUnif("view", view);
     skybox.setShaderUnif("projection", projection);
@@ -270,21 +216,25 @@ void Application::cleanUp() {
     glfwTerminate();
 }
 
+
+
 void Application::processKeyboard() {
     float deltaTime = 1.0 / ImGui::GetIO().Framerate;
 
-#define if_press_then(GLFW_KEY_XXX, function_call) \
+#define if_press(GLFW_KEY_XXX, function_call) \
     if (glfwGetKey(window, GLFW_KEY_XXX) == GLFW_PRESS) { function_call; }
 
-    if_press_then(GLFW_KEY_ESCAPE, glfwSetWindowShouldClose(window, true));
-    if_press_then(GLFW_KEY_W, camera.processKeyboard(FORWARD, deltaTime));
-    if_press_then(GLFW_KEY_S, camera.processKeyboard(BACKWARD, deltaTime));
-    if_press_then(GLFW_KEY_A, camera.processKeyboard(LEFT, deltaTime));
-    if_press_then(GLFW_KEY_D, camera.processKeyboard(RIGHT, deltaTime));
-    if_press_then(GLFW_KEY_Q, camera.processMouseMovement(deltaTime * -1000, 0));
-    if_press_then(GLFW_KEY_E, camera.processMouseMovement(deltaTime *  1000, 0));
-    if_press_then(GLFW_KEY_C, camera.processMouseMovement(0, deltaTime * -1000));
-    if_press_then(GLFW_KEY_Z, camera.processMouseMovement(0, deltaTime *  1000));
+    if_press(GLFW_KEY_ESCAPE, glfwSetWindowShouldClose(window, true));
+    if_press(GLFW_KEY_W, camera.processKeyboard(FORWARD, deltaTime));
+    if_press(GLFW_KEY_S, camera.processKeyboard(BACKWARD, deltaTime));
+    if_press(GLFW_KEY_A, camera.processKeyboard(LEFT, deltaTime));
+    if_press(GLFW_KEY_D, camera.processKeyboard(RIGHT, deltaTime));
+    if_press(GLFW_KEY_Q, camera.processMouseMovement(deltaTime * -1000, 0));
+    if_press(GLFW_KEY_E, camera.processMouseMovement(deltaTime *  1000, 0));
+    if_press(GLFW_KEY_C, camera.processMouseMovement(0, deltaTime * -1000));
+    if_press(GLFW_KEY_Z, camera.processMouseMovement(0, deltaTime *  1000));
+
+#undef if_press
 }
 
 void Application::processArgs(int argc, char **argv) {

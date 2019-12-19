@@ -22,7 +22,7 @@ public:
     explicit Object(const Shader &rs) : shader(rs) {}
 
     // setting local transformation relative to its parent
-    inline void setLocalTransform(const glm::mat4 t) {
+    inline void setLocalTransform(const Transform &t) {
         localTransfrom = t;
     }
 
@@ -36,8 +36,9 @@ protected:
     // The shader that is respondsible for rendering the object
     Shader shader;
     // The world transformation of the current object is the parent's
-    // world transformation multiplying the object's local transformation
+    //  world transformation multiplying the object's local transformation
     Transform localTransfrom;
+    // store triangular meshes
     Geometry geometry;
 };
 
