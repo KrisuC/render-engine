@@ -8,13 +8,13 @@
 
 #include "Skybox.hpp"
 #include "basic/Texture.hpp"
-#include "basic/Model.hpp"
+#include "engine/Model.hpp"
 
 void Skybox::render() {
     shader.use();
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap);
-    Primitive::renderCube();
+    Primitive::unitCube();
 }
 
 Skybox::Skybox() :
@@ -87,7 +87,7 @@ void Skybox::prepare() {
                                GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, envCubemap, 0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        Primitive::renderCube();
+        Primitive::unitCube();
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -123,7 +123,7 @@ void Skybox::prepare() {
                                GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, irradianceMap, 0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        Primitive::renderCube();
+        Primitive::unitCube();
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -168,7 +168,7 @@ void Skybox::prepare() {
                                    GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, prefilterMap, mip);
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            Primitive::renderCube();
+            Primitive::unitCube();
         }
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -192,7 +192,7 @@ void Skybox::prepare() {
     glViewport(0, 0, 512, 512);
     brdfLUTShader.use();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    Primitive::renderQuad();
+    Primitive::unitQuad();
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 

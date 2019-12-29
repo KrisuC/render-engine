@@ -20,8 +20,8 @@
 #include <cstdio>
 #include <string>
 
-#include "Shader.hpp"
-#include "Mesh.hpp"
+#include "basic/Shader.hpp"
+#include "basic/Mesh.hpp"
 
 // Model encapsulate Material and Mesh
 class Model {
@@ -42,13 +42,6 @@ private:
                          const std::string &typeName);
     Mesh processMesh(aiMesh *mesh, const aiScene * scene);
 };
-
-// Rendering some fixed size primitive
-namespace Primitive {
-    void renderSphere();
-    void renderCube();
-    void renderQuad();
-}
 
 
 #endif //RENDER_LAB_MODEL_HPP

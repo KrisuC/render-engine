@@ -7,7 +7,7 @@
 
 #include "basic/Shader.hpp"
 #include "basic/Mesh.hpp"
-#include "basic/Model.hpp"
+#include "engine/Model.hpp"
 #include "basic/Object.hpp"
 
 class CookTorrancePbr : public Object {

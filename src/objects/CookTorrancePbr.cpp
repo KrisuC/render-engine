@@ -3,7 +3,7 @@
 //
 
 #include "CookTorrancePbr.hpp"
-#include "../basic/Model.hpp"
+#include "engine/Model.hpp"
 
 CookTorrancePbr::CookTorrancePbr() :
     Object(Shader("./shaders/cookTorrancePBR.vert",
@@ -46,7 +46,7 @@ void CookTorrancePbr::prepare() {
 void CookTorrancePbr::render() {
     shader.use();
     if (!use_model) {
-        Primitive::renderSphere();
+        Primitive::unitSphere();
     } else {
         model->render();
     }

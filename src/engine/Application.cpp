@@ -9,7 +9,7 @@
 #include <imgui_impl_opengl3.h>
 
 #include "engine/Application.hpp"
-#include "basic/Model.hpp"
+#include "Model.hpp"
 #include "objects/CookTorrancePbr.hpp"
 #include "objects/Skybox.hpp"
 #include "engine/SceneGraph.hpp"

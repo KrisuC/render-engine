@@ -9,6 +9,7 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <stb_image.h>
 
 #include <vector>
@@ -43,5 +44,13 @@ public:
 private:
     void setupMesh();
 };
+
+// Rendering some fixed size primitive
+namespace Primitive {
+    // Unit == 2 :)
+    Mesh unitSphere();
+    Mesh unitCube();
+    Mesh unitQuad();
+}
 
 #endif //RENDER_ENGINE_MESH_HPP
