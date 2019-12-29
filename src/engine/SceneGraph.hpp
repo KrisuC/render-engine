@@ -30,8 +30,31 @@ public:
     inline void setRoot(SGNode *root) { this->p_root = root; }
     inline SGNode *root() { return p_root; }
 
-    void prepareScene();
-    void renderScene();
+    void prepareScene() {
+        prepareNode(p_root);
+    }
+    void renderScene() {
+        p_root->updateLights();
+        renderNode(p_root);
+    }
+
+private:
+    void renderNode(SGNode *p_node) {
+        for (auto obj : p_node->objects) {
+            obj->render();
+        }
+        for (auto child : p_node->childNodes) {
+            renderNode(child);
+        }
+    }
+    void prepareNode(SGNode *p_node) {
+        for (auto obj : p_node->objects) {
+            obj->prepare();
+        }
+        for (auto child : p_node->childNodes) {
+            prepareNode(child);
+        }
+    }
 
 private:
     SGNode *p_root;

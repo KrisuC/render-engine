@@ -77,7 +77,7 @@ void Skybox::prepare() {
     equirectToCubemapShader.setValue("equirectangularMap", 0);
     equirectToCubemapShader.setValue("projection", captureProjection);
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, hdrTexture.id());
+    glBindTexture(GL_TEXTURE_2D, hdrTexture.bind());
 
     glViewport(0, 0, dim, dim);
     glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);

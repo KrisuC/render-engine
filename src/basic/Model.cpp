@@ -87,10 +87,10 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene) {
         Vertex vertex{};
         // process each vertex positions
         // position:
-        vertex.Position = {mesh->mVertices[i].x, mesh->mVertices[i].y,
+        vertex.position = {mesh->mVertices[i].x, mesh->mVertices[i].y,
                            mesh->mVertices[i].z};
         // normal:
-        vertex.Normal = {mesh->mNormals[i].x, mesh->mNormals[i].y,
+        vertex.normal = {mesh->mNormals[i].x, mesh->mNormals[i].y,
                          mesh->mNormals[i].z};
 
         // texture coordinates
@@ -99,9 +99,9 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene) {
             vec.x = mesh->mTextureCoords[0][i].x;
             vec.y = mesh->mTextureCoords[0][i].y;
 
-            vertex.TexCoords = vec;
+            vertex.texCoords = vec;
         } else {
-            vertex.TexCoords = glm::vec2(0.0, 0.0f);
+            vertex.texCoords = glm::vec2(0.0, 0.0f);
         }
 
         vertices.push_back(vertex);
@@ -113,7 +113,7 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene) {
             indices.push_back(face.mIndices[j]);
     }
 
-    // TODO: fix with pbr pipeline
+    // TODO: fix with rust-steel pipeline
     // process material
 //    aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
 //    std::vector<Texture> diffuseMaps = loadMaterialTextures(material,

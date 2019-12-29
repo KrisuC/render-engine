@@ -28,6 +28,7 @@ public:
         for (auto obj : objects) {
             obj->setShaderUnif(name, std::forward<Args>(args)...);
         }
+        // Recursively called on child nodes
         for (auto child : childNodes) {
             child->setGlobalShaderValue(name, std::forward<Args>(args)...);
         }
@@ -57,6 +58,8 @@ private:
     // If it's root, it may contain view, projection matrix?
     Transform localTransform;
     std::vector<Light> lights;
+
+    friend class SceneGraph;
 };
 
 

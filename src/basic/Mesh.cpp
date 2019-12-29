@@ -45,11 +45,11 @@ void Mesh::setupMesh() {
     // Vertex texture coords
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-            (void *)offsetof(Vertex, TexCoords));
+            (void *)offsetof(Vertex, texCoords));
     // Vertex normals
     glEnableVertexAttribArray(2);
     glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                          (void *)offsetof(Vertex, Normal));
+                          (void *)offsetof(Vertex, normal));
 
     // Unbind
     glBindVertexArray(0);

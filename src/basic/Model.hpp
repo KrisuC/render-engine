@@ -23,6 +23,7 @@
 #include "Shader.hpp"
 #include "Mesh.hpp"
 
+// Model encapsulate Material and Mesh
 class Model {
 public:
     std::vector<Mesh> meshes;

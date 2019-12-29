@@ -7,19 +7,18 @@
 
 #include "basic/Shader.hpp"
 #include "basic/Transform.hpp"
-#include "basic/Geometry.hpp"
+#include "basic/Material.hpp"
+#include "basic/Mesh.hpp"
 
 // Represents an entity in scene
 // TODO: make Object an entity that holds Mesh, Shaders, Transform,
 //       Textures.
 class Object {
 public:
+    explicit Object(const Shader &rs) : shader(rs) {}
     virtual void prepare() = 0;
     virtual void render() = 0;
     virtual ~Object() = default;
-
-public:
-    explicit Object(const Shader &rs) : shader(rs) {}
 
     // setting local transformation relative to its parent
     inline void setLocalTransform(const Transform &t) {
@@ -39,7 +38,8 @@ protected:
     //  world transformation multiplying the object's local transformation
     Transform localTransfrom;
     // store triangular meshes
-    Geometry geometry;
+    Mesh *mesh;
+    Material *material;
 };
 
 

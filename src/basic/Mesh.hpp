@@ -22,20 +22,16 @@
 
 class Vertex {
 public:
-    glm::vec3 Position;
-    glm::vec3 Normal;
-    glm::vec2 TexCoords;
-
-    glm::vec3 Tangent;
-    glm::vec3 Bitangent;
+    glm::vec3 position;
+    glm::vec3 normal;
+    glm::vec2 texCoords;
 };
 
 // Only respond for Triangular Meshes
 // Leave textures for others to concern
 class Mesh {
 public:
-    Mesh(std::vector<Vertex> vertices,
-    std::vector<unsigned int> indices);
+    Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices);
 
     void render();
 

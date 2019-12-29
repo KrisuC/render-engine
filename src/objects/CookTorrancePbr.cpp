@@ -8,11 +8,11 @@
 CookTorrancePbr::CookTorrancePbr() :
     Object(Shader("./shaders/cookTorrancePBR.vert",
                   "./shaders/cookTorrancePBR.frag")),
-    albedo("./resources/pbr/rustediron2_basecolor.png"),
-    normal("./resources/pbr/rustediron2_normal.png"),
-    metallic("./resources/pbr/rustediron2_metallic.png"),
-    roughness("./resources/pbr/rustediron2_roughness.png"),
-    ao("./resources/pbr/ao.png") {}
+    albedo("./resources/rust-steel/albedo.png"),
+    normal("./resources/rust-steel/normal.png"),
+    metallic("./resources/rust-steel/metallic.png"),
+    roughness("./resources/rust-steel/roughness.png"),
+    ao("./resources/rust-steel/ao.png") {}
 
 void CookTorrancePbr::prepare() {
     shader.use();
@@ -26,15 +26,15 @@ void CookTorrancePbr::prepare() {
     shader.setValue("brdfLUT", 7);
 
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, albedo.id());
+    glBindTexture(GL_TEXTURE_2D, albedo.bind());
     glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, normal.id());
+    glBindTexture(GL_TEXTURE_2D, normal.bind());
     glActiveTexture(GL_TEXTURE2);
-    glBindTexture(GL_TEXTURE_2D, metallic.id());
+    glBindTexture(GL_TEXTURE_2D, metallic.bind());
     glActiveTexture(GL_TEXTURE3);
-    glBindTexture(GL_TEXTURE_2D, roughness.id());
+    glBindTexture(GL_TEXTURE_2D, roughness.bind());
     glActiveTexture(GL_TEXTURE4);
-    glBindTexture(GL_TEXTURE_2D, ao.id());
+    glBindTexture(GL_TEXTURE_2D, ao.bind());
     glActiveTexture(GL_TEXTURE5);
     glBindTexture(GL_TEXTURE_CUBE_MAP, irradianceMap);
     glActiveTexture(GL_TEXTURE6);

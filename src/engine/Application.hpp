@@ -59,7 +59,7 @@ private:
     // Scnene configuration
     Camera camera;
     Skybox skybox;
-    SceneGraph sceneGraph;
+    SceneGraph sceneGraph {};
 
     // GUI controls variables
     struct {

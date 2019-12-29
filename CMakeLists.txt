@@ -40,8 +40,8 @@ include_directories("${PROJECT_SOURCE_DIR}/3rd-party/glad/include/")
 add_subdirectory(${PROJECT_SOURCE_DIR}/3rd-party/glad/)
 
 # assimp
-include_directories("${PROJECT_SOURCE_DIR}/3rd-party/assimp/include/")
-add_subdirectory(${PROJECT_SOURCE_DIR}/3rd-party/assimp/)
+include_directories("${PROJECT_SOURCE_DIR}/3rd-party/assimp-5.0/include/")
+add_subdirectory(${PROJECT_SOURCE_DIR}/3rd-party/assimp-5.0/)
 
 # imgui
 include_directories("${PROJECT_SOURCE_DIR}/3rd-party/imgui/")

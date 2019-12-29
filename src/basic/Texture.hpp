@@ -14,17 +14,17 @@ public:
     Texture() = default;
     explicit Texture(std::string textureFilePath,
                      std::string tag="");
+    // Bind texture(only once) and return texture id
+    unsigned bind();
+    // Load data from image file into memory
+    void load();
 
-    inline unsigned id() { assert(textureID != -1); return textureID; };
     inline const std::string& type() { return tag; }
     inline const std::string& path() { return filePath; }
     ~Texture();
 
 protected:
-    // Load texture from drive to memory, not bind to any texture object
-    void loadTexture();
-    // Bind texture and return texture id
-    unsigned bindTexture();
+    // Load texture data into memory, not binding to any texture object
     // Free memory
     void free();
 
@@ -34,7 +34,7 @@ private:
     void *data = nullptr;
     std::string filePath;
     std::string tag;
-    unsigned int textureID = -1;
+    unsigned int textureID = 0;
     int width = 0, height = 0, nrComponents = 0;
 };
 
