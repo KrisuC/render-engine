@@ -23,27 +23,27 @@ public:
         childNodes.push_back(nodep);
     }
 
-    template <typename ...Args>
-    void setGlobalShaderValue(const std::string &name, Args &&...args) {
-        for (auto obj : objects) {
-            obj->setShaderUnif(name, std::forward<Args>(args)...);
-        }
-        // Recursively called on child nodes
-        for (auto child : childNodes) {
-            child->setGlobalShaderValue(name, std::forward<Args>(args)...);
-        }
-    }
+//    template <typename ...Args>
+//    void setGlobalShaderValue(const std::string &name, Args &&...args) {
+//        for (auto obj : objects) {
+//            obj->setShaderUnif(name, std::forward<Args>(args)...);
+//        }
+//        // Recursively called on child nodes
+//        for (auto child : childNodes) {
+//            child->setGlobalShaderValue(name, std::forward<Args>(args)...);
+//        }
+//    }
 
-    void updateLights() {
-        for (int i = 0; i < lights.size(); i++) {
-            this->setGlobalShaderValue(
-                    "lightPositions[" + std::to_string(i) + "]",
-                    lights[i].position);
-            this->setGlobalShaderValue(
-                    "lightColors[" + std::to_string(i) + "]",
-                    lights[i].color);
-        }
-    }
+//    void updateLights() {
+//        for (int i = 0; i < lights.size(); i++) {
+//            this->setGlobalShaderValue(
+//                    "lightPositions[" + std::to_string(i) + "]",
+//                    lights[i].position);
+//            this->setGlobalShaderValue(
+//                    "lightColors[" + std::to_string(i) + "]",
+//                    lights[i].color);
+//        }
+//    }
 
     inline void setLights(const std::vector<Light> &lights) {
         this->lights = lights;

@@ -5,6 +5,8 @@
 #ifndef RENDER_ENGINE_RENDERER_HPP
 #define RENDER_ENGINE_RENDERER_HPP
 
+#include "basic/Object.hpp"
+
 // TODO: encapsulate all opengl associated API into renderer
 class Renderer {
 public:

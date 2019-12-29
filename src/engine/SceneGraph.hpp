@@ -34,7 +34,7 @@ public:
         prepareNode(p_root);
     }
     void renderScene() {
-        p_root->updateLights();
+//        p_root->updateLights();
         renderNode(p_root);
     }
 

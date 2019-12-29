@@ -20,24 +20,12 @@ public:
     virtual void render() = 0;
     virtual ~Object() = default;
 
-    // setting local transformation relative to its parent
-    inline void setLocalTransform(const Transform &t) {
-        localTransfrom = t;
-    }
-
-    template <typename ...Args>
-    inline void setShaderUnif(const std::string &name, Args &&...args) {
-        shader.use();
-        shader.setValue(name, std::forward<Args>(args) ...);
-    }
-
-protected:
-    // The shader that is respondsible for rendering the object
-    Shader shader;
+public:
     // The world transformation of the current object is the parent's
-    //  world transformation multiplying the object's local transformation
+    // world transformation multiplying the object's local transformation
     Transform localTransfrom;
-    // store triangular meshes
+
+    Shader shader;
     Mesh *mesh;
     Material *material;
 };

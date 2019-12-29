@@ -16,7 +16,7 @@
 #include "basic/Light.hpp"
 #include "engine/SceneGraph.hpp"
 #include "objects/Skybox.hpp"
-#include "objects/CookTorrancePbr.hpp"
+#include "objects/CookTorrancePBR.hpp"
 
 // The base class of App
 class Application {
@@ -32,7 +32,7 @@ public:
         prepareUI();
         prepareScene();
         while (!applicationEnds) {
-            renderPass(); // renderScene()
+            renderPass(); // call renderScene() inside
         }
         cleanUp();
         return 0;

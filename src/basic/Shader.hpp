@@ -17,19 +17,19 @@ public:
     unsigned int getID();
     void use();
     // utility uniform functions
-    void setValue(const std::string &name, bool value) const;
-    void setValue(const std::string &name, int value) const;
-    void setValue(const std::string &name, unsigned value) const;
-    void setValue(const std::string &name, float value) const;
-    void setValue(const std::string &name, const glm::vec2 &value) const;
-    void setValue(const std::string &name, float x, float y) const;
-    void setValue(const std::string &name, const glm::vec3 &value) const;
-    void setValue(const std::string &name, float x, float y, float z) const;
-    void setValue(const std::string &name, const glm::vec4 &value) const;
-    void setValue(const std::string &name, float x, float y, float z, float w) const;
-    void setValue(const std::string &name, const glm::mat2 &mat) const;
-    void setValue(const std::string &name, const glm::mat3 &mat) const;
-    void setValue(const std::string &name, const glm::mat4 &mat) const;
+    void set(const std::string &name, bool value) const;
+    void set(const std::string &name, int value) const;
+    void set(const std::string &name, unsigned value) const;
+    void set(const std::string &name, float value) const;
+    void set(const std::string &name, const glm::vec2 &value) const;
+    void set(const std::string &name, float x, float y) const;
+    void set(const std::string &name, const glm::vec3 &value) const;
+    void set(const std::string &name, float x, float y, float z) const;
+    void set(const std::string &name, const glm::vec4 &value) const;
+    void set(const std::string &name, float x, float y, float z, float w) const;
+    void set(const std::string &name, const glm::mat2 &mat) const;
+    void set(const std::string &name, const glm::mat3 &mat) const;
+    void set(const std::string &name, const glm::mat4 &mat) const;
 
 private:
     // the program id

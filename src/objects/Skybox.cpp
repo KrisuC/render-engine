@@ -74,15 +74,15 @@ void Skybox::prepare() {
             glm::lookAt(orig, glm::vec3( 0.0f,  0.0f, -1.0f), glm::vec3(0.0f, -1.0f,  0.0f))
     };
     equirectToCubemapShader.use();
-    equirectToCubemapShader.setValue("equirectangularMap", 0);
-    equirectToCubemapShader.setValue("projection", captureProjection);
+    equirectToCubemapShader.set("equirectangularMap", 0);
+    equirectToCubemapShader.set("projection", captureProjection);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, hdrTexture.bind());
 
     glViewport(0, 0, dim, dim);
     glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
     for (int i = 0; i < 6; i++) {
-        equirectToCubemapShader.setValue("view", captureViews[i]);
+        equirectToCubemapShader.set("view", captureViews[i]);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                                GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, envCubemap, 0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -110,15 +110,15 @@ void Skybox::prepare() {
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 32, 32);
 
     irradianceShader.use();
-    irradianceShader.setValue("environmentMap", 0);
-    irradianceShader.setValue("projection", captureProjection);
+    irradianceShader.set("environmentMap", 0);
+    irradianceShader.set("projection", captureProjection);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap);
 
     glViewport(0, 0, 32, 32);
     glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
     for (int i = 0; i < 6; i++) {
-        irradianceShader.setValue("view", captureViews[i]);
+        irradianceShader.set("view", captureViews[i]);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                                GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, irradianceMap, 0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -144,8 +144,8 @@ void Skybox::prepare() {
     glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
 
     prefilterShader.use();
-    prefilterShader.setValue("environmentMap", 0);
-    prefilterShader.setValue("projection", captureProjection);
+    prefilterShader.set("environmentMap", 0);
+    prefilterShader.set("projection", captureProjection);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap);
 
@@ -161,9 +161,9 @@ void Skybox::prepare() {
         glViewport(0, 0, mipWidth, mipHeight);
 
         float roughness = (float)mip / (float)(maxMipLevels - 1);
-        prefilterShader.setValue("roughness", roughness);
+        prefilterShader.set("roughness", roughness);
         for (int i = 0; i < 6; i++) {
-            prefilterShader.setValue("view", captureViews[i]);
+            prefilterShader.set("view", captureViews[i]);
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                                    GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, prefilterMap, mip);
 

@@ -10,7 +10,7 @@
 
 #include "engine/Application.hpp"
 #include "Model.hpp"
-#include "objects/CookTorrancePbr.hpp"
+#include "objects/CookTorrancePBR.hpp"
 #include "objects/Skybox.hpp"
 #include "engine/SceneGraph.hpp"
 
@@ -145,41 +145,43 @@ void Application::prepareScene() {
             {{ 10.0f, -10.0f, 0.0f}, {300.0f, 300.0f, 300.0f}},
     };
 
-    sceneGraph.setRoot(new SGNode());
-    // setting up lights
-    sceneGraph.root()->setLights(lights);
-    // part 1
-    auto frontSphere = new CookTorrancePbr();
-    sceneGraph.root()->appendObjects(frontSphere);
-    sceneGraph.root()->setLocalTransform(
-            Transform(glm::translate(glm::mat4(1.f), {0, 0, -5})));
-    // part 2
-    auto backSpheresGroup = new SGNode();
-    sceneGraph.root()->appendNodes(backSpheresGroup);
-    backSpheresGroup->setLocalTransform(
-            Transform(glm::translate(glm::mat4(1.f), {0, 0, -5})));
-    int rows = 7, cols = 7;
-    float spacing = 2.5;
-    backSpheresGroup->setGlobalShaderValue("albedoVal", 0.5, 0.0, 0.0);
-    backSpheresGroup->setGlobalShaderValue("aoVal", 1.0f);
-    for (int row = 0; row < rows; row++) {
-        for (int col = 0; col < cols; col++) {
-            glm::vec3 pos = {
-                    (float(col) - cols / 2.f) * spacing,
-                    (float(row) - rows / 2.f) * spacing,
-                    -10.f
-            };
-            auto lt = glm::translate(glm::mat4(1.f), pos);
-            auto backSphere = new CookTorrancePbr();
-            backSphere->setLocalTransform(Transform(lt));
-            backSphere->setShaderUnif("metallicVal", (float)row / rows);
-            backSphere->setShaderUnif("roughnessVal",
-                    glm::clamp((float)col / cols, 0.05f, 1.0f));
-            backSpheresGroup->appendObjects(backSphere);
-        }
-    }
-    sceneGraph.root()->updateLights();
-    sceneGraph.prepareScene();
+    // TODO: Scene Graph!!!!! (After I fix Object)
+//    sceneGraph.setRoot(new SGNode());
+//    // setting up lights
+//    sceneGraph.root()->setLights(lights);
+//    // part 1
+//    auto frontSphere = new CookTorrancePBR();
+//    sceneGraph.root()->appendObjects(frontSphere);
+//    sceneGraph.root()->setLocalTransform(
+//            Transform(glm::translate(glm::mat4(1.f), {0, 0, -5})));
+//
+//    // part 2
+//    auto backSpheresGroup = new SGNode();
+//    sceneGraph.root()->appendNodes(backSpheresGroup);
+//    backSpheresGroup->setLocalTransform(
+//            Transform(glm::translate(glm::mat4(1.f), {0, 0, -5})));
+//    int rows = 7, cols = 7;
+//    float spacing = 2.5;
+//    backSpheresGroup->setGlobalShaderValue("albedoVal", 0.5, 0.0, 0.0);
+//    backSpheresGroup->setGlobalShaderValue("aoVal", 1.0f);
+//    for (int row = 0; row < rows; row++) {
+//        for (int col = 0; col < cols; col++) {
+//            glm::vec3 pos = {
+//                    (float(col) - cols / 2.f) * spacing,
+//                    (float(row) - rows / 2.f) * spacing,
+//                    -10.f
+//            };
+//            auto lt = glm::translate(glm::mat4(1.f), pos);
+//            auto backSphere = new CookTorrancePBR();
+//            backSphere->setLocalTransform(Transform(lt));
+//            backSphere->setShaderUnif("metallicVal", (float)row / rows);
+//            backSphere->setShaderUnif("roughnessVal",
+//                    glm::clamp((float)col / cols, 0.05f, 1.0f));
+//            backSpheresGroup->appendObjects(backSphere);
+//        }
+//    }
+//    sceneGraph.root()->updateLights();
+//    sceneGraph.prepareScene();
 }
 
 
@@ -195,13 +197,13 @@ void Application::renderScene() {
                                             (float)width / height, 0.1f, 100.0f);
     glm::mat4 view = camera.GetViewMatrix();
 
-    sceneGraph.root()->setGlobalShaderValue("projection", projection);
-    sceneGraph.root()->setGlobalShaderValue("view", view);
-    sceneGraph.root()->setGlobalShaderValue("camPos", camera.Position);
-    sceneGraph.renderScene();
+//    sceneGraph.root()->setGlobalShaderValue("projection", projection);
+//    sceneGraph.root()->setGlobalShaderValue("view", view);
+//    sceneGraph.root()->setGlobalShaderValue("camPos", camera.Position);
+//    sceneGraph.renderScene();
 
-    skybox.setShaderUnif("view", view);
-    skybox.setShaderUnif("projection", projection);
+    skybox.shader.set("view", view);
+    skybox.shader.set("projection", projection);
     skybox.render();
 }
 

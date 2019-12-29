@@ -7,12 +7,13 @@
 
 #include "basic/Shader.hpp"
 #include "basic/Mesh.hpp"
-#include "engine/Model.hpp"
 #include "basic/Object.hpp"
+#include "basic/Material.hpp"
+#include "engine/Model.hpp"
 
-class CookTorrancePbr : public Object {
+class CookTorrancePBR : public Object {
 public:
-    CookTorrancePbr();
+    CookTorrancePBR();
     void prepare() override;
     void render() override;
 
@@ -24,12 +25,6 @@ public:
     inline void useModel(bool flag) { use_model = flag; }
 
 private:
-    Texture albedo;
-    Texture normal;
-    Texture metallic;
-    Texture roughness;
-    Texture ao;
-
     unsigned int irradianceMap;
     unsigned int prefilterMap;
     unsigned int brdfLUTTexture;
