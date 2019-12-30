@@ -11,9 +11,13 @@
 class Renderer {
 public:
     Renderer() = default;
-    void draw(Object object);
+    void draw(const Object &object);
+    void draw(const Mesh &mesh) {
+        mesh.render();
+    }
 
 private:
+    // Storing state of graphics API:
 
 };
 

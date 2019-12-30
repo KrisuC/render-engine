@@ -18,4 +18,6 @@ void main() {
     vec3 color = texture(equirectangularMap, uv).rgb;
 
     FragColor = vec4(color, 1.0);
+    // Test
+//    FragColor = vec4(localPos, 0);
 }

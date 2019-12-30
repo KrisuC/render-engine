@@ -201,7 +201,18 @@ void Application::renderScene() {
 //    sceneGraph.root()->setGlobalShaderValue("view", view);
 //    sceneGraph.root()->setGlobalShaderValue("camPos", camera.Position);
 //    sceneGraph.renderScene();
+    Mesh sph = Primitive::unitSphere();
+    Mesh cube = Primitive::unitCube();
+    Shader test_shader = Shader("shaders/test.vert", "shaders/test.frag");
+    test_shader.use();
+    test_shader.set("projection", projection);
+    test_shader.set("view", view);
+    test_shader.set("model", glm::translate(glm::mat4(1.f), {0, 0, -3}));
+    sph.render();
+    test_shader.set("albedo", glm::vec3(0.5, 0.5, 0.5));
+    cube.render();
 
+    skybox.shader.use();
     skybox.shader.set("view", view);
     skybox.shader.set("projection", projection);
     skybox.render();

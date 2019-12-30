@@ -11,7 +11,7 @@
 
 class Skybox : public Object {
 public:
-    Skybox();
+    explicit Skybox(std::string path_to_image);
 
     void prepare() override;
     void render() override;
@@ -21,17 +21,19 @@ public:
     inline unsigned int getBrdfLUTTexture() { return brdfLUTTexture; }
 
 private:
-    Shader equirectToCubemapShader;
-    Shader irradianceShader;
-    Shader prefilterShader;
-    Shader brdfLUTShader;
-
+    Shader equirectToCubemapShader {"shaders/cubemap.vert",
+                                    "shaders/equirectangularToCubemap.frag"};
+    Shader irradianceShader {"shaders/cubemap.vert",
+                             "shaders/irradianceConvolution.frag"};
+    Shader prefilterShader {"shaders/cubemap.vert",
+                            "shaders/prefilter_map.frag"};
+    Shader brdfLUTShader {"shaders/brdf.vert", "shaders/brdf.frag"};
     Texture hdrTexture;
 
-    unsigned int envCubemap;
-    unsigned int irradianceMap;
-    unsigned int prefilterMap;
-    unsigned int brdfLUTTexture;
+    unsigned int envCubemap = 0;
+    unsigned int irradianceMap = 0;
+    unsigned int prefilterMap = 0;
+    unsigned int brdfLUTTexture = 0;
 };
 
 

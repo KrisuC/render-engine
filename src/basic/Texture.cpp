@@ -11,6 +11,7 @@ Texture::Texture(std::string textureFilePath, std::string tag) :
         filePath(std::move(textureFilePath)), tag(std::move(tag)) {
     // Do nothing
     // Load and bind must be called explicitly
+    std::cout << this->filePath << " is " << this->tag << std::endl;
 }
 
 

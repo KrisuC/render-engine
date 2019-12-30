@@ -5,54 +5,50 @@
 #include <utility>
 #include "Mesh.hpp"
 
-Mesh::Mesh(std::vector<Vertex> vertices,
-           std::vector<unsigned int> indices) {
-
-    this->vertices = std::move(vertices);
-    this->indices = std::move(indices);
-
+Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices,
+           unsigned int mesh_type) :
+            vertices(std::move(vertices)), indices(std::move(indices)),
+            mesh_type(mesh_type) {
     setupMesh();
 }
 
-void Mesh::render() {
+void Mesh::render() const {
     // render mesh
     glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, (int)indices.size(), GL_UNSIGNED_INT, 0);
+    glDrawElements(mesh_type, (int)indices.size(), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }
 
 void Mesh::setupMesh() {
     glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    // EBO store indices
-    glGenBuffers(1, &EBO);
+    glGenBuffers(1, &VBO); // VBO store vertices
+    glGenBuffers(1, &EBO); // EBO store indices
 
     glBindVertexArray(VAO);
+    {
+        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        glBufferData(GL_ARRAY_BUFFER,
+                     vertices.size()*sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
 
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER,
-            vertices.size()*sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
+        // Buiding EBO using indices from mFaces[]
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+                     indices.size()*sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
 
-    // Buiding EBO using indices from mFaces[]
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-            indices.size()*sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
-
-    // Positions
-    glEnableVertexAttribArray(0); // parameter is the position.
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-            nullptr);
-    // Normals
-    glEnableVertexAttribArray(2);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-            (void *)offsetof(Vertex, normal));
-    // Texture coords
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-            (void *)offsetof(Vertex, texCoords));
-
-    // Unbind
-    glBindVertexArray(0);
+        // Positions
+        glEnableVertexAttribArray(0); // parameter is the position.
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                              nullptr);
+        // Normals
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                              (void *)offsetof(Vertex, normal));
+        // Texture coords
+        glEnableVertexAttribArray(2);
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                              (void *)offsetof(Vertex, texCoords));
+    }
+    glBindVertexArray(0);  // Unbind
 }
 
 
@@ -75,7 +71,7 @@ namespace Primitive {
                 float zPos = std::sin(xSegment * 2.0f * PI) *
                              std::sin(ySegment * PI);
 
-                vertices.push_back({ {xPos, yPos, zPos},
+                vertices.push_back({ {xPos*0.5f, yPos*0.5f, zPos*0.5f},
                                      {xPos, yPos, zPos},
                                      {xSegment, ySegment} });
             }
@@ -95,10 +91,9 @@ namespace Primitive {
             }
         }
 
-        return std::move(Mesh(vertices, indices));
+        return std::move(Mesh(vertices, indices, GL_TRIANGLE_STRIP));
     }
 
-    // L = 2
     Mesh unitCube() {
         const static float vdata[] = {
                 // position, normal, uv
@@ -148,31 +143,45 @@ namespace Primitive {
         std::vector<Vertex> vertices;
         std::vector<unsigned int> indices;
         for (int i = 0; i < 36; i++) {
-            vertices.push_back({ glm::make_vec3(vdata + i*6),
-                                 glm::make_vec3(vdata + i*6 + 3),
-                                 glm::make_vec3(vdata + i*6 + 6) });
+            vertices.push_back({ glm::make_vec3(vdata + i*8) * 0.5f,
+                                 glm::make_vec3(vdata + i*8 + 3),
+                                 glm::make_vec2(vdata + i*8 + 6) });
+            auto v = glm::make_vec3(vdata + i*8 + 3);
             indices.push_back(i);
         }
         return std::move(Mesh(vertices, indices));
     }
 
-    // L = 2
     Mesh unitQuad() {
         const static float vdata[] = {
-                // positions        // texture Coords
+                // positions, normal, uv
                 -1.0f,  1.0f, 0.0f,  0.f, 0.f, 1.f, 0.0f, 1.0f,
                 -1.0f, -1.0f, 0.0f,  0.f, 0.f, 1.f, 0.0f, 0.0f,
                  1.0f,  1.0f, 0.0f,  0.f, 0.f, 1.f, 1.0f, 1.0f,
                  1.0f, -1.0f, 0.0f,  0.f, 0.f, 1.f, 1.0f, 0.0f,
         };
         std::vector<Vertex> vertices;
-        std::vector<unsigned  int> indices;
-        for (int i = 0; i < 36; i++) {
-            vertices.push_back({ glm::make_vec3(vdata + i*6),
-                                 glm::make_vec3(vdata + i*6 + 3),
-                                 glm::make_vec3(vdata + i*6 + 6) });
-            indices.push_back(i);
+        std::vector<unsigned  int> indices { 0, 1, 2, 3 };
+        for (int i = 0; i < 4; i++) {
+            vertices.push_back({ glm::make_vec3(vdata + i*8) * 0.5f,
+                                 glm::make_vec3(vdata + i*8 + 3),
+                                 glm::make_vec2(vdata + i*8 + 6) });
         }
-        return std::move(Mesh(vertices, indices));
+        return std::move(Mesh(vertices, indices, GL_TRIANGLE_STRIP));
+    }
+
+    void renderUnitCube() {
+        static auto sphere = unitSphere();
+        sphere.render();
+    }
+
+    void renderUnitSphere() {
+        static auto cube = unitCube();
+        cube.render();
+    }
+
+    void renderUnitQuad() {
+        static auto quad = unitQuad();
+        quad.render();
     }
 }

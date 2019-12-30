@@ -1,3 +1,5 @@
+#include <utility>
+
 //
 // Created by Krisu on 2019-12-06.
 //
@@ -14,19 +16,12 @@ void Skybox::render() {
     shader.use();
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap);
-    Primitive::unitCube();
+    Primitive::renderUnitCube();
 }
 
-Skybox::Skybox() :
-        Object(Shader("./shaders/skybox.vert", "./shaders/skybox.frag")),
-        equirectToCubemapShader("./shaders/cubemap.vert",
-                                "./shaders/equirectangularToCubemap.frag"),
-        irradianceShader("./shaders/cubemap.vert",
-                         "./shaders/irradianceConvolution.frag"),
-        prefilterShader("./shaders/cubemap.vert",
-                        "./shaders/prefilter_map.frag"),
-        brdfLUTShader("./shaders/brdf.vert", "./shaders/brdf.frag"),
-        hdrTexture("./resources/ibl/newport_loft.hdr", "hdr") { }
+Skybox::Skybox(std::string path_to_image) :
+         Object(Shader("shaders/skybox.vert", "shaders/skybox.frag")),
+         hdrTexture(std::move(path_to_image), "hdr")  { }
 
 void Skybox::prepare() {
     // convert equirectangular to cubemap
@@ -76,6 +71,7 @@ void Skybox::prepare() {
     equirectToCubemapShader.use();
     equirectToCubemapShader.set("equirectangularMap", 0);
     equirectToCubemapShader.set("projection", captureProjection);
+    hdrTexture.load();
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, hdrTexture.bind());
 
@@ -87,113 +83,128 @@ void Skybox::prepare() {
                                GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, envCubemap, 0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        Primitive::unitCube();
+        Primitive::renderUnitCube();
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-    // generate irradiance map
-    glGenTextures(1, &irradianceMap);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, irradianceMap);
-    for (int i = 0; i < 6; i++) {
-        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F, 32, 32,
-                     0, GL_RGB, GL_FLOAT, nullptr);
-    }
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-    // linear filter will handle the low resolution texture
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
-    glBindRenderbuffer(GL_RENDERBUFFER, captureRBO);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 32, 32);
-
-    irradianceShader.use();
-    irradianceShader.set("environmentMap", 0);
-    irradianceShader.set("projection", captureProjection);
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap);
-
-    glViewport(0, 0, 32, 32);
-    glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
-    for (int i = 0; i < 6; i++) {
-        irradianceShader.set("view", captureViews[i]);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                               GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, irradianceMap, 0);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        Primitive::unitCube();
-    }
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-    // generate prefilter map for ibl specular lighting
-    int res_prfmap = 128;
-    glGenTextures(1, &prefilterMap);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, prefilterMap);
-    for (int i = 0; i < 6; i++) {
-        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F,
-                     res_prfmap, res_prfmap, 0, GL_RGB, GL_FLOAT, nullptr);
-    }
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
-
-    prefilterShader.use();
-    prefilterShader.set("environmentMap", 0);
-    prefilterShader.set("projection", captureProjection);
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap);
-
-    glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
-    unsigned int maxMipLevels = 5;
-    for (int mip = 0; mip < maxMipLevels; mip++) {
-        // resize framebuffer according to mip-level
-        unsigned int mipWidth  = 128 * std::pow(0.5, mip);
-        unsigned int mipHeight = 128 * std::pow(0.5, mip);
-        glBindRenderbuffer(GL_RENDERBUFFER, captureFBO);
-        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24,
-                              mipWidth, mipHeight);
-        glViewport(0, 0, mipWidth, mipHeight);
-
-        float roughness = (float)mip / (float)(maxMipLevels - 1);
-        prefilterShader.set("roughness", roughness);
+    // -------------------------------------------------
+    // Generating some texture for IBL
+    {
+        // generate irradiance map
+        glGenTextures(1, &irradianceMap);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, irradianceMap);
         for (int i = 0; i < 6; i++) {
-            prefilterShader.set("view", captureViews[i]);
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                                   GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, prefilterMap, mip);
-
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            Primitive::unitCube();
+            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F, 32,
+                         32,
+                         0, GL_RGB, GL_FLOAT, nullptr);
         }
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S,
+                        GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T,
+                        GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R,
+                        GL_CLAMP_TO_EDGE);
+        // linear filter will handle the low resolution texture
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
+        glBindRenderbuffer(GL_RENDERBUFFER, captureRBO);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 32, 32);
+
+        irradianceShader.use();
+        irradianceShader.set("environmentMap", 0);
+        irradianceShader.set("projection", captureProjection);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap);
+
+        glViewport(0, 0, 32, 32);
+        glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
+        for (int i = 0; i < 6; i++) {
+            irradianceShader.set("view", captureViews[i]);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                                   GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+                                   irradianceMap, 0);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            Primitive::renderUnitCube();
+        }
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+        // generate prefilter map for ibl specular lighting
+        int res_prfmap = 128;
+        glGenTextures(1, &prefilterMap);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, prefilterMap);
+        for (int i = 0; i < 6; i++) {
+            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F,
+                         res_prfmap, res_prfmap, 0, GL_RGB, GL_FLOAT, nullptr);
+        }
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S,
+                        GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T,
+                        GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R,
+                        GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER,
+                        GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+
+        prefilterShader.use();
+        prefilterShader.set("environmentMap", 0);
+        prefilterShader.set("projection", captureProjection);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap);
+
+        glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
+        unsigned int maxMipLevels = 5;
+        for (int mip = 0; mip < maxMipLevels; mip++) {
+            // resize framebuffer according to mip-level
+            unsigned int mipWidth = 128 * std::pow(0.5, mip);
+            unsigned int mipHeight = 128 * std::pow(0.5, mip);
+            glBindRenderbuffer(GL_RENDERBUFFER, captureFBO);
+            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24,
+                                  mipWidth, mipHeight);
+            glViewport(0, 0, mipWidth, mipHeight);
+
+            float roughness = (float) mip / (float) (maxMipLevels - 1);
+            prefilterShader.set("roughness", roughness);
+            for (int i = 0; i < 6; i++) {
+                prefilterShader.set("view", captureViews[i]);
+                glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                                       GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+                                       prefilterMap, mip);
+
+                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+                Primitive::renderUnitCube();
+            }
+        }
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+        // brdf precomte
+        glGenTextures(1, &brdfLUTTexture);
+
+        glBindTexture(GL_TEXTURE_2D, brdfLUTTexture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, 512, 512, 0, GL_RG, GL_FLOAT,
+                     0);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
+        glBindRenderbuffer(GL_RENDERBUFFER, captureFBO);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 512, 512);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                               GL_TEXTURE_2D, brdfLUTTexture, 0);
+
+        glViewport(0, 0, 512, 512);
+        brdfLUTShader.use();
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        Primitive::renderUnitQuad();
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-    // brdf precomte
-    glGenTextures(1, &brdfLUTTexture);
-
-    glBindTexture(GL_TEXTURE_2D, brdfLUTTexture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, 512, 512, 0, GL_RG, GL_FLOAT, 0);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
-    glBindRenderbuffer(GL_RENDERBUFFER, captureFBO);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 512, 512);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                           GL_TEXTURE_2D, brdfLUTTexture, 0);
-
-    glViewport(0, 0, 512, 512);
-    brdfLUTShader.use();
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    Primitive::unitQuad();
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 
