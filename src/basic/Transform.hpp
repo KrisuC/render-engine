@@ -6,6 +6,7 @@
 #define RENDER_ENGINE_TRANSFORM_HPP
 
 #include <glm/gtc/matrix_transform.hpp>
+#include "basic/Shader.hpp"
 
 // TODO: separate vertex only behaviour to Transform
 // A transform is append to a node/objects in scene graph, to perform a local
@@ -13,12 +14,13 @@
 class Transform {
 public:
     Transform(): mat(glm::identity<glm::mat4>()) {}
-    explicit Transform(const glm::mat4 &mat) : mat(mat) {}
     Transform(const Transform &) = default;
-    Transform &operator=(const glm::mat4 &rhs) { mat = rhs; return *this; }
     Transform &operator=(const Transform &) = default;
 
-    const glm::mat4 &getMatrix() { return mat; }
+    inline void append(glm::mat4 rhs) { mat *= rhs; }
+    void setShaders(Shader &shader) {
+        shader.use();
+    }
 
 private:
     glm::mat4 mat;

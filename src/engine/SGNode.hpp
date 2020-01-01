@@ -45,7 +45,7 @@ public:
 //        }
 //    }
 
-    inline void setLights(const std::vector<Light> &lights) {
+    inline void setLights(const std::vector<PointLight> &lights) {
         this->lights = lights;
     }
 
@@ -57,7 +57,7 @@ private:
 
     // If it's root, it may contain view, projection matrix?
     Transform localTransform;
-    std::vector<Light> lights;
+    std::vector<PointLight> lights;
 
     friend class SceneGraph;
 };

@@ -7,6 +7,10 @@
 #include <string>
 
 // TODO: separate vertex and fragment shader
+//       VertexShader provide interface to update model/view/projection
+//       FragmentShader closely related with Material to set visual effect
+//       Shader organize VertexShader and FragmentShader
+//       but... is it necessary?
 class Shader {
 public:
     // constructor reads and builds the shader
@@ -39,7 +43,5 @@ private:
     void checkCompileErrors(GLuint shader, const std::string &type,
                                            std::string path);
 };
-
-
 
 #endif /* shader_hpp */

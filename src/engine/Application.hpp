@@ -16,7 +16,6 @@
 #include "basic/Light.hpp"
 #include "engine/SceneGraph.hpp"
 #include "objects/Skybox.hpp"
-#include "objects/CookTorrancePBR.hpp"
 
 // The base class of App
 class Application {
@@ -63,9 +62,9 @@ private:
 
     // GUI controls variables
     struct {
-        glm::vec3 albedo = {0, 0, 0};
-        float     roughness = 0.001;
-        float     metallic = 0.001;
+        glm::vec3 albedo = {1, 1, 1};
+        float     roughness = 0.1;
+        float     metallic = 0.9;
         bool      useTexture = false;
         bool      useModel = false;
     } ui;

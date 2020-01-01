@@ -7,7 +7,7 @@
 
 #include <glm/glm.hpp>
 
-class Light {
+class PointLight {
 public:
     glm::vec3 position;
     glm::vec3 color;

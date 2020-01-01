@@ -10,7 +10,6 @@
 
 #include "engine/Application.hpp"
 #include "Model.hpp"
-#include "objects/CookTorrancePBR.hpp"
 #include "objects/Skybox.hpp"
 #include "basic/Material.hpp"
 #include "engine/SceneGraph.hpp"
@@ -45,7 +44,11 @@ void Application::initializeContext(){
     }
 
     glfwMakeContextCurrent(window);
-    // glfwSwapInterval(1); // vsync
+    // vsync
+    glfwSwapInterval(1);
+    // MSAA
+//    glfwWindowHint(GLFW_SAMPLES, 4);
+//    glEnable(GL_MULTISAMPLE);
 
     if (gladLoadGL() == 0) {
         std::cerr << "Failed to initialize glad loader\n";
@@ -140,12 +143,7 @@ void Application::prepareScene() {
 
     // TODO: auto scene graph construction from scene description file
     // Scene graph generation (by hand) for testing
-    std::vector<Light> lights = {
-            {{-10.0f,  10.0f, 0.0f}, {300.0f, 300.0f, 300.0f}},
-            {{ 10.0f,  10.0f, 0.0f}, {300.0f, 300.0f, 300.0f}},
-            {{-10.0f, -10.0f, 0.0f}, {300.0f, 300.0f, 300.0f}},
-            {{ 10.0f, -10.0f, 0.0f}, {300.0f, 300.0f, 300.0f}},
-    };
+
 
     // TODO: Scene Graph!!!!! (After I fix Object)
 //    sceneGraph.setRoot(new SGNode());
@@ -190,6 +188,7 @@ void Application::prepareScene() {
 
 void Application::renderScene() {
     glEnable(GL_DEPTH_TEST);
+
     glClearColor(0.1, 0.1, 0.1, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -202,8 +201,8 @@ void Application::renderScene() {
 //    sceneGraph.root()->setGlobalShaderValue("view", view);
 //    sceneGraph.root()->setGlobalShaderValue("camPos", camera.Position);
 //    sceneGraph.renderScene();
-    Mesh sphere_mesh = Primitive::unitSphere();
-    Mesh cube_mesh = Primitive::unitCube();
+    Mesh sphere_mesh = Primitive::sphere();
+    Mesh cube_mesh = Primitive::cube();
     static auto *material = new Material;
     static bool first_run = true;
     if (first_run) {
@@ -211,11 +210,13 @@ void Application::renderScene() {
                                              TextureType::CubeMap };
         auto *prefilter_map = new Texture { skybox.getPrefilterMap(),
                                             TextureType::CubeMap };
+        // TODO: fix BRDF issues
         auto *brdfLUT_map = new Texture { skybox.getBrdfLUTTexture(),
                                           TextureType::Texture2D };
         material->appendTexture("irradiance_map", irradiance_map);
         material->appendTexture("prefilter_map", prefilter_map);
         material->appendTexture("brdfLUT_map", brdfLUT_map);
+        std::cout << brdfLUT_map->bind() << std::endl;
         first_run = false;
     }
     material->shader->use();
@@ -224,11 +225,21 @@ void Application::renderScene() {
     material->shader->set("cam_pos", camera.Position);
     material->shader->set("projection", projection);
     material->shader->set("view", view);
-    material->shader->set("model", glm::translate(glm::mat4(1.f), {0, 0, -3}));
+    material->shader->set("model", glm::translate(glm::mat4(1.f), {-2, 0, -3}));
     // lights and material -> fragment only
     // setting lights
-    material->shader->set("lightPositions[0]", {0+sin(4*glfwGetTime()), 0, 0});
-    material->shader->set("lightColors[0]", {1, 1, 1});
+    static std::vector<PointLight> lights = {
+            {{-10.0f,  10.0f, 0.0f}, {300.0f, 300.0f, 300.0f}},
+            {{ 10.0f,  10.0f, 0.0f}, {300.0f, 300.0f, 300.0f}},
+            {{-10.0f, -10.0f, 0.0f}, {300.0f, 300.0f, 300.0f}},
+            {{ 10.0f, -10.0f, 0.0f}, {300.0f, 300.0f, 300.0f}},
+    };
+    for (int i = 0; i < 4; i++) {
+        auto str_i = std::to_string(i);
+        material->shader->set("lightPositions["+str_i+"]",
+                lights[i].position + glm::vec3(sin(glfwGetTime()*5)));
+        material->shader->set("lightColors["+str_i+"]", lights[i].color);
+    }
     // setting material
     material->setAlbedo(ui.albedo);
     material->setRoughness(ui.roughness);
@@ -238,11 +249,11 @@ void Application::renderScene() {
     sphere_mesh.render();
 
     material->shader->set("model", glm::translate(glm::mat4(1.f), {2, 0, -3}));
-    material->setAlbedo({1, 1, 1});
+    material->setAlbedo({1, 0.4, 0});
     material->setRoughness(0.9);
-    material->setMettalic(0.2);
+    material->setMettalic(0.0);
     material->updateShader();
-    cube_mesh.render();
+    sphere_mesh.render();
 
     skybox.shader.use();
     skybox.shader.set("view", view);

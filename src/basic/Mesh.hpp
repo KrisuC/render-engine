@@ -51,13 +51,13 @@ private:
 // Rendering some fixed size primitive
 namespace Primitive {
     // Unit == 2 :)
-    Mesh unitSphere();
-    Mesh unitCube();
-    Mesh unitQuad();
+    Mesh sphere();
+    Mesh cube();
+    Mesh quad();
 
-    void renderUnitCube();
-    void renderUnitSphere();
-    void renderUnitQuad();
+    void renderCube();
+    void renderSphere();
+    void renderQuad();
 }
 
 #endif //RENDER_ENGINE_MESH_HPP

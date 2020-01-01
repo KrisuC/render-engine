@@ -54,7 +54,7 @@ void Mesh::setupMesh() {
 
 namespace Primitive {
     // R = 1
-    Mesh unitSphere() {
+    Mesh sphere() {
         std::vector<Vertex> vertices;
         std::vector<unsigned int> indices;
 
@@ -71,7 +71,7 @@ namespace Primitive {
                 float zPos = std::sin(xSegment * 2.0f * PI) *
                              std::sin(ySegment * PI);
 
-                vertices.push_back({ {xPos*0.5f, yPos*0.5f, zPos*0.5f},
+                vertices.push_back({ {xPos, yPos, zPos},
                                      {xPos, yPos, zPos},
                                      {xSegment, ySegment} });
             }
@@ -94,7 +94,8 @@ namespace Primitive {
         return std::move(Mesh(vertices, indices, GL_TRIANGLE_STRIP));
     }
 
-    Mesh unitCube() {
+    // L = 2
+    Mesh cube() {
         const static float vdata[] = {
                 // position, normal, uv
                 // back face
@@ -143,7 +144,7 @@ namespace Primitive {
         std::vector<Vertex> vertices;
         std::vector<unsigned int> indices;
         for (int i = 0; i < 36; i++) {
-            vertices.push_back({ glm::make_vec3(vdata + i*8) * 0.5f,
+            vertices.push_back({ glm::make_vec3(vdata + i*8),
                                  glm::make_vec3(vdata + i*8 + 3),
                                  glm::make_vec2(vdata + i*8 + 6) });
             auto v = glm::make_vec3(vdata + i*8 + 3);
@@ -152,7 +153,8 @@ namespace Primitive {
         return std::move(Mesh(vertices, indices));
     }
 
-    Mesh unitQuad() {
+    // L = 2
+    Mesh quad() {
         const static float vdata[] = {
                 // positions, normal, uv
                 -1.0f,  1.0f, 0.0f,  0.f, 0.f, 1.f, 0.0f, 1.0f,
@@ -162,26 +164,27 @@ namespace Primitive {
         };
         std::vector<Vertex> vertices;
         std::vector<unsigned  int> indices { 0, 1, 2, 3 };
+        vertices.reserve(4);
         for (int i = 0; i < 4; i++) {
-            vertices.push_back({ glm::make_vec3(vdata + i*8) * 0.5f,
+            vertices.push_back({ glm::make_vec3(vdata + i*8),
                                  glm::make_vec3(vdata + i*8 + 3),
                                  glm::make_vec2(vdata + i*8 + 6) });
         }
         return std::move(Mesh(vertices, indices, GL_TRIANGLE_STRIP));
     }
 
-    void renderUnitCube() {
-        static auto sphere = unitSphere();
-        sphere.render();
+    void renderCube() {
+        static auto s = sphere();
+        s.render();
     }
 
-    void renderUnitSphere() {
-        static auto cube = unitCube();
-        cube.render();
+    void renderSphere() {
+        static auto c = cube();
+        c.render();
     }
 
-    void renderUnitQuad() {
-        static auto quad = unitQuad();
-        quad.render();
+    void renderQuad() {
+        static auto q = quad();
+        q.render();
     }
 }

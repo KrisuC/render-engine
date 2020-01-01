@@ -16,7 +16,7 @@ void Skybox::render() {
     shader.use();
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap);
-    Primitive::renderUnitCube();
+    Primitive::renderCube();
 }
 
 Skybox::Skybox(std::string path_to_image) :
@@ -82,12 +82,12 @@ void Skybox::prepare() {
                                GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, envCubemap, 0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        Primitive::renderUnitCube();
+        Primitive::renderCube();
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     // -------------------------------------------------
-    // Generating some texture for IBL
+    // Generating maps for IBL
     {
         // generate irradiance map
         glGenTextures(1, &irradianceMap);
@@ -119,17 +119,20 @@ void Skybox::prepare() {
 
         glViewport(0, 0, 32, 32);
         glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
-        for (int i = 0; i < 6; i++) {
-            irradianceShader.set("view", captureViews[i]);
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                                   GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
-                                   irradianceMap, 0);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        {
+            for (int i = 0; i < 6; i++) {
+                irradianceShader.set("view", captureViews[i]);
+                glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                                       GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+                                       irradianceMap, 0);
+                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            Primitive::renderUnitCube();
+                Primitive::renderCube();
+            }
         }
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+        //--------------------------------------------------------------------
         // generate prefilter map for ibl specular lighting
         int res_prfmap = 128;
         glGenTextures(1, &prefilterMap);
@@ -138,12 +141,9 @@ void Skybox::prepare() {
             glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F,
                          res_prfmap, res_prfmap, 0, GL_RGB, GL_FLOAT, nullptr);
         }
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S,
-                        GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T,
-                        GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R,
-                        GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER,
                         GL_LINEAR_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -157,30 +157,33 @@ void Skybox::prepare() {
         glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap);
 
         glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
-        unsigned int maxMipLevels = 5;
-        for (int mip = 0; mip < maxMipLevels; mip++) {
-            // resize framebuffer according to mip-level
-            unsigned int mipWidth = 128 * std::pow(0.5, mip);
-            unsigned int mipHeight = 128 * std::pow(0.5, mip);
-            glBindRenderbuffer(GL_RENDERBUFFER, captureFBO);
-            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24,
-                                  mipWidth, mipHeight);
-            glViewport(0, 0, mipWidth, mipHeight);
+        {
+            unsigned int maxMipLevels = 5;
+            for (int mip = 0; mip < maxMipLevels; mip++) {
+                // resize framebuffer according to mip-level
+                unsigned int mipWidth = 128 * std::pow(0.5, mip);
+                unsigned int mipHeight = 128 * std::pow(0.5, mip);
+                glBindRenderbuffer(GL_RENDERBUFFER, captureFBO);
+                glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24,
+                                      mipWidth, mipHeight);
+                glViewport(0, 0, mipWidth, mipHeight);
 
-            float roughness = (float) mip / (float) (maxMipLevels - 1);
-            prefilterShader.set("roughness", roughness);
-            for (int i = 0; i < 6; i++) {
-                prefilterShader.set("view", captureViews[i]);
-                glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                                       GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
-                                       prefilterMap, mip);
+                float roughness = (float) mip / (float) (maxMipLevels - 1);
+                prefilterShader.set("roughness", roughness);
+                for (int i = 0; i < 6; i++) {
+                    prefilterShader.set("view", captureViews[i]);
+                    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                                           GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+                                           prefilterMap, mip);
 
-                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-                Primitive::renderUnitCube();
+                    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+                    Primitive::renderCube();
+                }
             }
         }
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+        //--------------------------------------------------------------------
         // brdf precomte
         glGenTextures(1, &brdfLUTTexture);
 
@@ -193,15 +196,18 @@ void Skybox::prepare() {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
         glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
-        glBindRenderbuffer(GL_RENDERBUFFER, captureFBO);
-        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 512, 512);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                               GL_TEXTURE_2D, brdfLUTTexture, 0);
+        {
+            glBindRenderbuffer(GL_RENDERBUFFER, captureFBO);
+            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 512,
+                                  512);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                                   GL_TEXTURE_2D, brdfLUTTexture, 0);
 
-        glViewport(0, 0, 512, 512);
-        brdfLUTShader.use();
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        Primitive::renderUnitQuad();
+            glViewport(0, 0, 512, 512);
+            brdfLUTShader.use();
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            Primitive::renderQuad();
+        }
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 }
