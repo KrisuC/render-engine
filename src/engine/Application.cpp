@@ -12,7 +12,9 @@
 #include "Model.hpp"
 #include "objects/CookTorrancePBR.hpp"
 #include "objects/Skybox.hpp"
+#include "basic/Material.hpp"
 #include "engine/SceneGraph.hpp"
+#include "materials/PBRMaterial.hpp"
 
 std::string Application::glsl_version;
 GLFWwindow *Application::window = nullptr;
@@ -43,7 +45,7 @@ void Application::initializeContext(){
     }
 
     glfwMakeContextCurrent(window);
-    glfwSwapInterval(1); // vsync
+    // glfwSwapInterval(1); // vsync
 
     if (gladLoadGL() == 0) {
         std::cerr << "Failed to initialize glad loader\n";
@@ -203,13 +205,33 @@ void Application::renderScene() {
 //    sceneGraph.renderScene();
     Mesh sph = Primitive::unitSphere();
     Mesh cube = Primitive::unitCube();
-    Shader test_shader = Shader("shaders/test.vert", "shaders/test.frag");
-    test_shader.use();
-    test_shader.set("projection", projection);
-    test_shader.set("view", view);
-    test_shader.set("model", glm::translate(glm::mat4(1.f), {0, 0, -3}));
+    static auto *p_shader = new Shader("shaders/cook-torrance.vert",
+                                      "shaders/cook-torrance.frag");
+    static auto *test_shader = new Shader("shaders/test.vert",
+                                            "shaders/test.frag");
+    static PBRMaterial *p_material;
+    static bool first_run = true;
+    if (first_run) {
+        p_material = new PBRMaterial("resources/rust-steel/");
+        p_material->loadTextures();
+        p_shader->use();
+        p_material->bindTextures();
+        p_material->setIblPrecomptedMap(*p_shader, skybox.getIrradianceMap(),
+                skybox.getPrefilterMap(), skybox.getBrdfLUTTexture());
+
+        first_run = false;
+    }
+    p_shader->use();
+    p_shader->set("projection", projection);
+    p_shader->set("view", view);
+    p_shader->set("model", glm::translate(glm::mat4(1.f), {0, 0, -3}));
+    p_shader->set("lightPositions[0]", {0, 0, 0});
+    p_shader->set("lightColors[0]", {1, 1, 1});
+    p_shader->set("albedo_const", glm::vec3(0.1, 0.2, 0.3));
     sph.render();
-    test_shader.set("albedo", glm::vec3(0.5, 0.5, 0.5));
+
+    p_shader->set("albedo_const", glm::vec3(0.5, 0.5, 0.5));
+    p_shader->set("model", glm::translate(glm::mat4(1.f), {2, 0, -3}));
     cube.render();
 
     skybox.shader.use();

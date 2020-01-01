@@ -11,6 +11,7 @@
 #include "basic/Material.hpp"
 #include "engine/Model.hpp"
 
+// TODO: delete this class
 class CookTorrancePBR : public Object {
 public:
     CookTorrancePBR();

@@ -7,17 +7,17 @@ in vec3 Normal;
 
 uniform bool useTexture;
 
-// material parameters
-uniform sampler2D albedoMap;
-uniform sampler2D normalMap;
-uniform sampler2D metallicMap;
-uniform sampler2D roughnessMap;
-uniform sampler2D aoMap;
-// material parameters
-uniform vec3 albedoVal;
-uniform float metallicVal;
-uniform float roughnessVal;
-uniform float aoVal;
+// material parameters - sampler
+uniform sampler2D albedo_map;
+uniform sampler2D normal_map;
+uniform sampler2D metallic_map;
+uniform sampler2D roughness_map;
+uniform sampler2D ao_map;
+// material parameters - constant
+uniform vec3 albedo_val;
+uniform float metallic_val;
+uniform float roughness_val;
+uniform float ao_val;
 
 // IBL
 // irraiance map for ibl
@@ -78,7 +78,7 @@ float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness) {
 }
 
 vec3 getNormalFromMap() {
-    vec3 tangentNormal = texture(normalMap, TexCoords).xyz * 2.0 - 1.0;
+    vec3 tangentNormal = texture(normal_map, TexCoords).xyz * 2.0 - 1.0;
 
     vec3 Q1 = dFdx(WorldPos);
     vec3 Q2 = dFdy(WorldPos);
@@ -94,17 +94,20 @@ vec3 getNormalFromMap() {
 }
 
 void main() {
-    vec3 albedo = albedoVal;
-    float metallic = metallicVal;
-    float roughness = roughnessVal;
-    float ao = aoVal;
-    vec3 normal = Normal;
+    vec3 albedo, normal;
+    float metallic, roughness, ao;
     if (useTexture) {
-        albedo = texture(albedoMap, TexCoords).rgb;
-        metallic = texture(metallicMap, TexCoords).r;
-        roughness = texture(roughnessMap, TexCoords).r;
+        albedo = texture(albedo_map, TexCoords).rgb;
+        metallic = texture(metallic_map, TexCoords).r;
+        roughness = texture(roughness_map, TexCoords).r;
         normal = getNormalFromMap();
-        ao = texture(aoMap, TexCoords).r;
+        ao = texture(ao_map, TexCoords).r;
+    } else {
+        albedo = albedo_val;
+        metallic = metallic_val;
+        roughness = roughness_val;
+        ao = ao_val;
+        normal = Normal;
     }
 
     vec3 N = normalize(normal);
@@ -164,7 +167,7 @@ void main() {
     color = color / (color + vec3(1.0)); // HDR
     color = pow(color, vec3(1.0 / 2.2)); // gamma
 
-    FragColor = vec4(color, 1.0);
+    FragColor = vec4(albedo, 1.0);
 }
 
 

@@ -9,6 +9,7 @@ file(GLOB engine_src
         "src/basic/*.cpp"
         "src/engine/*.cpp"
         "src/objects/*.cpp"
+        "src/materials/*.cpp"
         )
 
 add_executable(engine ${engine_src})

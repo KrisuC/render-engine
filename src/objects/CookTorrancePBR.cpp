@@ -6,8 +6,8 @@
 #include "engine/Model.hpp"
 
 CookTorrancePBR::CookTorrancePBR() :
-    Object(Shader("./shaders/cookTorrancePBR.vert",
-                  "./shaders/cookTorrancePBR.frag")) {}
+    Object(Shader("./shaders/cook-torrance.vert",
+                  "./shaders/cook-torrance.frag")) {}
 
 void CookTorrancePBR::prepare() {
     shader.use();

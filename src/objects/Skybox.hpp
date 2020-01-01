@@ -9,6 +9,7 @@
 #include "basic/Shader.hpp"
 #include "basic/Texture.hpp"
 
+// TODO: store precomputed map into actual files.
 class Skybox : public Object {
 public:
     explicit Skybox(std::string path_to_image);
@@ -22,11 +23,11 @@ public:
 
 private:
     Shader equirectToCubemapShader {"shaders/cubemap.vert",
-                                    "shaders/equirectangularToCubemap.frag"};
+                                    "shaders/equirectangular-to-cubemap.frag"};
     Shader irradianceShader {"shaders/cubemap.vert",
-                             "shaders/irradianceConvolution.frag"};
+                             "shaders/irradiance-convolution.frag"};
     Shader prefilterShader {"shaders/cubemap.vert",
-                            "shaders/prefilter_map.frag"};
+                            "shaders/prefilter-map.frag"};
     Shader brdfLUTShader {"shaders/brdf.vert", "shaders/brdf.frag"};
     Texture hdrTexture;
 
