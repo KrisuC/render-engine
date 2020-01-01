@@ -7,33 +7,41 @@
 #include "Texture.hpp"
 #include <stb_image.h>
 
-Texture::Texture(std::string textureFilePath, std::string tag) :
-        filePath(std::move(textureFilePath)), tag(std::move(tag)) {
-    // Do nothing
-    // Load and bind must be called explicitly
+Texture::Texture(const std::string& path, bool data_is_float):
+        m_type(TextureType::Texture2D), data_is_float(data_is_float) {
+
+    this->load(path);
+}
+
+Texture::Texture(unsigned int id, unsigned int type) :
+        id(id), m_type(type), data_is_float(false) {
+
+    if (type != TextureType::Texture2D && type != TextureType::CubeMap) {
+        throw std::runtime_error("undefined texture type");
+    }
 }
 
 
-void Texture::load() {
+void Texture::load(const std::string &path) {
     stbi_set_flip_vertically_on_load(true);
 
-    if (tag == "hdr") {
-        data = stbi_loadf(filePath.c_str(), &width, &height, &nrComponents, 0);
+    if (data_is_float) {
+        data = stbi_loadf(path.c_str(), &width, &height, &nrComponents, 0);
     } else {
-        data = stbi_load(filePath.c_str(), &width, &height, &nrComponents, 0);
+        data = stbi_load(path.c_str(), &width, &height, &nrComponents, 0);
     }
     if (!data) {
         throw std::runtime_error("Texture failed to load at path: "
-                                 + filePath + "\n");
+                                 + path + "\n");
     }
 }
 
 unsigned Texture::bind() {
     // Load and bind if not
-    if (textureID == 0) {
+    if (id == 0) {
         GLenum inFormat, outFormat, texelType;
 
-        if (tag == "hdr") {
+        if (data_is_float) {
             inFormat = GL_RGB16F;
             outFormat = GL_RGB;
             texelType = GL_FLOAT;
@@ -50,12 +58,12 @@ unsigned Texture::bind() {
             } else {
                 throw std::runtime_error(
                         "Undefined texture format: nrComponents = "
-                         + std::to_string(nrComponents) + " for " + filePath);
+                         + std::to_string(nrComponents));
             }
         }
 
-        glGenTextures(1, &textureID);
-        glBindTexture(GL_TEXTURE_2D, textureID);
+        glGenTextures(1, &id);
+        glBindTexture(GL_TEXTURE_2D, id);
         // load texture data into opengl
         glTexImage2D(GL_TEXTURE_2D, 0, inFormat, width, height, 0, outFormat,
                      texelType, data);
@@ -67,13 +75,13 @@ unsigned Texture::bind() {
 
         free();
     }
-    return textureID;
+    return id;
 }
 
 Texture::~Texture() {
     free();
     // delete texture from opengl and free space
-    glDeleteTextures(1, &textureID);
+    glDeleteTextures(1, &id);
 }
 
 void Texture::free() {

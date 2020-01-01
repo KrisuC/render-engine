@@ -1,3 +1,5 @@
+// General use cook-torrance BRDF shader
+// Default.
 #version 330 core
 out vec4 FragColor;
 
@@ -5,32 +7,39 @@ in vec2 TexCoords;
 in vec3 WorldPos;
 in vec3 Normal;
 
-uniform bool useTexture;
+// TODO: more specific
+uniform bool use_texture = false;
+
+// for calculating specular
+uniform vec3 cam_pos;
 
 // material parameters - sampler
 uniform sampler2D albedo_map;
-uniform sampler2D normal_map;
 uniform sampler2D metallic_map;
 uniform sampler2D roughness_map;
+uniform sampler2D emissive_map;
+uniform sampler2D normal_map;
 uniform sampler2D ao_map;
+uniform sampler2D specular_map;
+uniform sampler2D height_map;
+
 // material parameters - constant
 uniform vec3 albedo_val;
 uniform float metallic_val;
 uniform float roughness_val;
-uniform float ao_val;
+uniform float emissive_val;
 
 // IBL
 // irraiance map for ibl
-uniform samplerCube irradianceMap;
+uniform samplerCube irradiance_map;
 // ibl specular
-uniform samplerCube prefilterMap;
-uniform sampler2D   brdfLUT;
+uniform samplerCube prefilter_map;
+uniform sampler2D   brdfLUT_map;
 
 // lights
 uniform vec3 lightPositions[4];
 uniform vec3 lightColors[4];
 
-uniform vec3 camPos;
 
 const float PI = 3.14159265359;
 
@@ -96,7 +105,8 @@ vec3 getNormalFromMap() {
 void main() {
     vec3 albedo, normal;
     float metallic, roughness, ao;
-    if (useTexture) {
+
+    if (use_texture) {
         albedo = texture(albedo_map, TexCoords).rgb;
         metallic = texture(metallic_map, TexCoords).r;
         roughness = texture(roughness_map, TexCoords).r;
@@ -106,12 +116,12 @@ void main() {
         albedo = albedo_val;
         metallic = metallic_val;
         roughness = roughness_val;
-        ao = ao_val;
         normal = Normal;
+        ao = 1.0;
     }
 
     vec3 N = normalize(normal);
-    vec3 V = normalize(camPos - WorldPos);
+    vec3 V = normalize(cam_pos - WorldPos);
     vec3 R = reflect(-V, N);
 
     vec3 F0 = vec3(0.04);
@@ -149,14 +159,14 @@ void main() {
     vec3 kD = 1.0 - kS;
     kD *= 1.0 - metallic;
 
-    vec3 irradiance = texture(irradianceMap, N).rgb;
+    vec3 irradiance = texture(irradiance_map, N).rgb;
     vec3 diffuse    = irradiance * albedo;
 
     // get IBL specular part
     const float MAX_REFLECTION_LOD = 4.0;
     vec3 prefilterdColor
-            = textureLod(prefilterMap, R, roughness*MAX_REFLECTION_LOD).rgb;
-    vec2 brdf = texture(brdfLUT,
+            = textureLod(prefilter_map, R, roughness*MAX_REFLECTION_LOD).rgb;
+    vec2 brdf = texture(brdfLUT_map,
                         vec2( max(dot(N, V), 0.0), roughness )).rg;
     vec3 specular = prefilterdColor * (F * brdf.x + brdf.y);
 
@@ -167,9 +177,8 @@ void main() {
     color = color / (color + vec3(1.0)); // HDR
     color = pow(color, vec3(1.0 / 2.2)); // gamma
 
-    FragColor = vec4(albedo, 1.0);
+    FragColor = vec4(color, 1.0);
 }
-
 
 
 

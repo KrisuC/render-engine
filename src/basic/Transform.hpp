@@ -7,6 +7,7 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
+// TODO: separate vertex only behaviour to Transform
 // A transform is append to a node/objects in scene graph, to perform a local
 // transformation according to the local space of its parent node
 class Transform {

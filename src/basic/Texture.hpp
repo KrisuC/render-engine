@@ -9,32 +9,35 @@
 #include <cassert>
 #include <string>
 
+enum TextureType {
+    Texture2D = GL_TEXTURE_2D,
+    CubeMap = GL_TEXTURE_CUBE_MAP
+};
+
 class Texture {
 public:
-    Texture() = default;
-    explicit Texture(std::string textureFilePath,
-                     std::string tag="");
-    // Bind texture(only once) and return texture id
-    unsigned bind();
-    // Load data from image file into memory
-    void load();
+    explicit Texture(const std::string& path,
+                     bool float_data=false);
+    explicit Texture(unsigned int id, unsigned int type);
 
-    inline const std::string& type() { return tag; }
-    inline const std::string& path() { return filePath; }
+    // Bind texture(only once) and return texture id
+    unsigned int bind();
+    inline unsigned int type() const { return m_type; }
+
     ~Texture();
 
 protected:
-    // Load texture data into memory, not binding to any texture object
+    // Load data from image file into memory
+    void load(const std::string &path);
     // Free memory
     void free();
 
 private:
-    // unsigned char (byte) for normal jpg
-    // float for hdr image
+    // unsigned char (byte) for normal jpg, float for hdr image
+    bool data_is_float;
     void *data = nullptr;
-    std::string filePath;
-    std::string tag;
-    unsigned int textureID = 0;
+    unsigned int id = 0;
+    unsigned int m_type;
     int width = 0, height = 0, nrComponents = 0;
 };
 

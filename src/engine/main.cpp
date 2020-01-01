@@ -6,6 +6,7 @@
 #else
     #include <unistd.h>
 #endif
+#define LOG
 
 int main(int argc, char *argv[]) {
     chdir("..");

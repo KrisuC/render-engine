@@ -14,7 +14,7 @@
 #include "objects/Skybox.hpp"
 #include "basic/Material.hpp"
 #include "engine/SceneGraph.hpp"
-#include "materials/PBRMaterial.hpp"
+#include "Application.hpp"
 
 std::string Application::glsl_version;
 GLFWwindow *Application::window = nullptr;
@@ -193,46 +193,56 @@ void Application::renderScene() {
     glClearColor(0.1, 0.1, 0.1, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    int width, height;
-    glfwGetWindowSize(window, &width, &height);
-    glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom),
-                                            (float)width / height, 0.1f, 100.0f);
-    glm::mat4 view = camera.GetViewMatrix();
+    int w, h;
+    glfwGetWindowSize(window, &w, &h);
+    auto projection = glm::perspective(glm::radians(camera.Zoom), (float)w/h, 0.1f, 100.0f);
+    auto view       = camera.GetViewMatrix();
 
 //    sceneGraph.root()->setGlobalShaderValue("projection", projection);
 //    sceneGraph.root()->setGlobalShaderValue("view", view);
 //    sceneGraph.root()->setGlobalShaderValue("camPos", camera.Position);
 //    sceneGraph.renderScene();
-    Mesh sph = Primitive::unitSphere();
-    Mesh cube = Primitive::unitCube();
-    static auto *p_shader = new Shader("shaders/cook-torrance.vert",
-                                      "shaders/cook-torrance.frag");
-    static auto *test_shader = new Shader("shaders/test.vert",
-                                            "shaders/test.frag");
-    static PBRMaterial *p_material;
+    Mesh sphere_mesh = Primitive::unitSphere();
+    Mesh cube_mesh = Primitive::unitCube();
+    static auto *material = new Material;
     static bool first_run = true;
     if (first_run) {
-        p_material = new PBRMaterial("resources/rust-steel/");
-        p_material->loadTextures();
-        p_shader->use();
-        p_material->bindTextures();
-        p_material->setIblPrecomptedMap(*p_shader, skybox.getIrradianceMap(),
-                skybox.getPrefilterMap(), skybox.getBrdfLUTTexture());
-
+        auto *irradiance_map = new Texture { skybox.getIrradianceMap(),
+                                             TextureType::CubeMap };
+        auto *prefilter_map = new Texture { skybox.getPrefilterMap(),
+                                            TextureType::CubeMap };
+        auto *brdfLUT_map = new Texture { skybox.getBrdfLUTTexture(),
+                                          TextureType::Texture2D };
+        material->appendTexture("irradiance_map", irradiance_map);
+        material->appendTexture("prefilter_map", prefilter_map);
+        material->appendTexture("brdfLUT_map", brdfLUT_map);
         first_run = false;
     }
-    p_shader->use();
-    p_shader->set("projection", projection);
-    p_shader->set("view", view);
-    p_shader->set("model", glm::translate(glm::mat4(1.f), {0, 0, -3}));
-    p_shader->set("lightPositions[0]", {0, 0, 0});
-    p_shader->set("lightColors[0]", {1, 1, 1});
-    p_shader->set("albedo_const", glm::vec3(0.1, 0.2, 0.3));
-    sph.render();
+    material->shader->use();
+    material->shader->set("use_texture", 0);
+    // setting transform -> vertex only
+    material->shader->set("cam_pos", camera.Position);
+    material->shader->set("projection", projection);
+    material->shader->set("view", view);
+    material->shader->set("model", glm::translate(glm::mat4(1.f), {0, 0, -3}));
+    // lights and material -> fragment only
+    // setting lights
+    material->shader->set("lightPositions[0]", {0+sin(4*glfwGetTime()), 0, 0});
+    material->shader->set("lightColors[0]", {1, 1, 1});
+    // setting material
+    material->setAlbedo(ui.albedo);
+    material->setRoughness(ui.roughness);
+    material->setMettalic(ui.metallic);
+    material->updateShader();
+    // draw
+    sphere_mesh.render();
 
-    p_shader->set("albedo_const", glm::vec3(0.5, 0.5, 0.5));
-    p_shader->set("model", glm::translate(glm::mat4(1.f), {2, 0, -3}));
-    cube.render();
+    material->shader->set("model", glm::translate(glm::mat4(1.f), {2, 0, -3}));
+    material->setAlbedo({1, 1, 1});
+    material->setRoughness(0.9);
+    material->setMettalic(0.2);
+    material->updateShader();
+    cube_mesh.render();
 
     skybox.shader.use();
     skybox.shader.set("view", view);

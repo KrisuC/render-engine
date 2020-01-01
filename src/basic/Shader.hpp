@@ -6,6 +6,7 @@
 #include <glm/glm.hpp>
 #include <string>
 
+// TODO: separate vertex and fragment shader
 class Shader {
 public:
     // constructor reads and builds the shader

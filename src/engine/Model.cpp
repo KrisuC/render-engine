@@ -57,24 +57,24 @@ std::vector<Texture> Model::loadMaterialTextures(
 
     //TODO: Fix Texture issues
     std::vector<Texture> textures;
-    for (unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
-        aiString str;
-        mat->GetTexture(type, i, &str);
-        bool skip = false;
-        for (auto &t : textures_loaded) {
-            if (std::strcmp(t.path().c_str(), str.C_Str()) == 0) {
-                textures.push_back(t);
-                skip = true;
-                break;
-            }
-        }
-        if (!skip) {
-            // not already loaded before
-            Texture texture(str.C_Str(), typeName);
-            textures.push_back(texture);
-            textures_loaded.push_back(texture);
-        }
-    }
+//    for (unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
+//        aiString str;
+//        mat->GetTexture(type, i, &str);
+//        bool skip = false;
+//        for (auto &t : textures_loaded) {
+//            if (std::strcmp(t.path().c_str(), str.C_Str()) == 0) {
+//                textures.push_back(t);
+//                skip = true;
+//                break;
+//            }
+//        }
+//        if (!skip) {
+//            // not already loaded before
+//            Texture texture(str.C_Str(), typeName);
+//            textures.push_back(texture);
+//            textures_loaded.push_back(texture);
+//        }
+//    }
     return textures;
 }
 
