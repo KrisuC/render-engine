@@ -4,14 +4,30 @@
 
 #include "Material.hpp"
 
-void
-Material::bind_texture(const std::string &str, Texture *texture) {
+void Material::bind_texture(const std::string &str, Texture *texture) {
     glActiveTexture(GL_TEXTURE0+current_used_texture_units);
     glBindTexture(texture->type(), texture->bind());
     shader->set(str, current_used_texture_units);
     current_used_texture_units++;
 }
 
+Material::Material(const std::string &textures_dir, const std::string &suffix) {
+    setAlbedo(new Texture {textures_dir + "albedo" + suffix});
+    try {
+        auto ao_map = new Texture {textures_dir + "ao"+ suffix};
+        setAO(ao_map);
+    } catch (std::runtime_error &e) {
+        std::cerr << "no ao map for " + textures_dir << std::endl;
+    }
+    try {
+        setMetallic(new Texture {textures_dir + "metallic" + suffix});
+    } catch (std::runtime_error &e) {
+        std::cerr << "no metallic map for " + textures_dir << std::endl;
+        setMetallic(0.f);
+    }
+    setNormal(new Texture {textures_dir + "normal" + suffix});
+    setRoughness(new Texture {textures_dir + "roughness" + suffix});
+}
 
 void Material::updateShader() {
     current_used_texture_units = 1;

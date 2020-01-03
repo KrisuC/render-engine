@@ -7,12 +7,13 @@ in vec2 TexCoords;
 in vec3 WorldPos;
 in vec3 Normal;
 
-// TODO: more specific
+// TODO: more specific texture useage bools
 uniform bool use_texture = false;
 
 // for calculating specular
 uniform vec3 cam_pos;
 
+// TODO: support for height_map, emissive_map
 // material parameters - sampler
 uniform sampler2D albedo_map;
 uniform sampler2D metallic_map;
@@ -89,14 +90,14 @@ float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness) {
 vec3 getNormalFromMap() {
     vec3 tangentNormal = texture(normal_map, TexCoords).xyz * 2.0 - 1.0;
 
-    vec3 Q1 = dFdx(WorldPos);
-    vec3 Q2 = dFdy(WorldPos);
+    vec3 Q1  = dFdx(WorldPos);
+    vec3 Q2  = dFdy(WorldPos);
     vec2 st1 = dFdx(TexCoords);
     vec2 st2 = dFdy(TexCoords);
 
-    vec3 N = normalize(Normal);
-    vec3 T = normalize(Q1 * st2.t - Q2 * st1.t);
-    vec3 B = -normalize(cross(N, T));
+    vec3 N   = normalize(Normal);
+    vec3 T  = normalize(Q1*st2.t - Q2*st1.t);
+    vec3 B  = -normalize(cross(N, T));
     mat3 TBN = mat3(T, B, N);
 
     return normalize(TBN * tangentNormal);
@@ -110,7 +111,7 @@ void main() {
         albedo = texture(albedo_map, TexCoords).rgb;
         metallic = texture(metallic_map, TexCoords).r;
         roughness = texture(roughness_map, TexCoords).r;
-        normal = getNormalFromMap();
+        normal = Normal; //getNormalFromMap();
         ao = texture(ao_map, TexCoords).r;
     } else {
         albedo = albedo_val;

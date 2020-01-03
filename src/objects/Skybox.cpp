@@ -19,9 +19,8 @@ void Skybox::render() {
     Primitive::renderCube();
 }
 
-Skybox::Skybox(std::string path_to_image) :
-         Object(Shader("shaders/skybox.vert", "shaders/skybox.frag")),
-         hdrTexture(std::move(path_to_image), "hdr")  { }
+Skybox::Skybox(const std::string& path_to_image) :
+         hdrTexture(path_to_image, "hdr")  { }
 
 void Skybox::prepare() {
     // convert equirectangular to cubemap

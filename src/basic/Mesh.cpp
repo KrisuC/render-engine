@@ -54,6 +54,7 @@ void Mesh::setupMesh() {
 
 namespace Primitive {
     // R = 1
+    // TODO: Replace with a better sphere
     Mesh sphere() {
         std::vector<Vertex> vertices;
         std::vector<unsigned int> indices;
@@ -65,12 +66,9 @@ namespace Primitive {
             for (unsigned int x = 0; x <= X_SEGMENTS; ++x) {
                 float xSegment = (float) x / (float) X_SEGMENTS;
                 float ySegment = (float) y / (float) Y_SEGMENTS;
-                float xPos = std::cos(xSegment * 2.0f * PI) *
-                             std::sin(ySegment * PI);
-                float yPos = std::cos(ySegment * PI);
-                float zPos = std::sin(xSegment * 2.0f * PI) *
-                             std::sin(ySegment * PI);
-
+                float xPos = std::cos(xSegment*2.f*PI) * std::sin(ySegment*PI);
+                float yPos = std::cos(ySegment*PI);
+                float zPos = std::sin(xSegment*2.0f*PI) * std::sin(ySegment*PI);
                 vertices.push_back({ {xPos, yPos, zPos},
                                      {xPos, yPos, zPos},
                                      {xSegment, ySegment} });

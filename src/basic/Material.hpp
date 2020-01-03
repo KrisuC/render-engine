@@ -8,6 +8,7 @@
 #include <utility>
 #include <string>
 #include <vector>
+#include <iostream>
 #include <glm/glm.hpp>
 #include "basic/Texture.hpp"
 #include "basic/Shader.hpp"
@@ -17,6 +18,7 @@
 class Material {
 public:
     Material() = default;
+    explicit Material(const std::string &textures_dir, const std::string &suffix = ".png");
 
     // Replace material shader with a user-modified one
     inline void setShader(Shader *new_shader);
@@ -26,7 +28,7 @@ public:
     inline void setAlbedo(float r, float g, float b);
 
     inline void setMetallic(Texture *m);
-    inline void setMettalic(float m);
+    inline void setMetallic(float m);
 
     inline void setRoughness(Texture *r);
     inline void setRoughness(float r);
@@ -101,7 +103,7 @@ void Material::setAlbedo(float r, float g, float b) { setAlbedo({r, g, b}); }
 
 void Material::setMetallic(Texture *m) { use_map.metallic = true; metallic.map = m; }
 
-void Material::setMettalic(float m)    { use_map.metallic = false; metallic.value = m; }
+void Material::setMetallic(float m)    { use_map.metallic = false; metallic.value = m; }
 
 void Material::setRoughness(Texture *r) { use_map.roughness = true; roughness.map = r; }
 
@@ -118,5 +120,6 @@ void Material::setAO(Texture *a)     { ao = a; }
 void Material::setSpecular(Texture *s) { specular = s; }
 
 void Material::setHeight(Texture *h)   { height = h; }
+
 
 #endif //RENDER_ENGINE_MATERIAL_HPP

@@ -15,7 +15,7 @@
 //       Textures.
 class Object {
 public:
-    explicit Object(const Shader &rs) : shader(rs) {}
+    Object(Mesh *mesh, Material *material) : mesh(mesh), material(material) {}
     virtual void prepare() = 0;
     virtual void render() = 0;
     virtual ~Object() = default;
@@ -25,7 +25,6 @@ public:
     // world transformation multiplying the object's local transformation
     Transform localTransfrom;
 
-    Shader shader;
     Mesh *mesh;
     Material *material;
 };

@@ -201,60 +201,114 @@ void Application::renderScene() {
 //    sceneGraph.root()->setGlobalShaderValue("view", view);
 //    sceneGraph.root()->setGlobalShaderValue("camPos", camera.Position);
 //    sceneGraph.renderScene();
-    Mesh sphere_mesh = Primitive::sphere();
-    Mesh cube_mesh = Primitive::cube();
-    static auto *material = new Material;
+    // -------------------Preparing----------------------------
+    static std::vector<PointLight> lights = {
+            {{-10.0f, 10.0f,  0.0f}, {300.0f, 300.0f, 300.0f}},
+            {{10.0f,  10.0f,  0.0f}, {300.0f, 300.0f, 300.0f}},
+            {{-10.0f, -10.0f, 0.0f}, {300.0f, 300.0f, 300.0f}},
+            {{10.0f,  -10.0f, 0.0f}, {300.0f, 300.0f, 300.0f}},
+    };
+    static Mesh sphere_mesh = Primitive::sphere();
+    static Mesh cube_mesh = Primitive::cube();
+    static std::vector<Material *> materials;
     static bool first_run = true;
     if (first_run) {
-        auto *irradiance_map = new Texture { skybox.getIrradianceMap(),
-                                             TextureType::CubeMap };
-        auto *prefilter_map = new Texture { skybox.getPrefilterMap(),
-                                            TextureType::CubeMap };
-        // TODO: fix BRDF issues
-        auto *brdfLUT_map = new Texture { skybox.getBrdfLUTTexture(),
-                                          TextureType::Texture2D };
-        material->appendTexture("irradiance_map", irradiance_map);
-        material->appendTexture("prefilter_map", prefilter_map);
-        material->appendTexture("brdfLUT_map", brdfLUT_map);
-        std::cout << brdfLUT_map->bind() << std::endl;
+        auto *irradiance_map = new Texture{skybox.getIrradianceMap(),
+                                           TextureType::CubeMap};
+        auto *prefilter_map = new Texture{skybox.getPrefilterMap(),
+                                          TextureType::CubeMap};
+        auto *brdfLUT_map = new Texture{skybox.getBrdfLUTTexture(),
+                                        TextureType::Texture2D};
+
+        for (int i = 0; i < 3; i++) {
+            materials.push_back(new Material);
+        }
+        materials.push_back(new Material{"resources/metal03/", ".jpg"});
+        materials.push_back(new Material{"resources/ground36/", ".jpg"});
+        materials.push_back(new Material{"resources/marble05/", ".jpg"});
+
+        for (auto material : materials) {
+            material->appendTexture("irradiance_map", irradiance_map);
+            material->appendTexture("prefilter_map", prefilter_map);
+            material->appendTexture("brdfLUT_map", brdfLUT_map);
+        }
         first_run = false;
     }
-    material->shader->use();
-    material->shader->set("use_texture", 0);
-    // setting transform -> vertex only
-    material->shader->set("cam_pos", camera.Position);
-    material->shader->set("projection", projection);
-    material->shader->set("view", view);
-    material->shader->set("model", glm::translate(glm::mat4(1.f), {-2, 0, -3}));
-    // lights and material -> fragment only
-    // setting lights
-    static std::vector<PointLight> lights = {
-            {{-10.0f,  10.0f, 0.0f}, {300.0f, 300.0f, 300.0f}},
-            {{ 10.0f,  10.0f, 0.0f}, {300.0f, 300.0f, 300.0f}},
-            {{-10.0f, -10.0f, 0.0f}, {300.0f, 300.0f, 300.0f}},
-            {{ 10.0f, -10.0f, 0.0f}, {300.0f, 300.0f, 300.0f}},
-    };
-    for (int i = 0; i < 4; i++) {
-        auto str_i = std::to_string(i);
-        material->shader->set("lightPositions["+str_i+"]",
-                lights[i].position + glm::vec3(sin(glfwGetTime()*5)));
-        material->shader->set("lightColors["+str_i+"]", lights[i].color);
+    // Global Settings update for each pass
+    {
+        for (auto material : materials) {
+            material->shader->use();
+            material->shader->set("projection", projection);
+            material->shader->set("view", view);
+            material->shader->set("cam_pos", camera.Position);
+            for (int i = 0; i < 4; i++) {
+                auto str_i = std::to_string(i);
+                material->shader->use();
+                material->shader->set("lightPositions["+str_i+"]",
+                                      lights[i].position + glm::vec3(sin(glfwGetTime()*5)));
+                material->shader->set("lightColors["+str_i+"]", lights[i].color);
+            }
+        }
+        for (int i = 0; i < materials.size(); i++) {
+            materials[i]->shader->use();
+            materials[i]->shader->set("model",
+                    glm::translate(glm::mat4(1.f), {3.f*(i-materials.size()/2.f), 0, -3}));
+        }
     }
+    // First
+    materials[0]->shader->use();
+    materials[0]->shader->set("use_texture", 0);
     // setting material
-    material->setAlbedo(ui.albedo);
-    material->setRoughness(ui.roughness);
-    material->setMettalic(ui.metallic);
-    material->updateShader();
-    // draw
+    materials[0]->setAlbedo(ui.albedo);
+    materials[0]->setRoughness(ui.roughness);
+    materials[0]->setMetallic(ui.metallic);
+    materials[0]->updateShader();
     sphere_mesh.render();
 
-    material->shader->set("model", glm::translate(glm::mat4(1.f), {2, 0, -3}));
-    material->setAlbedo({1, 0.4, 0});
-    material->setRoughness(0.9);
-    material->setMettalic(0.0);
-    material->updateShader();
+    // Second:
+    materials[1]->shader->use();
+    materials[1]->shader->set("use_texture", 0);
+    materials[1]->setAlbedo({0.4, 0.4, 0.4});
+    materials[1]->setRoughness(0.1);
+    materials[1]->setMetallic(0.1);
+    materials[1]->updateShader();
     sphere_mesh.render();
 
+    // Third
+    materials[2]->shader->use();
+    static auto *albedo = new Texture {"resources/rust-steel/albedo.png"};
+    static auto *ao = new Texture {"resources/rust-steel/ao.png"};
+    static auto *metallic = new Texture {"resources/rust-steel/metallic.png"};
+    static auto *normal = new Texture {"resources/rust-steel/normal.png"};
+    static auto *roughness = new Texture {"resources/rust-steel/roughness.png"};
+    materials[2]->setAlbedo(albedo);
+    materials[2]->setAO(ao);
+    materials[2]->setMetallic(metallic);
+    materials[2]->setNormal(normal);
+    materials[2]->setRoughness(roughness);
+    materials[2]->shader->set("use_texture", 1);
+    materials[2]->updateShader();
+    sphere_mesh.render();
+
+    // Fourth
+    materials[3]->shader->use();
+    materials[3]->shader->set("use_texture", 1);
+    materials[3]->updateShader();
+    sphere_mesh.render();
+
+    // Fiveth
+    materials[4]->shader->use();
+    materials[4]->shader->set("use_texture", 1);
+    materials[4]->updateShader();
+    sphere_mesh.render();
+
+    // Sixth
+    materials[5]->shader->use();
+    materials[5]->shader->set("use_texture", 1);
+    materials[5]->updateShader();
+    sphere_mesh.render();
+
+    // Sky box
     skybox.shader.use();
     skybox.shader.set("view", view);
     skybox.shader.set("projection", projection);

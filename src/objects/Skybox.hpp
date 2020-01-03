@@ -10,16 +10,19 @@
 #include "basic/Texture.hpp"
 
 // TODO: store precomputed map into actual files.
-class Skybox : public Object {
+class Skybox {
 public:
-    explicit Skybox(std::string path_to_image);
+    explicit Skybox(const std::string& path_to_image);
 
-    void prepare() override;
-    void render() override;
+    void prepare();
+    void render();
 
     inline unsigned int getIrradianceMap()  { return irradianceMap; }
     inline unsigned int getPrefilterMap()   { return prefilterMap; }
     inline unsigned int getBrdfLUTTexture() { return brdfLUTTexture; }
+
+public:
+    Shader shader {"shaders/skybox.vert", "shaders/skybox.frag"};
 
 private:
     Shader equirectToCubemapShader {"shaders/cubemap.vert",
