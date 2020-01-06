@@ -18,6 +18,10 @@
 #include <string>
 #include <sstream>
 
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+
 #include "Shader.hpp"
 #include "Texture.hpp"
 
@@ -32,7 +36,7 @@ public:
 // Leave textures for others to concern
 class Mesh {
 public:
-    Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices,
+    Mesh(std::vector<Vertex> vertices,std::vector<unsigned int> indices,
          unsigned int mesh_type=GL_TRIANGLES);
 
     void render() const;

@@ -11,14 +11,14 @@
 #include "basic/Object.hpp"
 #include "basic/Transform.hpp"
 #include "basic/Camera.hpp"
-#include "engine/SGNode.hpp"
+#include "engine/SceneNode.hpp"
 
 // SceneGraph -> Node -> Node -> Object
 //            -> Node -> ...
 //            -> ...
 //
 // SceneGraph       : entry of the graph
-// SGNode(interior) : responsible for lights and other special effects
+// SceneNode(interior) : responsible for lights and other special effects
 // Obeject(leaf)    : real entity to be rendered
 
 // TODO: A method to construct a scene graph from a scene description
@@ -26,9 +26,22 @@
 class SceneGraph {
 public:
     SceneGraph() = default;
+    explicit SceneGraph(const std::string &scene_path) {
+        Assimp::Importer ai_importer;
+        const aiScene *ai_scene = ai_importer.ReadFile(scene_path,
+                                                 aiProcess_Triangulate      |
+                                             /*  aiProcess_FlipUVs          | */
+                                                 aiProcess_GenSmoothNormals);
 
-    inline void setRoot(SGNode *root) { this->p_root = root; }
-    inline SGNode *root() { return p_root; }
+        if (!ai_scene || (ai_scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE) ||
+            !ai_scene->mRootNode) {
+            throw std::runtime_error(std::string("assimp error: ") +
+                                     ai_importer.GetErrorString());
+        }
+    }
+
+    inline void setRoot(SceneNode *root) { this->p_root = root; }
+    inline SceneNode *root() { return p_root; }
 
     void prepareScene() {
         prepareNode(p_root);
@@ -39,25 +52,9 @@ public:
     }
 
 private:
-    void renderNode(SGNode *p_node) {
-        for (auto obj : p_node->objects) {
-            obj->render();
-        }
-        for (auto child : p_node->childNodes) {
-            renderNode(child);
-        }
-    }
-    void prepareNode(SGNode *p_node) {
-        for (auto obj : p_node->objects) {
-            obj->prepare();
-        }
-        for (auto child : p_node->childNodes) {
-            prepareNode(child);
-        }
-    }
 
 private:
-    SGNode *p_root;
+    SceneNode *p_root;
 };
 
 

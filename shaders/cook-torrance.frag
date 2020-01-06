@@ -23,7 +23,6 @@ uniform sampler2D normal_map;
 uniform sampler2D ao_map;
 uniform sampler2D specular_map;
 uniform sampler2D height_map;
-
 // material parameters - constant
 uniform vec3 albedo_val;
 uniform float metallic_val;
@@ -31,9 +30,9 @@ uniform float roughness_val;
 uniform float emissive_val;
 
 // IBL
-// irraiance map for ibl
+// diffuse
 uniform samplerCube irradiance_map;
-// ibl specular
+// specular
 uniform samplerCube prefilter_map;
 uniform sampler2D   brdfLUT_map;
 
