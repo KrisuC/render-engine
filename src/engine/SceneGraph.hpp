@@ -43,13 +43,13 @@ public:
     inline void setRoot(SceneNode *root) { this->p_root = root; }
     inline SceneNode *root() { return p_root; }
 
-    void prepareScene() {
-        prepareNode(p_root);
-    }
-    void renderScene() {
-//        p_root->updateLights();
-        renderNode(p_root);
-    }
+//    void prepareScene() {
+//        prepareNode(p_root);
+//    }
+//    void renderScene() {
+////        p_root->updateLights();
+//        renderNode(p_root);
+//    }
 
 private:
 
