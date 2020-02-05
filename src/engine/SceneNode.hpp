@@ -8,7 +8,7 @@
 #include <vector>
 #include "basic/Light.hpp"
 #include "basic/Transform.hpp"
-#include "basic/Object.hpp"
+#include "basic/Renderable.hpp"
 
 // A scene graph node
 // TODO: add specific post-effects, but how?
@@ -17,7 +17,7 @@ public:
     SceneNode() = default;
 
     inline void setLocalTransform(const Transform &t) { localTransform = t; }
-    inline void appendObjects(Object *objp) { objects.push_back(objp); }
+    inline void appendObjects(Renderable *objp) { objects.push_back(objp); }
     inline void appendNodes(SceneNode *nodep) {
         nodep->parent = this;
         childNodes.push_back(nodep);
@@ -50,7 +50,7 @@ public:
     }
 
 private:
-    std::vector<Object *> objects;
+    std::vector<Renderable *> objects;
 
     std::vector<SceneNode *> childNodes;
     SceneNode *parent = nullptr;

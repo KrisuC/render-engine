@@ -20,9 +20,15 @@ void Skybox::render() {
 }
 
 Skybox::Skybox(const std::string& path_to_image) :
-         hdrTexture(path_to_image, "hdr")  { }
+         hdrTexture(path_to_image, "hdr")  {
+    prepare();
+}
 
 void Skybox::prepare() {
+    unsigned int irradianceMap = 0;
+    unsigned int prefilterMap = 0;
+    unsigned int brdfLUTTexture = 0;
+
     // convert equirectangular to cubemap
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
@@ -209,6 +215,7 @@ void Skybox::prepare() {
         }
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
+    ibl = { irradianceMap, prefilterMap, brdfLUTTexture };
 }
 
 

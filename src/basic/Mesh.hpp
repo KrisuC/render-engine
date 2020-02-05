@@ -32,11 +32,10 @@ public:
     glm::vec2 texCoords;
 };
 
-// Only respond for Triangular Meshes
-// Leave textures for others to concern
 class Mesh {
 public:
-    Mesh(std::vector<Vertex> vertices,std::vector<unsigned int> indices,
+    Mesh(std::vector<Vertex> vertices,
+         std::vector<unsigned int> indices,
          unsigned int mesh_type=GL_TRIANGLES);
 
     void render() const;
@@ -49,6 +48,7 @@ public:
 private:
     // Called in constructor
     void setupMesh();
+
     unsigned int mesh_type;
 };
 

@@ -8,13 +8,13 @@
 #include <stb_image.h>
 
 Texture::Texture(const std::string& path, bool data_is_float):
-        m_type(TextureType::Texture2D), data_is_float(data_is_float) {
+        textureType(TextureType::Texture2D), dataIsFloat(data_is_float) {
 
     this->load(path);
 }
 
 Texture::Texture(unsigned int id, unsigned int type) :
-        id(id), m_type(type), data_is_float(false) {
+        id(id), textureType(type), dataIsFloat(false) {
 
     if (type != TextureType::Texture2D && type != TextureType::CubeMap) {
         throw std::runtime_error("undefined texture type");
@@ -25,7 +25,7 @@ Texture::Texture(unsigned int id, unsigned int type) :
 void Texture::load(const std::string &path) {
     stbi_set_flip_vertically_on_load(true);
 
-    if (data_is_float) {
+    if (dataIsFloat) {
         data = stbi_loadf(path.c_str(), &width, &height, &nrComponents, 0);
     } else {
         data = stbi_load(path.c_str(), &width, &height, &nrComponents, 0);
@@ -41,7 +41,7 @@ unsigned Texture::bind() {
     if (id == 0) {
         GLenum inFormat, outFormat, texelType;
 
-        if (data_is_float) {
+        if (dataIsFloat) {
             inFormat = GL_RGB16F;
             outFormat = GL_RGB;
             texelType = GL_FLOAT;

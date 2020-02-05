@@ -5,26 +5,27 @@
 #ifndef RENDER_ENGINE_SKYBOX_HPP
 #define RENDER_ENGINE_SKYBOX_HPP
 
-#include "basic/Object.hpp"
+#include "basic/Renderable.hpp"
 #include "basic/Shader.hpp"
 #include "basic/Texture.hpp"
+#include "engine/IBL.hpp"
 
 // TODO: store precomputed map into actual files.
 class Skybox {
 public:
+    Skybox() = default;
     explicit Skybox(const std::string& path_to_image);
 
-    void prepare();
     void render();
 
-    inline unsigned int getIrradianceMap()  { return irradianceMap; }
-    inline unsigned int getPrefilterMap()   { return prefilterMap; }
-    inline unsigned int getBrdfLUTTexture() { return brdfLUTTexture; }
-
-public:
-    Shader shader {"shaders/skybox.vert", "shaders/skybox.frag"};
+    inline IBL getIBL() { return ibl; }
 
 private:
+    void prepare();
+
+private:
+    Shader shader {"shaders/skybox.vert", "shaders/skybox.frag"};
+
     Shader equirectToCubemapShader {"shaders/cubemap.vert",
                                     "shaders/equirectangular-to-cubemap.frag"};
     Shader irradianceShader {"shaders/cubemap.vert",
@@ -35,9 +36,7 @@ private:
     Texture hdrTexture;
 
     unsigned int envCubemap = 0;
-    unsigned int irradianceMap = 0;
-    unsigned int prefilterMap = 0;
-    unsigned int brdfLUTTexture = 0;
+    IBL ibl;
 };
 
 

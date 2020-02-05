@@ -16,13 +16,14 @@ enum TextureType {
 
 class Texture {
 public:
+    Texture() = default;
     explicit Texture(const std::string& path,
                      bool float_data=false);
     explicit Texture(unsigned int id, unsigned int type);
 
     // Bind texture(only once) and return texture id
     unsigned int bind();
-    inline unsigned int type() const { return m_type; }
+    inline unsigned int type() const { return textureType; }
 
     ~Texture();
 
@@ -34,10 +35,10 @@ protected:
 
 private:
     // unsigned char (byte) for normal jpg, float for hdr image
-    bool data_is_float;
+    bool dataIsFloat = false;
     void *data = nullptr;
     unsigned int id = 0;
-    unsigned int m_type;
+    unsigned int textureType = 0;
     int width = 0, height = 0, nrComponents = 0;
 };
 

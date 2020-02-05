@@ -8,21 +8,24 @@
 #include <vector>
 #include <memory>
 
-#include "basic/Object.hpp"
+#include "basic/Renderable.hpp"
 #include "basic/Transform.hpp"
 #include "basic/Camera.hpp"
 #include "engine/SceneNode.hpp"
 
-// SceneGraph -> Node -> Node -> Object
-//            -> Node -> ...
-//            -> ...
-//
-// SceneGraph       : entry of the graph
-// SceneNode(interior) : responsible for lights and other special effects
-// Obeject(leaf)    : real entity to be rendered
+/*
+     Scene -> Node -> Node -> Object
+           -> Node -> ...
+           -> ...
+
+     SceneGraph       : entry of the graph
+     SceneNode(interior) : responsible for lights and other special effects
+     Obeject(leaf)    : real entity to be rendered
+*/
 
 // TODO: A method to construct a scene graph from a scene description
 //       file
+
 class SceneGraph {
 public:
     SceneGraph() = default;
@@ -52,9 +55,7 @@ public:
 //    }
 
 private:
-
-private:
-    SceneNode *p_root;
+    SceneNode *p_root = nullptr;
 };
 
 

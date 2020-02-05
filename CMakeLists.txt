@@ -1,5 +1,5 @@
 # This will become a big project one day.
-# I believe it will happen with all my heart.
+
 cmake_minimum_required(VERSION 3.14)
 project(render-engine)
 
@@ -8,8 +8,7 @@ set(CMAKE_CXX_STANDARD 14)
 file(GLOB engine_src
         "src/basic/*.cpp"
         "src/engine/*.cpp"
-        "src/objects/*.cpp"
-        "src/materials/*.cpp"
+        "src/main.cpp"
         )
 
 add_executable(engine ${engine_src})

@@ -41,7 +41,7 @@ If you success, you will see something like these:
 - Cook-Torrance BRDF
 - Basic transforms
 - Camera and  interaction
-- UI
+- GUIManager
 
 ## TODO list:
 

@@ -15,8 +15,9 @@
 #include "basic/Texture.hpp"
 #include "basic/Light.hpp"
 #include "engine/SceneGraph.hpp"
-#include "objects/Skybox.hpp"
+#include "Skybox.hpp"
 
+// TODO: remove Application
 // The base class of App
 class Application {
 public:

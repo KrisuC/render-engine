@@ -5,20 +5,31 @@
 #ifndef RENDER_ENGINE_RENDERER_HPP
 #define RENDER_ENGINE_RENDERER_HPP
 
-#include "basic/Object.hpp"
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
 
-// TODO: encapsulate all opengl associated API into renderer
+#include "basic/Renderable.hpp"
+
+/*
+ * Renderer encapsulates OpenGL loader things and OpenGL API.
+ * It's a middle layer between OpenGL API and the render engine, i.e., a
+ * platform-independent layer
+ */
+
+class GUIManager;
+
 class Renderer {
 public:
-    Renderer() = default;
-    void draw(const Object &object);
-    void draw(const Mesh &mesh) {
-        mesh.render();
-    }
+    Renderer();
+
+    void setVsync(bool on);
+
+    void setMSAA(int samples);
 
 private:
-    // Storing state of graphics API:
+    GLFWwindow *window;
 
+    friend class GUIManager;
 };
 
 

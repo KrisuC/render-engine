@@ -10,7 +10,7 @@
 
 #include "engine/Application.hpp"
 #include "Model.hpp"
-#include "objects/Skybox.hpp"
+#include "Skybox.hpp"
 #include "basic/Material.hpp"
 #include "engine/SceneGraph.hpp"
 #include "Application.hpp"
@@ -22,8 +22,9 @@ static void glfwErrorCallback(int error, const char *description) {
     std::cerr << "Glfw Error " << error << ": " << description << std::endl;
 }
 
+// TODO: put these in Renderer
 void Application::initializeContext(){
-    // Setup ImGui context
+/*    // Setup ImGui context
     glfwSetErrorCallback(glfwErrorCallback);
     if (!glfwInit()) {
         exit(-1);
@@ -53,20 +54,20 @@ void Application::initializeContext(){
     if (gladLoadGL() == 0) {
         std::cerr << "Failed to initialize glad loader\n";
         exit(-1);
-    }
+    }*/
 }
 
 
 
 void Application::prepareUI() {
-    IMGUI_CHECKVERSION();
+/*    IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO &io = ImGui::GetIO();
 
     ImGui::StyleColorsDark();
 
     ImGui_ImplGlfw_InitForOpenGL(window, true);
-    ImGui_ImplOpenGL3_Init(glsl_version.c_str());
+    ImGui_ImplOpenGL3_Init(glsl_version.c_str());*/
 }
 
 
