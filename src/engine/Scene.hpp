@@ -6,20 +6,42 @@
 #define RENDER_ENGINE_SCENE_HPP
 
 #include <vector>
-#include "basic/Renderable.hpp"
-#include "basic/Light.hpp"
+#include "Renderable.hpp"
+#include "Light.hpp"
 #include "Skybox.hpp"
+#include "Camera.hpp"
 
 /*
  * Scene holds all Renderables, Lights and some other resources in the scene
+ *
+ * Usage:
+ * 1. create a simple scene with one light source, one renderable and render
+ *    the scene
+ *
+ * Scene scene;
+ * Light light = ...;
+ * Renderable renderable = ...;
+ * Skybox skybox = ...;
+ *
+ * scene.addLight(light);
+ * scene.addRenderable(renderable);
+ * scene.addSkybox(skybox);
+ * scene.generateSceneGraph();
+ *
+ * while (!Renderer.end()) {
+ *      Renderer.renderScene(scene);
+ * }
+ *
  */
+
+class Renderer;
 
 class Scene {
 public:
     Scene() = default;
 
-    void setSkyBox(Skybox skybox_to_use) {
-        skybox = std::move(skybox_to_use);
+    void setSkybox(const Skybox &box) {
+        skybox = box;
     }
 
     void addRenderable(const Renderable& renderable) {
@@ -30,10 +52,22 @@ public:
         lights.push_back(light);
     }
 
+    void build() {
+        // Setting Light to Renderable::Shader
+        for (auto renderable : renderables) {
+            for (auto light : lights) {
+
+            }
+        }
+    }
+
 private:
     std::vector<Renderable> renderables;
     std::vector<Light> lights;
     Skybox skybox;
+    Camera camera;
+
+    friend Renderer;
 };
 
 

@@ -8,9 +8,9 @@
 #include <vector>
 #include <memory>
 
-#include "basic/Renderable.hpp"
-#include "basic/Transform.hpp"
-#include "basic/Camera.hpp"
+#include "Renderable.hpp"
+#include "Transform.hpp"
+#include "Camera.hpp"
 #include "engine/SceneNode.hpp"
 
 /*

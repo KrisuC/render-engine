@@ -13,15 +13,15 @@
 
 class Shader {
 public:
-    // constructor reads and builds the shader
     Shader(const GLchar *vertexPath,
            const GLchar *fragmentPath,
            const GLchar *geometryPath = nullptr);
-    Shader() = default;
-    // use/activate the shader
-    unsigned int getID();
-    void use();
-    // utility uniform functions
+    Shader() : Shader("shaders/default.vert", "shaders/default.frag") {}
+
+    // "Activate" the shader
+    void useShaderProgram();
+
+    // Uniform setting
     void set(const std::string &name, bool value) const;
     void set(const std::string &name, int value) const;
     void set(const std::string &name, unsigned value) const;
@@ -37,9 +37,9 @@ public:
     void set(const std::string &name, const glm::mat4 &mat) const;
 
 private:
-    // the program id
+    // The shader program id
     unsigned int id = 0;
-    // checking error
+
     void checkCompileErrors(GLuint shader, const std::string &type,
                                            std::string path);
 };

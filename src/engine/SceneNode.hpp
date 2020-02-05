@@ -6,9 +6,9 @@
 #define RENDER_ENGINE_SCENENODE_HPP
 
 #include <vector>
-#include "basic/Light.hpp"
-#include "basic/Transform.hpp"
-#include "basic/Renderable.hpp"
+#include "Light.hpp"
+#include "Transform.hpp"
+#include "Renderable.hpp"
 
 // A scene graph node
 // TODO: add specific post-effects, but how?

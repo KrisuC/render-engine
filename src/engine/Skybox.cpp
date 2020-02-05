@@ -9,18 +9,18 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "Skybox.hpp"
-#include "basic/Texture.hpp"
+#include "Texture.hpp"
 #include "engine/Model.hpp"
 
 void Skybox::render() {
-    shader.use();
+    shader.useShaderProgram();
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap);
-    Primitive::renderCube();
+    SimpleMesh::renderCube();
 }
 
 Skybox::Skybox(const std::string& path_to_image) :
-         hdrTexture(path_to_image, "hdr")  {
+         texture(path_to_image, "hdr")  {
     prepare();
 }
 
@@ -73,11 +73,11 @@ void Skybox::prepare() {
             glm::lookAt(orig, glm::vec3( 0.0f,  0.0f,  1.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
             glm::lookAt(orig, glm::vec3( 0.0f,  0.0f, -1.0f), glm::vec3(0.0f, -1.0f,  0.0f))
     };
-    equirectToCubemapShader.use();
+    equirectToCubemapShader.useShaderProgram();
     equirectToCubemapShader.set("equirectangularMap", 0);
     equirectToCubemapShader.set("projection", captureProjection);
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, hdrTexture.bind());
+    glBindTexture(GL_TEXTURE_2D, texture.bind());
 
     glViewport(0, 0, dim, dim);
     glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
@@ -87,7 +87,7 @@ void Skybox::prepare() {
                                GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, envCubemap, 0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        Primitive::renderCube();
+        SimpleMesh::renderCube();
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -116,7 +116,7 @@ void Skybox::prepare() {
         glBindRenderbuffer(GL_RENDERBUFFER, captureRBO);
         glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 32, 32);
 
-        irradianceShader.use();
+        irradianceShader.useShaderProgram();
         irradianceShader.set("environmentMap", 0);
         irradianceShader.set("projection", captureProjection);
         glActiveTexture(GL_TEXTURE0);
@@ -132,13 +132,13 @@ void Skybox::prepare() {
                                        irradianceMap, 0);
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-                Primitive::renderCube();
+                SimpleMesh::renderCube();
             }
         }
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
         //--------------------------------------------------------------------
-        // generate prefilter map for ibl specular lighting
+        // generate prefilter map for skyboxes specular lighting
         int res_prfmap = 128;
         glGenTextures(1, &prefilterMap);
         glBindTexture(GL_TEXTURE_CUBE_MAP, prefilterMap);
@@ -155,7 +155,7 @@ void Skybox::prepare() {
 
         glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
 
-        prefilterShader.use();
+        prefilterShader.useShaderProgram();
         prefilterShader.set("environmentMap", 0);
         prefilterShader.set("projection", captureProjection);
         glActiveTexture(GL_TEXTURE0);
@@ -182,7 +182,7 @@ void Skybox::prepare() {
                                            prefilterMap, mip);
 
                     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-                    Primitive::renderCube();
+                    SimpleMesh::renderCube();
                 }
             }
         }
@@ -209,9 +209,9 @@ void Skybox::prepare() {
                                    GL_TEXTURE_2D, brdfLUTTexture, 0);
 
             glViewport(0, 0, 512, 512);
-            brdfLUTShader.use();
+            brdfLUTShader.useShaderProgram();
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            Primitive::renderQuad();
+            SimpleMesh::renderQuad();
         }
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }

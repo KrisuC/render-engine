@@ -10,18 +10,14 @@
 #include <vector>
 #include <iostream>
 #include <glm/glm.hpp>
-#include "basic/Texture.hpp"
-#include "basic/Shader.hpp"
+#include "Texture.hpp"
+#include "Shader.hpp"
 
 // Hold and manage all the textures, responsible for binding texture to shader
 // All suppord
 class Material {
 public:
     Material() = default;
-    explicit Material(const std::string &textures_dir, const std::string &suffix = ".png");
-
-    // Replace material shader with a user-modified one
-    inline void setShader(Shader *new_shader);
 
     inline void setAlbedo(Texture *a);
     inline void setAlbedo(glm::vec3 a);
@@ -43,15 +39,7 @@ public:
 
     inline void appendTexture(const std::string &name, Texture *t);
 
-    void updateShader();
-
-private:
-    void bind_texture(const std::string &str, Texture *texture);
-
-public:
-    // Shader responsible for this texture
-    Shader *shader = new Shader {"shaders/cook-torrance.vert",
-                                 "shaders/cook-torrance.frag"};
+    void updateShader(Shader &shader);
 
 private:
     // All supported general use parameter(tex/val) type:
@@ -90,9 +78,6 @@ private:
 void Material::appendTexture(const std::string &name, Texture *t) {
     extra_textures.push_back({name, t});
 }
-
-void Material::setShader(Shader *new_shader) {
-    delete shader; shader = new_shader; }
 
 void Material::setAlbedo(Texture *a)  {
     use_map.albedo = true; albedo.map = a; }

@@ -20,8 +20,8 @@
 #include <cstdio>
 #include <string>
 
-#include "basic/Shader.hpp"
-#include "basic/Mesh.hpp"
+#include "Shader.hpp"
+#include "Mesh.hpp"
 
 // Model encapsulate Material and Mesh
 class Model {

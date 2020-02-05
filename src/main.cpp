@@ -1,5 +1,3 @@
-#include "engine/Application.hpp"
-
 #if defined(WIN32) || defined(_WIN32)
     #include <direct.h>
     #define chdir _chdir
@@ -7,10 +5,32 @@
     #include <unistd.h>
 #endif
 
+#include "engine/Scene.hpp"
+#include "engine/Renderer.hpp"
+
 int main(int argc, char *argv[]) {
     chdir("..");
-    Application::initializeContext();
-    Application &app = Application::instance();
-    app.processArgs(argc, argv);
-    return app.exec();
+
+    /* Game code begins here */
+    Scene scene;
+    scene.addLight(PointLight({2, 2, 2}, {1, 1, 1}));
+    auto *mesh = new Mesh(SimpleMesh::Sphere());
+    auto *material = new Material;
+    material->setAlbedo(0.9, 0, 0);
+    material->setMetallic(0.1);
+    material->setRoughness(0.2);
+    auto *default_shader = new Shader;
+    scene.addRenderable(Renderable(mesh, material, default_shader));
+    scene.setSkybox(Skybox());
+    scene.build();
+
+    Renderer renderer;
+    while (!renderer.end()) {
+        renderer.draw(scene);
+    }
+    /* Game code ends here */
+
+    return 0;
 }
+
+

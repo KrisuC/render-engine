@@ -8,10 +8,10 @@
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 
-#include "engine/Application.hpp"
-#include "Model.hpp"
-#include "Skybox.hpp"
-#include "basic/Material.hpp"
+#include "Application.hpp"
+#include "engine/Model.hpp"
+#include "engine/Skybox.hpp"
+#include "engine/Material.hpp"
 #include "engine/SceneGraph.hpp"
 #include "Application.hpp"
 
@@ -140,7 +140,6 @@ void Application::prepareScene() {
     // TODO: replace all these shits with a scene description files
     //       and some function for generating scene graph
     camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f));
-    skybox.prepare();
 
     // TODO: auto scene graph construction from scene description file
     // Scene graph generation (by hand) for testing
@@ -209,8 +208,8 @@ void Application::renderScene() {
             {{-10.0f, -10.0f, 0.0f}, {300.0f, 300.0f, 300.0f}},
             {{10.0f,  -10.0f, 0.0f}, {300.0f, 300.0f, 300.0f}},
     };
-    static Mesh sphere_mesh = Primitive::sphere();
-    static Mesh cube_mesh = Primitive::cube();
+    static Mesh sphere_mesh = SimpleMesh::sphere();
+    static Mesh cube_mesh = SimpleMesh::cube();
     static std::vector<Material *> materials;
     static bool first_run = true;
     if (first_run) {
@@ -263,7 +262,7 @@ void Application::renderScene() {
     materials[0]->setAlbedo(ui.albedo);
     materials[0]->setRoughness(ui.roughness);
     materials[0]->setMetallic(ui.metallic);
-    materials[0]->updateShader();
+    materials[0]->updateShader(<#initializer#>);
     sphere_mesh.render();
 
     // Second:
@@ -272,7 +271,7 @@ void Application::renderScene() {
     materials[1]->setAlbedo({0.4, 0.4, 0.4});
     materials[1]->setRoughness(0.1);
     materials[1]->setMetallic(0.1);
-    materials[1]->updateShader();
+    materials[1]->updateShader(<#initializer#>);
     sphere_mesh.render();
 
     // Third
@@ -288,29 +287,29 @@ void Application::renderScene() {
     materials[2]->setNormal(normal);
     materials[2]->setRoughness(roughness);
     materials[2]->shader->set("use_texture", 1);
-    materials[2]->updateShader();
+    materials[2]->updateShader(<#initializer#>);
     sphere_mesh.render();
 
     // Fourth
     materials[3]->shader->use();
     materials[3]->shader->set("use_texture", 1);
-    materials[3]->updateShader();
+    materials[3]->updateShader(<#initializer#>);
     sphere_mesh.render();
 
     // Fiveth
     materials[4]->shader->use();
     materials[4]->shader->set("use_texture", 1);
-    materials[4]->updateShader();
+    materials[4]->updateShader(<#initializer#>);
     sphere_mesh.render();
 
     // Sixth
     materials[5]->shader->use();
     materials[5]->shader->set("use_texture", 1);
-    materials[5]->updateShader();
+    materials[5]->updateShader(<#initializer#>);
     sphere_mesh.render();
 
     // Sky box
-    skybox.shader.use();
+    skybox.shader.useShaderProgram();
     skybox.shader.set("view", view);
     skybox.shader.set("projection", projection);
     skybox.render();

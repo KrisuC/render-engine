@@ -40,4 +40,9 @@ void Renderer::setMSAA(int samples) {
     }
 }
 
+Renderer::~Renderer() {
+    glfwDestroyWindow(window);
+    glfwTerminate();
+}
+
 

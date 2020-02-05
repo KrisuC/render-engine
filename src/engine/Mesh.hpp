@@ -53,11 +53,11 @@ private:
 };
 
 // Rendering some fixed size primitive
-namespace Primitive {
+namespace SimpleMesh {
     // Unit == 2 :)
-    Mesh sphere();
-    Mesh cube();
-    Mesh quad();
+    Mesh Sphere();
+    Mesh Cube();
+    Mesh Quad();
 
     void renderCube();
     void renderSphere();

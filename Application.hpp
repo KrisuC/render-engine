@@ -10,12 +10,12 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
-#include "basic/Shader.hpp"
-#include "basic/Camera.hpp"
-#include "basic/Texture.hpp"
-#include "basic/Light.hpp"
+#include "engine/Shader.hpp"
+#include "engine/Camera.hpp"
+#include "engine/Texture.hpp"
+#include "engine/Light.hpp"
 #include "engine/SceneGraph.hpp"
-#include "Skybox.hpp"
+#include "engine/Skybox.hpp"
 
 // TODO: remove Application
 // The base class of App
@@ -58,7 +58,7 @@ private:
     //       in prepareScene() rather than insert here in application
     // Scnene configuration
     Camera camera;
-    Skybox skybox {"resources/ibl/newport_loft.hdr"};
+    Skybox skybox {"resources/skyboxes/newport_loft.hdr"};
     SceneGraph sceneGraph {};
 
     // GUI controls variables

@@ -9,7 +9,7 @@
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 
-#include <basic/Renderer.hpp>
+#include <engine/Renderer.hpp>
 
 /*
  * Handling GUI things.
@@ -29,6 +29,12 @@ public:
         ImGui_ImplOpenGL3_Init("#version 330");
     }
 
+    ~GUIManager() {
+        ImGui_ImplOpenGL3_Shutdown();
+        ImGui_ImplGlfw_Shutdown();
+        ImGui::DestroyContext();
+    }
+
     void drawUI() {
         glfwPollEvents();
 
@@ -40,6 +46,7 @@ public:
 
         ImGui::Render();
 
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     };
 
 private:

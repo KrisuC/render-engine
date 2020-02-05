@@ -52,10 +52,10 @@ void Mesh::setupMesh() {
 }
 
 
-namespace Primitive {
+namespace SimpleMesh {
     // R = 1
-    // TODO: Replace with a better sphere
-    Mesh sphere() {
+    // TODO: Replace with a better Sphere
+    Mesh Sphere() {
         std::vector<Vertex> vertices;
         std::vector<unsigned int> indices;
 
@@ -93,7 +93,7 @@ namespace Primitive {
     }
 
     // L = 2
-    Mesh cube() {
+    Mesh Cube() {
         const static float vdata[] = {
                 // position, normal, uv
                 // back face
@@ -152,7 +152,7 @@ namespace Primitive {
     }
 
     // L = 2
-    Mesh quad() {
+    Mesh Quad() {
         const static float vdata[] = {
                 // positions, normal, uv
                 -1.0f,  1.0f, 0.0f,  0.f, 0.f, 1.f, 0.0f, 1.0f,
@@ -172,17 +172,17 @@ namespace Primitive {
     }
 
     void renderCube() {
-        static auto s = sphere();
+        static auto s = Sphere();
         s.render();
     }
 
     void renderSphere() {
-        static auto c = cube();
+        static auto c = Cube();
         c.render();
     }
 
     void renderQuad() {
-        static auto q = quad();
+        static auto q = Quad();
         q.render();
     }
 }

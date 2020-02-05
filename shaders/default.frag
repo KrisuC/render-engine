@@ -1,14 +1,10 @@
-// General use cook-torrance BRDF shader
-// Default.
+// General use PBR shader
 #version 330 core
 out vec4 FragColor;
 
 in vec2 TexCoords;
 in vec3 WorldPos;
 in vec3 Normal;
-
-// TODO: more specific texture useage bools
-uniform bool use_texture = false;
 
 // for calculating specular
 uniform vec3 cam_pos;
@@ -28,6 +24,13 @@ uniform vec3 albedo_val;
 uniform float metallic_val;
 uniform float roughness_val;
 uniform float emissive_val;
+uniform float ao_val = 1.0;
+// material using status
+uniform bool use_albedo_map = false;
+uniform bool use_metallic_map = false;
+uniform bool use_roughness_map = false;
+uniform bool use_emissive_map = false;
+uniform bool use_normal_map = false;
 
 // IBL
 // diffuse
@@ -36,88 +39,45 @@ uniform samplerCube irradiance_map;
 uniform samplerCube prefilter_map;
 uniform sampler2D   brdfLUT_map;
 
-// lights
+// Point lights
 uniform vec3 lightPositions[4];
 uniform vec3 lightColors[4];
 
 
 const float PI = 3.14159265359;
 
-// Fresnel equation - computing how much part is specular light
-vec3 fresnelSchlick(float cosTheta, vec3 F0) {
-    return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
-}
-
-vec3 fresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness) {
-    return F0 + (max(vec3(1.0 - roughness), F0) - F0) * pow(1.0 - cosTheta, 5.0);
-}
-
-// normal distribution function
-float DistributionGGX(vec3 N, vec3 H, float roughness) {
-    float a = roughness * roughness;
-    float a2 = a * a;
-    float NdotH = max(dot(N, H), 0.0);
-    float NdotH2 = NdotH * NdotH;
-
-    float nom = a2;
-    float denom = NdotH2 * (a2 - 1.0) + 1.0;
-    denom = PI * denom * denom;
-
-    return nom / denom;
-}
-
-// geometry function
-float GeometrySchlickGGX(float NdotV, float roughness) {
-    float r = (roughness + 1.0);
-    float k = (r * r) / 8.0;
-
-    float nom = NdotV;
-    float denom = NdotV * (1.0 - k) + k;
-
-    return nom / denom;
-}
-
-float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness) {
-    float NdotV = max(dot(N, V), 0.0);
-    float NdotL = max(dot(N, L), 0.0);
-    float ggx2 = GeometrySchlickGGX(NdotV, roughness);
-    float ggx1 = GeometrySchlickGGX(NdotL, roughness);
-
-    return ggx1 * ggx2;
-}
-
-vec3 getNormalFromMap() {
-    vec3 tangentNormal = texture(normal_map, TexCoords).xyz * 2.0 - 1.0;
-
-    vec3 Q1  = dFdx(WorldPos);
-    vec3 Q2  = dFdy(WorldPos);
-    vec2 st1 = dFdx(TexCoords);
-    vec2 st2 = dFdy(TexCoords);
-
-    vec3 N   = normalize(Normal);
-    vec3 T  = normalize(Q1*st2.t - Q2*st1.t);
-    vec3 B  = -normalize(cross(N, T));
-    mat3 TBN = mat3(T, B, N);
-
-    return normalize(TBN * tangentNormal);
-}
+vec3 fresnelSchlick(float cosTheta, vec3 F0);
+vec3 fresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness);
+float DistributionGGX(vec3 N, vec3 H, float roughness);
+float GeometrySchlickGGX(float NdotV, float roughness);
+vec3 getNormalFromMap();
 
 void main() {
     vec3 albedo, normal;
     float metallic, roughness, ao;
 
-    if (use_texture) {
+    if (use_albedo_map) {
         albedo = texture(albedo_map, TexCoords).rgb;
-        metallic = texture(metallic_map, TexCoords).r;
-        roughness = texture(roughness_map, TexCoords).r;
-        normal = Normal; //getNormalFromMap();
-        ao = texture(ao_map, TexCoords).r;
     } else {
         albedo = albedo_val;
+    }
+    if (use_metallic_map) {
+        metallic = texture(metallic_map, TexCoords).r;
+    } else {
         metallic = metallic_val;
+    }
+    if (use_roughness_map) {
+        roughness = texture(roughness_map, TexCoords).r;
+    } else {
         roughness = roughness_val;
+    }
+    if (use_normal_map) {
+        normal = getNormalFromMap();
+    } else {
         normal = Normal;
-        ao = 1.0;
+    }
+    if (use_emissive_map) {
+        // ...
     }
 
     vec3 N = normalize(normal);
@@ -179,6 +139,69 @@ void main() {
 
     FragColor = vec4(color, 1.0);
 }
+
+
+vec3 fresnelSchlick(float cosTheta, vec3 F0) {
+    return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
+}
+
+
+vec3 fresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness) {
+    return F0 + (max(vec3(1.0 - roughness), F0) - F0) * pow(1.0 - cosTheta, 5.0);
+}
+
+
+float DistributionGGX(vec3 N, vec3 H, float roughness) {
+    float a = roughness * roughness;
+    float a2 = a * a;
+    float NdotH = max(dot(N, H), 0.0);
+    float NdotH2 = NdotH * NdotH;
+
+    float nom = a2;
+    float denom = NdotH2 * (a2 - 1.0) + 1.0;
+    denom = PI * denom * denom;
+
+    return nom / denom;
+}
+
+
+float GeometrySchlickGGX(float NdotV, float roughness) {
+    float r = (roughness + 1.0);
+    float k = (r * r) / 8.0;
+
+    float nom = NdotV;
+    float denom = NdotV * (1.0 - k) + k;
+
+    return nom / denom;
+}
+
+
+float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness) {
+    float NdotV = max(dot(N, V), 0.0);
+    float NdotL = max(dot(N, L), 0.0);
+    float ggx2 = GeometrySchlickGGX(NdotV, roughness);
+    float ggx1 = GeometrySchlickGGX(NdotL, roughness);
+
+    return ggx1 * ggx2;
+}
+
+
+vec3 getNormalFromMap() {
+    vec3 tangentNormal = texture(normal_map, TexCoords).xyz * 2.0 - 1.0;
+
+    vec3 Q1  = dFdx(WorldPos);
+    vec3 Q2  = dFdy(WorldPos);
+    vec2 st1 = dFdx(TexCoords);
+    vec2 st2 = dFdy(TexCoords);
+
+    vec3 N   = normalize(Normal);
+    vec3 T  = normalize(Q1*st2.t - Q2*st1.t);
+    vec3 B  = -normalize(cross(N, T));
+    mat3 TBN = mat3(T, B, N);
+
+    return normalize(TBN * tangentNormal);
+}
+
 
 
 

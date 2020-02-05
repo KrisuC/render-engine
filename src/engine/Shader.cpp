@@ -96,11 +96,7 @@ Shader::Shader(const char *vertexPath,
         glDeleteShader(geometry);
 }
 
-unsigned int Shader::getID() {
-    return this->id;
-}
-
-void Shader::use() {
+void Shader::useShaderProgram() {
     glUseProgram(this->id);
 }
 
