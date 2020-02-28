@@ -24,7 +24,7 @@ static void glfwErrorCallback(int error, const char *description) {
 
 // TODO: put these in Renderer
 void Application::initializeContext(){
-/*    // Setup ImGui context
+    // Setup ImGui context
     glfwSetErrorCallback(glfwErrorCallback);
     if (!glfwInit()) {
         exit(-1);
@@ -54,20 +54,20 @@ void Application::initializeContext(){
     if (gladLoadGL() == 0) {
         std::cerr << "Failed to initialize glad loader\n";
         exit(-1);
-    }*/
+    }
 }
 
 
 
 void Application::prepareUI() {
-/*    IMGUI_CHECKVERSION();
+    IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO &io = ImGui::GetIO();
 
     ImGui::StyleColorsDark();
 
     ImGui_ImplGlfw_InitForOpenGL(window, true);
-    ImGui_ImplOpenGL3_Init(glsl_version.c_str());*/
+    ImGui_ImplOpenGL3_Init(glsl_version.c_str());
 }
 
 
@@ -137,51 +137,7 @@ void Application::renderPass() {
 
 
 void Application::prepareScene() {
-    // TODO: replace all these shits with a scene description files
-    //       and some function for generating scene graph
     camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f));
-
-    // TODO: auto scene graph construction from scene description file
-    // Scene graph generation (by hand) for testing
-
-
-    // TODO: Scene Graph!!!!! (After I fix Object)
-//    sceneGraph.setRoot(new SGNode());
-//    // setting up lights
-//    sceneGraph.root()->setLights(lights);
-//    // part 1
-//    auto frontSphere = new CookTorrancePBR();
-//    sceneGraph.root()->appendObjects(frontSphere);
-//    sceneGraph.root()->setLocalTransform(
-//            Transform(glm::translate(glm::mat4(1.f), {0, 0, -5})));
-//
-//    // part 2
-//    auto backSpheresGroup = new SGNode();
-//    sceneGraph.root()->appendNodes(backSpheresGroup);
-//    backSpheresGroup->setLocalTransform(
-//            Transform(glm::translate(glm::mat4(1.f), {0, 0, -5})));
-//    int rows = 7, cols = 7;
-//    float spacing = 2.5;
-//    backSpheresGroup->setGlobalShaderValue("albedoVal", 0.5, 0.0, 0.0);
-//    backSpheresGroup->setGlobalShaderValue("aoVal", 1.0f);
-//    for (int row = 0; row < rows; row++) {
-//        for (int col = 0; col < cols; col++) {
-//            glm::vec3 pos = {
-//                    (float(col) - cols / 2.f) * spacing,
-//                    (float(row) - rows / 2.f) * spacing,
-//                    -10.f
-//            };
-//            auto lt = glm::translate(glm::mat4(1.f), pos);
-//            auto backSphere = new CookTorrancePBR();
-//            backSphere->setLocalTransform(Transform(lt));
-//            backSphere->setShaderUnif("metallicVal", (float)row / rows);
-//            backSphere->setShaderUnif("roughnessVal",
-//                    glm::clamp((float)col / cols, 0.05f, 1.0f));
-//            backSpheresGroup->appendObjects(backSphere);
-//        }
-//    }
-//    sceneGraph.root()->updateLights();
-//    sceneGraph.prepareScene();
 }
 
 

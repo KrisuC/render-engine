@@ -10,7 +10,7 @@
 
 #include "Skybox.hpp"
 #include "Texture.hpp"
-#include "engine/Model.hpp"
+#include "Model.hpp"
 
 void Skybox::render() {
     shader.useShaderProgram();

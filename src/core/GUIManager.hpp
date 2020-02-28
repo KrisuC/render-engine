@@ -53,5 +53,4 @@ private:
 };
 
 
-
 #endif //RENDER_ENGINE_GUIMANAGER_HPP

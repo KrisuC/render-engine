@@ -6,7 +6,7 @@
 #define RENDER_ENGINE_SCENE_HPP
 
 #include <vector>
-#include "Renderable.hpp"
+#include "GameObject.hpp"
 #include "Skybox.hpp"
 #include "Camera.hpp"
 #include "Light.hpp"
@@ -20,11 +20,11 @@
  *
  * Scene scene;
  * Light light = ...;
- * Renderable renderable = ...;
+ * GameObject renderable = ...;
  * Skybox skybox = ...;
  *
  * scene.addLight(light);
- * scene.addRenderable(renderable);
+ * scene.addGameObject(renderable);
  * scene.addSkybox(skybox);
  * scene.generateSceneGraph();
  *
@@ -41,21 +41,19 @@ class Scene {
 public:
     Scene() = default;
 
-    void setSkybox(const Skybox &box) {
-        skybox = box;
+    void addGameObject(const GameObject& renderable) {
+        gameObjects.push_back(renderable);
     }
 
-    void addRenderable(const Renderable& renderable) {
-        renderables.push_back(renderable);
-    }
-
-    void addLight(const Light& light) {
+    void addLight(const Light &light) {
         lights.push_back(light);
     }
 
+    void setSkybox(Skybox *sb);
+
     void build() {
-        // Setting Light to Renderable::Shader
-        for (auto renderable : renderables) {
+        // Setting Light to GameObject::Shader
+        for (auto o : gameObjects) {
             for (auto light : lights) {
 
             }
@@ -63,10 +61,10 @@ public:
     }
 
 private:
-    std::vector<Renderable> renderables;
+    std::vector<GameObject> gameObjects;
     std::vector<Light> lights;
-    Skybox skybox;
-    Camera camera;
+    Skybox *skybox = nullptr;
+    Camera *camera = nullptr;
 
     friend Renderer;
 };

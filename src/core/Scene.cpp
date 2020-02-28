@@ -3,3 +3,10 @@
 //
 
 #include "Scene.hpp"
+
+void Scene::setSkybox(Skybox *sb) {
+    if (!skybox) {
+        delete skybox;
+    }
+    skybox = sb;
+}

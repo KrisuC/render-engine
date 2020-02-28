@@ -71,6 +71,7 @@ vec3 fresnelSchlick(float cosTheta, vec3 F0);
 vec3 fresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness);
 float DistributionGGX(vec3 N, vec3 H, float roughness);
 float GeometrySchlickGGX(float NdotV, float roughness);
+float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness);
 vec3 getNormalFromMap();
 
 void main() {
@@ -115,7 +116,7 @@ void main() {
         vec3 H = normalize(V + L); // half-way
         float dist = length(pointLights[i].position - WorldPos);
         float attenuation = 1.0 / (dist * dist);
-        vec3 radiance = pointLights.color * attenuation;
+        vec3 radiance = pointLights[i].color * attenuation;
 
         // Cook-Torrance BRDF
         float NDF = DistributionGGX(N, H, roughness);

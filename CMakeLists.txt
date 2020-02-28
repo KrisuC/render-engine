@@ -8,12 +8,16 @@ set(CMAKE_CXX_STANDARD 14)
 file(GLOB engine_src
         "src/basic/*.cpp"
         "src/core/*.cpp"
+        "src/components/*.cpp"
         "src/app/main.cpp"
         )
 
 add_executable(engine ${engine_src})
 
-target_include_directories(engine PRIVATE ${PROJECT_SOURCE_DIR}/src)
+target_include_directories(engine PRIVATE
+        ${PROJECT_SOURCE_DIR}/src/core
+        ${PROJECT_SOURCE_DIR}/src/components
+        )
 
 #------------------------------------------------------------------------------#
 # Below is the settings for 3rd party libraries

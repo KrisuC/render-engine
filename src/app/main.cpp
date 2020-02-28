@@ -10,34 +10,40 @@
 #include <iostream>
 
 
-#include "core/Scene.hpp"
-#include "core/Renderer.hpp"
-#include "core/Engine.hpp"
+#include "Scene.hpp"
+#include "Renderer.hpp"
+#include "Engine.hpp"
 
 int main(int argc, char *argv[]) {
     chdir("..");
 
-
-
     /* Game code begins here */
-    Engine engine;
+    Engine *engine = Engine::GetEngine();
 
-    Scene scene;
-    scene.addLight(PointLight({2, 2, 2}, {1, 1, 1}));
-    auto *mesh = new Mesh(SimpleMesh::Sphere());
-    auto *material = new Material;
+    Scene *scene = engine->createScene();
+    scene->addLight(PointLight({2, 2, 2},
+                                     {1, 1, 1}));
+
+    auto mesh = engine->create<Mesh>();
+    auto material = engine->create<Material>();
     material->setAlbedo(0.9, 0, 0);
     material->setMetallic(0.1);
     material->setRoughness(0.2);
-    auto *default_shader = new Shader;
-    scene.addRenderable(Renderable(mesh, material, default_shader));
-    scene.setSkybox(Skybox());
-    scene.build();
 
-    Renderer renderer;
-    while (!renderer.end()) {
-        renderer.draw(scene);
+    auto default_shader = engine->create<Shader>();
+    material->setShader(default_shader);
+
+    scene->addGameObject(GameObject(mesh, material));
+
+    scene->setSkybox(new Skybox);
+    scene->build();
+
+    Renderer *renderer = engine->getRenderer();
+    while (!renderer->end()) {
+        renderer->render(*scene);
     }
+
+
     /* Game code ends here */
 
 

@@ -8,8 +8,9 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "Renderable.hpp"
+#include "GameObject.hpp"
 #include "Scene.hpp"
+
 
 /*
  * Renderer encapsulates OpenGL loader things, OpenGL API and window asset
@@ -41,18 +42,23 @@ public:
 
     void setMSAA(int samples);
 
-    bool end() {
-        return glfwWindowShouldClose(window);
+    bool end();
+
+    void render(const Scene &scene);
+
+    void render(const GameObject &gameObject) {
+
     }
 
-    void draw(const Scene &scene) {
-        for (auto renderable : scene.renderables) {
-//            renderer.draw(renderable);
-        }
-    }
+    void initializeOpenGL();
 
 private:
-    GLFWwindow *window;
+    void beforeRenderPass();
+
+    void afterRenderPass();
+
+private:
+    GLFWwindow *window = nullptr;
 
     friend class GUIManager;
 };

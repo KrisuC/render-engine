@@ -5,10 +5,10 @@
 #ifndef RENDER_ENGINE_SKYBOX_HPP
 #define RENDER_ENGINE_SKYBOX_HPP
 
-#include "Renderable.hpp"
+#include "GameObject.hpp"
 #include "Shader.hpp"
 #include "Texture.hpp"
-#include "engine/IBL.hpp"
+#include "IBL.hpp"
 
 // TODO: store precomputed map into actual files.
 class Skybox {
