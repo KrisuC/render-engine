@@ -58,7 +58,7 @@ private:
     //       in prepareScene() rather than insert here in application
     // Scnene configuration
     Camera camera;
-    Skybox skybox {"resources/skyboxes/newport_loft.hdr"};
+    Skybox skybox {"asset/skybox/newport_loft.hdr"};
     SceneGraph sceneGraph {};
 
     // GUI controls variables

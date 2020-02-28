@@ -7,8 +7,8 @@ set(CMAKE_CXX_STANDARD 14)
 
 file(GLOB engine_src
         "src/basic/*.cpp"
-        "src/engine/*.cpp"
-        "src/main.cpp"
+        "src/core/*.cpp"
+        "src/app/main.cpp"
         )
 
 add_executable(engine ${engine_src})
@@ -45,7 +45,11 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/3rd-party/assimp-5.0/)
 
 # imgui
 include_directories("${PROJECT_SOURCE_DIR}/3rd-party/imgui/")
-add_subdirectory(${PROJECT_SOURCE_DIR}/3rd-party/imgui)
+add_subdirectory(${PROJECT_SOURCE_DIR}/3rd-party/imgui/)
+
+# rapidJSON
+include_directories("${PROJECT_SOURCE_DIR}/3rd-party/rapidjson/include/")
+add_subdirectory(${PROJECT_SOURCE_DIR}/3rd-party/rapidjson/)
 
 target_link_libraries(imgui glad glfw)
 target_link_libraries(engine assimp imgui glad glfw stb_image glm)

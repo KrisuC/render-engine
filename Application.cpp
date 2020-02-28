@@ -39,7 +39,7 @@ void Application::initializeContext(){
 #endif
 
     int width = 1280, height = 720;
-    window = glfwCreateWindow(width, height, "Render engine", nullptr, nullptr);
+    window = glfwCreateWindow(width, height, "Render core", nullptr, nullptr);
     if (!window) {
         exit(-1);
     }
@@ -223,9 +223,9 @@ void Application::renderScene() {
         for (int i = 0; i < 3; i++) {
             materials.push_back(new Material);
         }
-        materials.push_back(new Material{"resources/metal03/", ".jpg"});
-        materials.push_back(new Material{"resources/ground36/", ".jpg"});
-        materials.push_back(new Material{"resources/marble05/", ".jpg"});
+        materials.push_back(new Material{"asset/metal03/", ".jpg"});
+        materials.push_back(new Material{"asset/ground36/", ".jpg"});
+        materials.push_back(new Material{"asset/marble05/", ".jpg"});
 
         for (auto material : materials) {
             material->appendTexture("irradiance_map", irradiance_map);
@@ -276,11 +276,11 @@ void Application::renderScene() {
 
     // Third
     materials[2]->shader->use();
-    static auto *albedo = new Texture {"resources/rust-steel/albedo.png"};
-    static auto *ao = new Texture {"resources/rust-steel/ao.png"};
-    static auto *metallic = new Texture {"resources/rust-steel/metallic.png"};
-    static auto *normal = new Texture {"resources/rust-steel/normal.png"};
-    static auto *roughness = new Texture {"resources/rust-steel/roughness.png"};
+    static auto *albedo = new Texture {"asset/rust-steel/albedo.png"};
+    static auto *ao = new Texture {"asset/rust-steel/ao.png"};
+    static auto *metallic = new Texture {"asset/rust-steel/metallic.png"};
+    static auto *normal = new Texture {"asset/rust-steel/normal.png"};
+    static auto *roughness = new Texture {"asset/rust-steel/roughness.png"};
     materials[2]->setAlbedo(albedo);
     materials[2]->setAO(ao);
     materials[2]->setMetallic(metallic);
