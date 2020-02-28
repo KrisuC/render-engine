@@ -14,7 +14,7 @@
 
 /*
  * Renderer encapsulates OpenGL loader things, OpenGL API and window asset
- * It's a middle layer between OpenGL API and the render core, i.e., a
+ * It's a middle layer between OpenGL API and the Render core, i.e., a
  * platform-independent layer
  *
  * Usage:
@@ -25,7 +25,7 @@
  *
  * preparing scene...
  *
- * while (!Renderer.end()) {
+ * while (!Renderer.End()) {
  *      Renderer.draw(scene);
  * }
  *
@@ -38,21 +38,23 @@ public:
     Renderer();
     ~Renderer();
 
-    void setVsync(bool on);
+    void SetVsync(bool on);
 
-    void setMSAA(int samples);
+    void SetMSAA(int samples);
 
-    bool end();
+    bool End();
 
-    void render(const Scene &scene);
+    void Render(Scene const& scene);
 
-    void render(const GameObject &gameObject) {
+    void Render(GameObject const& gameObject) {
 
     }
 
-    void initializeOpenGL();
+    void InitializeOpenGL();
 
 private:
+    void processKeyboard();
+
     void beforeRenderPass();
 
     void afterRenderPass();

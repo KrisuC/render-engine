@@ -10,12 +10,13 @@
 #include "Skybox.hpp"
 #include "Camera.hpp"
 #include "Light.hpp"
+#include "Material.hpp"
 
 /*
  * Scene holds all Renderables, Lights and some other asset in the scene
  *
  * Usage:
- * 1. create a simple scene with one light source, one renderable and render
+ * 1. create a simple scene with one light source, one renderable and Render
  *    the scene
  *
  * Scene scene;
@@ -23,12 +24,12 @@
  * GameObject renderable = ...;
  * Skybox skybox = ...;
  *
- * scene.addLight(light);
- * scene.addGameObject(renderable);
+ * scene.AddLight(light);
+ * scene.AddGameObject(renderable);
  * scene.addSkybox(skybox);
  * scene.generateSceneGraph();
  *
- * while (!Renderer.end()) {
+ * while (!Renderer.End()) {
  *      Renderer.renderScene(scene);
  * }
  *
@@ -41,22 +42,22 @@ class Scene {
 public:
     Scene() = default;
 
-    void addGameObject(const GameObject& renderable) {
-        gameObjects.push_back(renderable);
-    }
+    void AddGameObject(GameObject&& gameObject);
 
-    void addLight(const Light &light) {
-        lights.push_back(light);
-    }
+    void AddLight(const Light &light);
 
-    void setSkybox(Skybox *sb);
+    void SetSkybox(Skybox *sb);
 
-    void build() {
-        // Setting Light to GameObject::Shader
-        for (auto o : gameObjects) {
-            for (auto light : lights) {
+    /* Setting Shader component due to scene configuration */
+    void Build();
 
-            }
+    /* Scene update per render pass
+     * Mainly for
+     *
+     */
+    void Update() {
+        for (auto& gobj : gameObjects) {
+
         }
     }
 
@@ -64,7 +65,7 @@ private:
     std::vector<GameObject> gameObjects;
     std::vector<Light> lights;
     Skybox *skybox = nullptr;
-    Camera *camera = nullptr;
+    Camera *camera = new Camera{};
 
     friend Renderer;
 };

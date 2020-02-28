@@ -44,9 +44,9 @@ Model::Model(const std::string &directory) {
 }
 
 void Model::render() {
-    // TODO: bind texture
+    // TODO: Bind texture
     for (auto &mesh : meshes) {
-        mesh.render();
+        mesh.Render();
     }
 }
 
@@ -57,9 +57,9 @@ std::vector<Texture> Model::loadMaterialTextures(
 
     //TODO: Fix Texture issues
     std::vector<Texture> textures;
-//    for (unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
+//    for (unsigned int i = 0; i < mat->GetTextureCount(Type); i++) {
 //        aiString str;
-//        mat->GetTexture(type, i, &str);
+//        mat->GetTexture(Type, i, &str);
 //        bool skip = false;
 //        for (auto &t : textures_loaded) {
 //            if (std::strcmp(t.path().c_str(), str.C_Str()) == 0) {
@@ -119,11 +119,11 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene) {
 //    std::vector<Texture> diffuseMaps = loadMaterialTextures(material,
 //                                                            aiTextureType_DIFFUSE,
 //                                                            "texture_diffuse");
-//    texture.insert(texture.end(), diffuseMaps.begin(), diffuseMaps.end());
+//    texture.insert(texture.end(), diffuseMaps.begin(), diffuseMaps.End());
 //    std::vector<Texture> specularMaps = loadMaterialTextures(material,
 //                                                             aiTextureType_SPECULAR,
 //                                                             "texture_specular");
-//    texture.insert(texture.end(), specularMaps.begin(), specularMaps.end());
+//    texture.insert(texture.end(), specularMaps.begin(), specularMaps.End());
     return Mesh(vertices, indices);
 }
 

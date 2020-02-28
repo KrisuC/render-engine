@@ -22,12 +22,12 @@ public:
     explicit Texture(unsigned int id, unsigned int type);
 
     // Bind texture(only once) and return texture id
-    unsigned int bind();
-    inline unsigned int type() const { return textureType; }
+    unsigned int Bind();
+    inline unsigned int Type() const { return textureType; }
 
     ~Texture();
 
-protected:
+private:
     // Load data from image file into memory
     void load(const std::string &path);
     // Free memory

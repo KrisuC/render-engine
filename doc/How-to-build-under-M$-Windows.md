@@ -1,4 +1,4 @@
-# How to build under M$ Visual Studio
+# How to Build under M$ Visual Studio
 
 需要：
 
@@ -9,7 +9,7 @@
 
 步骤:
 
-1. 在根目录下创建 cmake-build-ms 文件夹（或者你随便叫什么别的名字都行），然后分别选项目根目录，和根目录下你新创建的那个文件夹：
+1. 在根目录下创建 cmake-Build-ms 文件夹（或者你随便叫什么别的名字都行），然后分别选项目根目录，和根目录下你新创建的那个文件夹：
 
 ![cmake-gui-path](cmake-gui-path.png)
 
@@ -30,7 +30,7 @@
 
 ![cmake-change-lib-output-path](cmake-change-lib-output-path.png)
 
-![cmake-build-ms-debug-dir](cmake-build-ms-debug-dir.png)
+![cmake-Build-ms-debug-dir](cmake-Build-ms-debug-dir.png)
 
 9. 再点一下 Configure，再点一下 Generate，然后 OpenProject，再build一遍
 

@@ -16,9 +16,9 @@ public:
     Skybox() = default;
     explicit Skybox(const std::string& path_to_image);
 
-    void render();
+    void Render();
 
-    inline IBL getIBL() { return ibl; }
+    inline IBL GetIBL() { return ibl; }
 
 private:
     void prepare();

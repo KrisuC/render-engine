@@ -16,37 +16,41 @@
 
 // Hold and manage all the texture, responsible for binding texture to shader
 // All suppord
+
 class Material {
 public:
     Material() = default;
 
-    inline void setAlbedo(Texture *a);
-    inline void setAlbedo(glm::vec3 a);
-    inline void setAlbedo(float r, float g, float b);
+    inline void SetAlbedo(Texture *a);
+    inline void SetAlbedo(glm::vec3 a);
+    inline void SetAlbedo(float r, float g, float b);
 
-    inline void setMetallic(Texture *m);
-    inline void setMetallic(float m);
+    inline void SetMetallic(Texture *m);
+    inline void SetMetallic(float m);
 
-    inline void setRoughness(Texture *r);
-    inline void setRoughness(float r);
+    inline void SetRoughness(Texture *r);
+    inline void SetRoughness(float r);
 
-    inline void setEmissive(Texture *e);
-    inline void setEmissive(float e);
+    inline void SetEmissive(Texture *e);
+    inline void SetEmissive(float e);
 
-    inline void setNormal(Texture *n);
-    inline void setAO(Texture *a);
-    inline void setSpecular(Texture *s);
-    inline void setHeight(Texture *h);
+    inline void SetNormal(Texture *n);
+    inline void SetAO(Texture *a);
+    inline void SetSpecular(Texture *s);
+    inline void SetHeight(Texture *h);
 
-    inline void appendTexture(const std::string &name, Texture *t);
+    inline void AppendTexture(const std::string &name, Texture *t);
 
-    void setShader(Shader *ns);
-    void updateShader();
+    void SetShader(Shader *ns);
+    void UpdateShader();
+    inline Shader& GetShader() { return *shader; }
 
-    Shader *shader;
 
 private:
-    // All supported general use parameter(tex/val) type:
+    /* Shader responsible for rendering this Material */
+    Shader *shader = &Shader::DefaultShader();
+
+    // All supported general use parameter(tex/val) Type:
     struct { Texture *map; glm::vec3 value; } albedo = { nullptr, {0, 0, 0} };
     struct { Texture *map; float value; } metallic = { nullptr, 0 };
     struct { Texture *map; float value; } roughness = { nullptr, 0 };
@@ -62,7 +66,8 @@ private:
         bool specular = false;
         bool roughness = false;
         bool emissive = false;
-    } use_map;
+        bool normal = false;
+    } map_using_status;
     // Append some extra shader specific texture
     struct ExtraTexture {
         std::string name;
@@ -79,36 +84,36 @@ private:
 
 
 // ----------------------Inline functions----------------------------
-void Material::appendTexture(const std::string &name, Texture *t) {
+void Material::AppendTexture(const std::string &name, Texture *t) {
     extra_textures.push_back({name, t});
 }
 
-void Material::setAlbedo(Texture *a)  {
-    use_map.albedo = true; albedo.map = a; }
+void Material::SetAlbedo(Texture *a)  {
+    map_using_status.albedo = true; albedo.map = a; }
 
-void Material::setAlbedo(glm::vec3 a) { use_map.albedo = false; albedo.value = a; }
+void Material::SetAlbedo(glm::vec3 a) { map_using_status.albedo = false; albedo.value = a; }
 
-void Material::setAlbedo(float r, float g, float b) { setAlbedo({r, g, b}); }
+void Material::SetAlbedo(float r, float g, float b) { SetAlbedo({r, g, b}); }
 
-void Material::setMetallic(Texture *m) { use_map.metallic = true; metallic.map = m; }
+void Material::SetMetallic(Texture *m) { map_using_status.metallic = true; metallic.map = m; }
 
-void Material::setMetallic(float m)    { use_map.metallic = false; metallic.value = m; }
+void Material::SetMetallic(float m)    { map_using_status.metallic = false; metallic.value = m; }
 
-void Material::setRoughness(Texture *r) { use_map.roughness = true; roughness.map = r; }
+void Material::SetRoughness(Texture *r) { map_using_status.roughness = true; roughness.map = r; }
 
-void Material::setRoughness(float r)    { use_map.roughness = false; roughness.value = r;; }
+void Material::SetRoughness(float r)    { map_using_status.roughness = false; roughness.value = r;; }
 
-void Material::setEmissive(Texture *e) { use_map.emissive = true; emissive.map = e; }
+void Material::SetEmissive(Texture *e) { map_using_status.emissive = true; emissive.map = e; }
 
-void Material::setEmissive(float e)    { use_map.emissive = false; emissive.value = e; }
+void Material::SetEmissive(float e)    { map_using_status.emissive = false; emissive.value = e; }
 
-void Material::setNormal(Texture *n) { normal = n; }
+void Material::SetNormal(Texture *n) { map_using_status.normal = true ; normal = n; }
 
-void Material::setAO(Texture *a)     { ao = a; }
+void Material::SetAO(Texture *a)     { ao = a; }
 
-void Material::setSpecular(Texture *s) { specular = s; }
+void Material::SetSpecular(Texture *s) { specular = s; }
 
-void Material::setHeight(Texture *h)   { height = h; }
+void Material::SetHeight(Texture *h)   { height = h; }
 
 
 

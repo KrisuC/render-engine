@@ -12,8 +12,8 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices,
     setupMesh();
 }
 
-void Mesh::render() const {
-    // render mesh
+void Mesh::Render() const {
+    // Render mesh
     glBindVertexArray(VAO);
     glDrawElements(mesh_type, (int)indices.size(), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
@@ -173,16 +173,16 @@ namespace SimpleMesh {
 
     void renderCube() {
         static auto s = Sphere();
-        s.render();
+        s.Render();
     }
 
     void renderSphere() {
         static auto c = Cube();
-        c.render();
+        c.Render();
     }
 
     void renderQuad() {
         static auto q = Quad();
-        q.render();
+        q.Render();
     }
 }

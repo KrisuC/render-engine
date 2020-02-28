@@ -1,10 +1,3 @@
-#if defined(WIN32) || defined(_WIN32)
-    #include <direct.h>
-    #define chdir _chdir
-#else
-    #include <unistd.h>
-#endif
-
 #include <fstream>
 #include <sstream>
 #include <iostream>
@@ -13,34 +6,40 @@
 #include "Scene.hpp"
 #include "Renderer.hpp"
 #include "Engine.hpp"
+#include "Mesh.hpp"
+#include "Transform.hpp"
+#include "Material.hpp"
+#include "IO.hpp"
 
 int main(int argc, char *argv[]) {
-    chdir("..");
-
     /* Game code begins here */
     Engine *engine = Engine::GetEngine();
 
-    Scene *scene = engine->createScene();
-    scene->addLight(PointLight({2, 2, 2},
-                                     {1, 1, 1}));
+    Scene *scene = engine->CreateScene();
+    scene->AddLight(PointLight({2, 2, 2},
+                               {1, 1, 1}));
 
-    auto mesh = engine->create<Mesh>();
-    auto material = engine->create<Material>();
-    material->setAlbedo(0.9, 0, 0);
-    material->setMetallic(0.1);
-    material->setRoughness(0.2);
+    GameObject object;
+    object.CreateComponent<Mesh>(SimpleMesh::Sphere());
+    auto& material = object.CreateComponent<Material>();
+    material.SetShader(&Shader::TestShader());
+    auto& transform = object.CreateComponent<Transform>();
+    transform.Translate(0, 0, -10);
 
-    auto default_shader = engine->create<Shader>();
-    material->setShader(default_shader);
+    scene->AddGameObject(std::move(object));
 
-    scene->addGameObject(GameObject(mesh, material));
+    scene->SetSkybox(new Skybox);
+    scene->Build();
 
-    scene->setSkybox(new Skybox);
-    scene->build();
-
-    Renderer *renderer = engine->getRenderer();
-    while (!renderer->end()) {
-        renderer->render(*scene);
+    Renderer *renderer = engine->GetRenderer();
+    while (!renderer->End()) {
+        scene->Update();
+        if (io::KeyPress(Key::w)) {
+            std::cout << "pressing w!!!!\n";
+        }
+        auto mp = io::MousePosition();
+        std::cout << mp.first << " " << mp.second << std::endl;
+        renderer->Render(*scene);
     }
 
 

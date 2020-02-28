@@ -9,7 +9,7 @@
 #include <stdexcept>
 
 /*
- * Light is responsible for holding a specific type of light
+ * Light is responsible for holding a specific Type of light
  * 3 types of lights are supported
  *
  * 1. Point light: position and color
@@ -21,8 +21,8 @@
  * 1. create light using class interface (on stack)
  *
  * Light plight(LightType::Point);
- * plight.setPosition(...);
- * plight.setColor(...);
+ * plight.SetPosition(...);
+ * plight.SetColor(...);
  *
  * 2. create light using helper function (on stack)
  *
@@ -32,7 +32,7 @@
  *
  */
 
-enum LightType { Directional, Point, Spot };
+enum LightType { Directional = 0, Point = 1, Spot = 2 };
 
 class Light {
     using vec3 = glm::vec3;
@@ -40,32 +40,46 @@ class Light {
 public:
     explicit Light(LightType lightType) : ltype(lightType) { }
 
-    inline void setPosition(vec3 pos) {
-        assert(ltype == LightType::Point || ltype == LightType::Spot);
+    inline void SetPosition(vec3 pos) {
+        // assert(ltype == LightType::Point || ltype == LightType::Spot);
         position = pos;
     }
 
-    inline void setDirection(vec3 dir) {
-        assert(ltype == LightType::Directional || ltype == LightType::Spot);
+    inline void SetDirection(vec3 dir) {
+        // assert(ltype == LightType::Directional || ltype == LightType::Spot);
         direciton = dir;
     }
 
-    inline void setColor(vec3 c) {
+    inline void SetColor(vec3 c) {
         color = c;
     }
 
-    inline void setConeAngleInRadian(float cone) {
-        assert(ltype == LightType::Spot);
+    inline void SetConeAngleInRadian(float cone) {
+        // assert(ltype == LightType::Spot);
         cone_angle_in_radian = cone;
+    }
+
+    inline bool IsPointLight() const {
+        return ltype == LightType::Point;
+    }
+
+    inline bool IsSpotLight() const {
+        return ltype == LightType::Spot;
+    }
+
+    inline bool IsDirectionalLight() const {
+        return ltype == LightType::Directional;
     }
 
 private:
     LightType ltype;
 
-    vec3 position;
-    vec3 direciton;
-    vec3 color;
-    float cone_angle_in_radian;
+    vec3 position {};
+    vec3 direciton {};
+    vec3 color {};
+    float cone_angle_in_radian {};
+
+    friend class Shader;
 };
 
 Light PointLight(glm::vec3 position, glm::vec3 color);

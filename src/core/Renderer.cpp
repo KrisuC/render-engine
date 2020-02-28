@@ -3,6 +3,7 @@
 //
 
 #include "Renderer.hpp"
+#include "IO.hpp"
 
 namespace {
     void ErrorCallBack(int error, const char* description) {
@@ -13,11 +14,11 @@ namespace {
 
 
 Renderer::Renderer() {
-    initializeOpenGL();
+    InitializeOpenGL();
 }
 
 
-void Renderer::initializeOpenGL() {
+void Renderer::InitializeOpenGL() {
     if (!glfwInit()) {
         std::cerr << "GLFW failed to init\n";
         exit(-1);
@@ -33,11 +34,12 @@ void Renderer::initializeOpenGL() {
 #endif
 
     int width = 1280, height = 720;
-    window = glfwCreateWindow(width, height, "render-engine", nullptr, nullptr);
+    window = glfwCreateWindow(width, height, "Render-engine", nullptr, nullptr);
     if (!window) {
         exit(-1);
     }
     glfwMakeContextCurrent(window);
+    io::_current_glfw_window_ = window;
 
     if (gladLoadGL() == 0) {
         std::cerr << "GLAD failed to init\n";
@@ -46,12 +48,12 @@ void Renderer::initializeOpenGL() {
 }
 
 
-void Renderer::setVsync(bool on) {
+void Renderer::SetVsync(bool on) {
     glfwSwapInterval(static_cast<int>(on));
 }
 
 
-void Renderer::setMSAA(int samples) {
+void Renderer::SetMSAA(int samples) {
     glfwWindowHint(GLFW_SAMPLES, samples);
     if (samples) {
         glEnable(GL_MULTISAMPLE);
@@ -65,7 +67,7 @@ Renderer::~Renderer() {
     glfwTerminate();
 }
 
-bool Renderer::end() {
+bool Renderer::End() {
     static bool firstRun = true;
     if (!firstRun) {
         afterRenderPass();
@@ -84,11 +86,12 @@ void Renderer::beforeRenderPass() {
 
 void Renderer::afterRenderPass() {
     glfwSwapBuffers(window);
+    processKeyboard();
 }
 
-void Renderer::render(const Scene &scene) {
-    for (auto go : scene.gameObjects) {
-        render(go);
+void Renderer::Render(const Scene &scene) {
+    for (const auto& gobj : scene.gameObjects) {
+        Render(gobj);
     }
 }
 

@@ -1,70 +1,60 @@
 // General use PBR shader
-#version 330 core
+#version 410 core
 out vec4 FragColor;
 
 in vec2 TexCoords;
 in vec3 WorldPos;
 in vec3 Normal;
 
-const int MAX_POINT_LIGHT = 16;
-const int MAX_DIRECTIONAL_LIGHT = 4;
-const int MAX_SPOT_LIGHT = 16;
 const float PI = 3.14159265359;
 
 // for calculating specular
 uniform vec3 cameraPosition;
 
-// TODO: support for height_map, emissive_map
-// Sampler
-uniform sampler2D albedo_map;
-uniform sampler2D metallic_map;
-uniform sampler2D roughness_map;
-uniform sampler2D emissive_map;
-uniform sampler2D normal_map;
-uniform sampler2D ao_map;
-uniform sampler2D specular_map;
-uniform sampler2D height_map;
-// Constant
-uniform vec3 albedo_val;
-uniform float metallic_val;
-uniform float roughness_val;
-uniform float emissive_val;
-uniform float ao_val = 1.0;
-// Status
-uniform bool use_albedo_map = false;
-uniform bool use_metallic_map = false;
-uniform bool use_roughness_map = false;
-uniform bool use_emissive_map = false;
-uniform bool use_normal_map = false;
+/*********** Material Configuration **************/
+uniform struct Material {
+    struct { sampler2D map; vec3 value; } albedo;
+    struct { sampler2D map; float value; } metallic;
+    struct { sampler2D map; float value; } roughness;
+    struct { sampler2D map; float value; } emissive;
+    sampler2D normal;
+    sampler2D ao;
+    sampler2D specular;
+    sampler2D height;
+
+    struct {
+        bool albedo;
+        bool metallic;
+        bool specular;
+        bool roughness;
+        bool emissive;
+        bool normal;
+    } map_using_status;
+} m;
+
+
+/*************************************************/
+
 
 // IBL
 uniform samplerCube irradiance_map;
 uniform samplerCube prefilter_map;
 uniform sampler2D   brdfLUT_map;
 
-// Lights
-struct PointLight {
-    vec3 position;
-    vec3 color;
-} pointLights[MAX_POINT_LIGHT];
+/************* Lights Configuration **************/
+const int DIRECTIONAL = 0, POINT = 1, SPOT = 2;
+const int MAX_LIGHT = 20;
 
-uniform int pointLightsCount = 0;
-
-struct DirectionalLight {
-    vec3 direction;
-    vec3 color;
-} directionalLights[MAX_DIRECTIONAL_LIGHT];
-
-uniform int directionalLightsCount = 0;
-
-struct SpotLight {
+uniform struct Lights {
     vec3 position;
     vec3 direction;
     vec3 color;
-    float cone_angle;
-} spotLights[MAX_SPOT_LIGHT];
+    float cone_angle_in_radian;
 
-uniform int spotLightsCount = 0;
+    int ltype;
+} lights[MAX_LIGHT];
+uniform int light_cnt = 0;
+/*************************************************/
 
 
 vec3 fresnelSchlick(float cosTheta, vec3 F0);
@@ -78,29 +68,27 @@ void main() {
     vec3 albedo, normal;
     float metallic, roughness, ao;
 
-    if (use_albedo_map) {
-        albedo = texture(albedo_map, TexCoords).rgb;
+    if (m.map_using_status.albedo) {
+        albedo = texture(m.albedo.map, TexCoords).rgb;
     } else {
-        albedo = albedo_val;
+        albedo = m.albedo.value;
     }
-    if (use_metallic_map) {
-        metallic = texture(metallic_map, TexCoords).r;
+    if (m.map_using_status.metallic) {
+        metallic = texture(m.metallic.map, TexCoords).r;
     } else {
-        metallic = metallic_val;
+        metallic = m.metallic.value;
     }
-    if (use_roughness_map) {
-        roughness = texture(roughness_map, TexCoords).r;
+    if (m.map_using_status.roughness) {
+        roughness = texture(m.roughness.map, TexCoords).r;
     } else {
-        roughness = roughness_val;
+        roughness = m.roughness.value;
     }
-    if (use_normal_map) {
+    if (m.map_using_status.normal) {
         normal = getNormalFromMap();
     } else {
         normal = Normal;
     }
-    if (use_emissive_map) {
-        // ...
-    }
+
 
     vec3 N = normalize(normal);
     vec3 V = normalize(cameraPosition - WorldPos);
@@ -110,13 +98,13 @@ void main() {
     F0 = mix(F0, albedo, metallic); // for non-metal, F0 is always 0.04
 
     vec3 Lo = vec3(0.0);
-    for (int i = 0; i < pointLightsCount; i++) {
+    for (int i = 0; i < light_cnt; i++) {
         // Per-light raiance
-        vec3 L = normalize(pointLights[i].position - WorldPos);
+        vec3 L = normalize(lights[i].position - WorldPos);
         vec3 H = normalize(V + L); // half-way
-        float dist = length(pointLights[i].position - WorldPos);
+        float dist = length(lights[i].position - WorldPos);
         float attenuation = 1.0 / (dist * dist);
-        vec3 radiance = pointLights[i].color * attenuation;
+        vec3 radiance = lights[i].color * attenuation;
 
         // Cook-Torrance BRDF
         float NDF = DistributionGGX(N, H, roughness);
@@ -209,7 +197,7 @@ float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness) {
 
 
 vec3 getNormalFromMap() {
-    vec3 tangentNormal = texture(normal_map, TexCoords).xyz * 2.0 - 1.0;
+    vec3 tangentNormal = texture(m.normal, TexCoords).xyz * 2.0 - 1.0;
 
     vec3 Q1  = dFdx(WorldPos);
     vec3 Q2  = dFdy(WorldPos);

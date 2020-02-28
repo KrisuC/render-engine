@@ -17,7 +17,7 @@ Texture::Texture(unsigned int id, unsigned int type) :
         id(id), textureType(type), dataIsFloat(false) {
 
     if (type != TextureType::Texture2D && type != TextureType::CubeMap) {
-        throw std::runtime_error("undefined texture type");
+        throw std::runtime_error("undefined texture Type");
     }
 }
 
@@ -36,8 +36,8 @@ void Texture::load(const std::string &path) {
     }
 }
 
-unsigned Texture::bind() {
-    // Load and bind if not
+unsigned Texture::Bind() {
+    // Load and Bind if not
     if (id == 0) {
         GLenum inFormat, outFormat, texelType;
 

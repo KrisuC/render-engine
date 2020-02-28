@@ -10,10 +10,10 @@
 
 #include "Skybox.hpp"
 #include "Texture.hpp"
-#include "Model.hpp"
+#include "Mesh.hpp"
 
-void Skybox::render() {
-    shader.useShaderProgram();
+void Skybox::Render() {
+    shader.UseShaderProgram();
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap);
     SimpleMesh::renderCube();
@@ -73,16 +73,16 @@ void Skybox::prepare() {
             glm::lookAt(orig, glm::vec3( 0.0f,  0.0f,  1.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
             glm::lookAt(orig, glm::vec3( 0.0f,  0.0f, -1.0f), glm::vec3(0.0f, -1.0f,  0.0f))
     };
-    equirectToCubemapShader.useShaderProgram();
-    equirectToCubemapShader.set("equirectangularMap", 0);
-    equirectToCubemapShader.set("projection", captureProjection);
+    equirectToCubemapShader.UseShaderProgram();
+    equirectToCubemapShader.Set("equirectangularMap", 0);
+    equirectToCubemapShader.Set("projection", captureProjection);
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture.bind());
+    glBindTexture(GL_TEXTURE_2D, texture.Bind());
 
     glViewport(0, 0, dim, dim);
     glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
     for (int i = 0; i < 6; i++) {
-        equirectToCubemapShader.set("view", captureViews[i]);
+        equirectToCubemapShader.Set("view", captureViews[i]);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                                GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, envCubemap, 0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -116,9 +116,9 @@ void Skybox::prepare() {
         glBindRenderbuffer(GL_RENDERBUFFER, captureRBO);
         glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 32, 32);
 
-        irradianceShader.useShaderProgram();
-        irradianceShader.set("environmentMap", 0);
-        irradianceShader.set("projection", captureProjection);
+        irradianceShader.UseShaderProgram();
+        irradianceShader.Set("environmentMap", 0);
+        irradianceShader.Set("projection", captureProjection);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap);
 
@@ -126,7 +126,7 @@ void Skybox::prepare() {
         glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
         {
             for (int i = 0; i < 6; i++) {
-                irradianceShader.set("view", captureViews[i]);
+                irradianceShader.Set("view", captureViews[i]);
                 glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                                        GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
                                        irradianceMap, 0);
@@ -155,9 +155,9 @@ void Skybox::prepare() {
 
         glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
 
-        prefilterShader.useShaderProgram();
-        prefilterShader.set("environmentMap", 0);
-        prefilterShader.set("projection", captureProjection);
+        prefilterShader.UseShaderProgram();
+        prefilterShader.Set("environmentMap", 0);
+        prefilterShader.Set("projection", captureProjection);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap);
 
@@ -174,9 +174,9 @@ void Skybox::prepare() {
                 glViewport(0, 0, mipWidth, mipHeight);
 
                 float roughness = (float) mip / (float) (maxMipLevels - 1);
-                prefilterShader.set("roughness", roughness);
+                prefilterShader.Set("roughness", roughness);
                 for (int i = 0; i < 6; i++) {
-                    prefilterShader.set("view", captureViews[i]);
+                    prefilterShader.Set("view", captureViews[i]);
                     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                                            GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
                                            prefilterMap, mip);
@@ -209,7 +209,7 @@ void Skybox::prepare() {
                                    GL_TEXTURE_2D, brdfLUTTexture, 0);
 
             glViewport(0, 0, 512, 512);
-            brdfLUTShader.useShaderProgram();
+            brdfLUTShader.UseShaderProgram();
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             SimpleMesh::renderQuad();
         }

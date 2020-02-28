@@ -36,7 +36,7 @@ public:
         ImGui::DestroyContext();
     }
 
-    void drawUI() {
+    void DrawUI() {
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
@@ -51,6 +51,10 @@ public:
 private:
     const Renderer &renderer;
 };
+
+void Renderer::processKeyboard() {
+    
+}
 
 
 #endif //RENDER_ENGINE_GUIMANAGER_HPP

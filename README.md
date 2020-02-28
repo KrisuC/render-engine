@@ -1,22 +1,22 @@
-# render-engine
+# Render-engine
 
 A simple renderer.
 
-## How to build
+## How to Build
 
-To build and run on *nix systems (macOS / Linux / FreeBSD):
+To Build and run on *nix systems (macOS / Linux / FreeBSD):
 
 ```
-mkdir cmake-build
-cd cmake-build
+mkdir cmake-Build
+cd cmake-Build
 cmake ..
 make -j16
 ./engine
 ```
 
-To build on windows, see:
+To Build on windows, see:
 
-[build for visual studio on windows](./doc/How-to-build-under-M$-Windows.md)
+[Build for visual studio on windows](./doc/How-to-Build-under-M$-Windows.md)
 
 If you success, you will see something like these:
 

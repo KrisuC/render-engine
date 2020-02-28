@@ -2,7 +2,15 @@
 // Created by Krisu on 2020-02-05.
 //
 
+#if defined(WIN32) || defined(_WIN32)
+#include <direct.h>
+    #define chdir _chdir
+#else
+#include <unistd.h>
+#endif
+
 #include "Engine.hpp"
+
 
 
 Engine::~Engine() {
@@ -12,21 +20,22 @@ Engine::~Engine() {
     delete renderer;
 }
 
-Scene *Engine::createScene() {
+Scene *Engine::CreateScene() {
     auto scene = new Scene;
     scenes.push_back(scene);
     return scene;
 }
 
-Renderer *Engine::getRenderer() {
+Renderer *Engine::GetRenderer() {
     return renderer;
 }
 
 Engine::Engine() {
+    chdir("..");
     renderer = new Renderer;
 }
 
 Engine *Engine::GetEngine() {
-    static Engine *engine = new Engine();
+    static auto *engine = new Engine();
     return engine;
 }

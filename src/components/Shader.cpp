@@ -48,6 +48,8 @@ Shader::Shader(const char *vertexPath,
     }
     catch(std::ifstream::failure &e) {
         std::cerr << "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ\n";
+        std::cerr << vertexPath << std::endl << geometryPath << std::endl;
+        std::cerr << fragmentPath << std::endl;
         exit(-1);
     }
     const char * vShaderCode = vertexCode.c_str();
@@ -96,60 +98,60 @@ Shader::Shader(const char *vertexPath,
         glDeleteShader(geometry);
 }
 
-void Shader::useShaderProgram() {
+void Shader::UseShaderProgram() {
     glUseProgram(this->id);
 }
 
-void Shader::set(const std::string &name, bool value) const {
+void Shader::Set(const std::string &name, bool value) const {
     glUniform1i(glGetUniformLocation(id, name.c_str()), (int)value);
 }
 
-void Shader::set(const std::string &name, int value) const {
+void Shader::Set(const std::string &name, int value) const {
     glUniform1i(glGetUniformLocation(id, name.c_str()), value);
 }
 
-void Shader::set(const std::string &name, unsigned value) const {
+void Shader::Set(const std::string &name, unsigned value) const {
     glUniform1i(glGetUniformLocation(id, name.c_str()), value);
 }
 
-void Shader::set(const std::string &name, float value) const {
+void Shader::Set(const std::string &name, float value) const {
     glUniform1f(glGetUniformLocation(id, name.c_str()), value);
 }
 
-void Shader::set(const std::string &name, const glm::vec2 &value) const {
+void Shader::Set(const std::string &name, const glm::vec2 &value) const {
     glUniform2fv(glGetUniformLocation(id, name.c_str()), 1, &value[0]);
 }
 
-void Shader::set(const std::string &name, float x, float y) const {
+void Shader::Set(const std::string &name, float x, float y) const {
     glUniform2f(glGetUniformLocation(id, name.c_str()), x, y);
 }
 
-void Shader::set(const std::string &name, const glm::vec3 &value) const {
+void Shader::Set(const std::string &name, const glm::vec3 &value) const {
     glUniform3fv(glGetUniformLocation(id, name.c_str()), 1, &value[0]);
 }
 
-void Shader::set(const std::string &name, float x, float y, float z) const {
+void Shader::Set(const std::string &name, float x, float y, float z) const {
     glUniform3f(glGetUniformLocation(id, name.c_str()), x, y, z);
 }
 
-void Shader::set(const std::string &name, const glm::vec4 &value) const {
+void Shader::Set(const std::string &name, const glm::vec4 &value) const {
     glUniform4fv(glGetUniformLocation(id, name.c_str()), 1, &value[0]);
 }
 
-void Shader::set(const std::string &name, float x, float y, float z,
-                      float w) const {
+void Shader::Set(const std::string &name, float x, float y, float z,
+                 float w) const {
     glUniform4f(glGetUniformLocation(id, name.c_str()), x, y, z, w);
 }
 
-void Shader::set(const std::string &name, const glm::mat2 &mat) const {
+void Shader::Set(const std::string &name, const glm::mat2 &mat) const {
     glUniformMatrix2fv(glGetUniformLocation(id, name.c_str()), 1, GL_FALSE, &mat[0][0]);
 }
 
-void Shader::set(const std::string &name, const glm::mat3 &mat) const {
+void Shader::Set(const std::string &name, const glm::mat3 &mat) const {
     glUniformMatrix3fv(glGetUniformLocation(id, name.c_str()), 1, GL_FALSE, &mat[0][0]);
 }
 
-void Shader::set(const std::string &name, const glm::mat4 &mat) const {
+void Shader::Set(const std::string &name, const glm::mat4 &mat) const {
     glUniformMatrix4fv(glGetUniformLocation(id, name.c_str()), 1, GL_FALSE, &mat[0][0]);
 }
 
@@ -164,7 +166,7 @@ Shader::checkCompileErrors(GLuint shader, const std::string& type, std::string p
         if (!success) {
             glGetShaderInfoLog(shader, 1024, nullptr, infoLog);
             std::cerr << path << std::endl;
-            std::cerr << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n" << infoLog << "\n -- ------------------------------------ -- \n";
+            std::cerr << "ERROR::SHADER_COMPILATION_ERROR of Type: " << type << "\n" << infoLog << "\n -- ------------------------------------ -- \n";
             exit(-1);
         }
         else {
@@ -173,12 +175,46 @@ Shader::checkCompileErrors(GLuint shader, const std::string& type, std::string p
                 path = path.substr(0, path.find('.'));
                 glGetProgramInfoLog(shader, 1024, nullptr, infoLog);
                 std::cerr << path << std::endl;
-                std::cerr << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog << "\n --  ------------------------------------ -- " << std::endl;
+                std::cerr << "ERROR::PROGRAM_LINKING_ERROR of Type: " << type << "\n" << infoLog << "\n --  ------------------------------------ -- " << std::endl;
                 exit(-1);
             }
         }
     }
 }
 
-Shader::Shader() : Shader("shader/default.vert", "shader/default.frag", nullptr) {}
+Shader::Shader() : Shader(
+        "shader/default.vert",
+        "shader/default.frag",
+        nullptr) {}
+
+void Shader::SetLight(Light const& light) {
+    static int light_cnt = 0;
+    static const std::string lstr =
+            "lights[" + std::to_string(light_cnt) + "]";
+
+    this->Set(lstr + ".position", light.position);
+    this->Set(lstr + ".direction", light.direciton);
+    this->Set(lstr + "color", light.color);
+    this->Set("light_cnt", ++light_cnt);
+}
+
+Shader &Shader::DefaultShader() {
+    static Shader default_shader;
+    return default_shader;
+}
+
+Shader &Shader::TestShader() {
+    static Shader test { "shader/test.vert",
+                         "shader/test.frag" };
+    return test;
+}
+
+void Shader::SetTransform(Transform const &transform) {
+    this->Set("model", transform.synthesis);
+}
+
+void Shader::SetProjectionView(glm::mat4 projection, glm::mat4 view) {
+    this->Set("projection", projection);
+    this->Set("view", view);
+}
 

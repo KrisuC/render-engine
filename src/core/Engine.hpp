@@ -25,23 +25,14 @@ public:
 
     ~Engine();
 
-    Scene* createScene();
-    Renderer* getRenderer();
-
-    template <typename T, typename... Args>
-    T* create(Args&&...args) {
-        T *obj = new T{std::forward<T>(args...)};
-        return obj;
-    }
+    Scene* CreateScene();
+    Renderer* GetRenderer();
 
 private:
     Engine();
 
 public:
     std::vector<Scene*> scenes;
-    std::vector<Material*> materials;
-    std::vector<Shader*> shaders;
-    std::vector<Mesh*> meshes;
     Renderer* renderer;
 };
 
