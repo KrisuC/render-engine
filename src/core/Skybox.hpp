@@ -13,12 +13,12 @@
 // TODO: store precomputed map into actual files.
 class Skybox {
 public:
-    Skybox() = default;
-    explicit Skybox(const std::string& path_to_image);
+    Skybox();
+    explicit Skybox(Texture const& skyboxTexture);
 
     void Render();
 
-    inline IBL GetIBL() { return ibl; }
+    inline IBL const& GetIBL() { return ibl; }
 
 private:
     void prepare();
@@ -39,9 +39,9 @@ private:
     Shader brdfLUTShader {"shader/brdf.vert",
                           "shader/brdf.frag"};
 
-    Texture texture {"asset/skybox/GrandCanyon.hdr", true};
-
     unsigned int envCubemap = 0;
+    Texture const& texture;
+
     IBL ibl;
 };
 

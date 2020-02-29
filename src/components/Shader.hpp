@@ -9,15 +9,10 @@
 #include "Light.hpp"
 #include "Transform.hpp"
 
-// TODO: separate vertex and fragment shader
-//       VertexShader provide interface to update model/view/projection
-//       FragmentShader closely related with Material to Set visual effect
-//       Shader organize VertexShader and FragmentShader
-
-enum ShaderType {
-    VertexShader = GL_VERTEX_SHADER,
-    FragmentShader = GL_FRAGMENT_SHADER,
-    GeometryShader = GL_GEOMETRY_SHADER
+enum class ShaderType {
+    Vertex = GL_VERTEX_SHADER,
+    Fragment = GL_FRAGMENT_SHADER,
+    Geometry = GL_GEOMETRY_SHADER
 };
 
 class Shader {

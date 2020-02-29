@@ -9,7 +9,11 @@
 #include <cassert>
 #include <string>
 
-enum TextureType {
+/*
+ * Resouce owner of a texture
+ */
+
+enum class TextureType {
     Texture2D = GL_TEXTURE_2D,
     CubeMap = GL_TEXTURE_CUBE_MAP
 };
@@ -19,27 +23,29 @@ public:
     Texture() = default;
     explicit Texture(const std::string& path,
                      bool float_data=false);
-    explicit Texture(unsigned int id, unsigned int type);
 
-    // Bind texture(only once) and return texture id
-    unsigned int Bind();
-    inline unsigned int Type() const { return textureType; }
+    Texture(Texture const&) = delete;
+    Texture& operator=(Texture const&) = delete;
+
+    Texture(Texture && rhs) noexcept;
+    Texture& operator=(Texture && rhs) noexcept;
+
+
+    explicit Texture(unsigned id, TextureType type);
+
+    inline unsigned int ID() const { return id; }
+
+    inline TextureType Type() const { return textureType; }
 
     ~Texture();
 
 private:
-    // Load data from image file into memory
-    void load(const std::string &path);
-    // Free memory
-    void free();
+    void load_and_bind(const std::string &path, bool data_is_float);
 
 private:
-    // unsigned char (byte) for normal jpg, float for hdr image
-    bool dataIsFloat = false;
-    void *data = nullptr;
+
     unsigned int id = 0;
-    unsigned int textureType = 0;
-    int width = 0, height = 0, nrComponents = 0;
+    TextureType textureType = TextureType::Texture2D;
 };
 
 

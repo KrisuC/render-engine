@@ -53,9 +53,7 @@ public:
     void Build();
 
 private:
-    /* Scene update per render pass
-     * Mainly for Transform
-     */
+    /* Scene update per render pass. Mainly for Transform */
     void Update(Renderer const& renderer);
 
 private:
@@ -66,6 +64,8 @@ private:
 
     friend class Renderer;
 };
+
+
 
 
 #endif //RENDER_ENGINE_SCENE_HPP

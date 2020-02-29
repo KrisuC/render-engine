@@ -19,12 +19,7 @@ void Skybox::Render() {
     SimpleMesh::renderCube();
 }
 
-Skybox::Skybox(const std::string& path_to_image) :
-         texture(path_to_image, "hdr")  {
-    prepare();
-}
-
-void Skybox::prepare() {
+Skybox::Skybox(Texture const& skyboxTexture) : texture(skyboxTexture)  {
     unsigned int irradianceMap = 0;
     unsigned int prefilterMap = 0;
     unsigned int brdfLUTTexture = 0;
@@ -77,7 +72,7 @@ void Skybox::prepare() {
     equirectToCubemapShader.Set("equirectangularMap", 0);
     equirectToCubemapShader.Set("projection", captureProjection);
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture.Bind());
+    glBindTexture(GL_TEXTURE_2D, texture.ID());
 
     glViewport(0, 0, dim, dim);
     glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
@@ -215,8 +210,15 @@ void Skybox::prepare() {
         }
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
-    ibl = { irradianceMap, prefilterMap, brdfLUTTexture };
+    ibl = {irradianceMap, prefilterMap, brdfLUTTexture};
 }
+
+void Skybox::prepare() {
+
+}
+
+Skybox::Skybox() :
+Skybox(Texture("asset/texture/skybox/GrandCanyon.jpg",false) ) {}
 
 
 

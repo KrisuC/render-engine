@@ -236,4 +236,3 @@ void Shader::processShaderFile(char const *filePath, ShaderType shaderType) {
         // TODO
     }
 }
-

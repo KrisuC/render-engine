@@ -22,7 +22,6 @@ Renderer::Renderer() {
     InitializeOpenGL();
 }
 
-
 void Renderer::InitializeOpenGL() {
     if (!glfwInit()) {
         std::cerr << "GLFW failed to init\n";

@@ -23,6 +23,8 @@ int main(int argc, char *argv[]) {
     object.CreateComponent<Mesh>(SimpleMesh::Sphere());
 
     auto& material = object.CreateComponent<Material>();
+    material.SetShader(&Shader::TestShader());
+    material.SetShader(&Shader::DefaultShader());
     material.SetAlbedo(1, 0, 0);
     material.SetMetallic(1.0);
     material.SetRoughness(0.2);

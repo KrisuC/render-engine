@@ -13,9 +13,12 @@ void Material::UpdateShaderUniform() {
     current_used_texture_units = 1;
 
     auto bind_texture = [&]
-            (const std::string &str, Texture *texture) {
+            (const std::string &str, Texture const *texture) {
         glActiveTexture(GL_TEXTURE0+current_used_texture_units);
-        glBindTexture(texture->Type(), texture->Bind());
+        glBindTexture(
+                static_cast<unsigned>(texture->Type()),
+                texture->ID()
+        );
         shader->Set(str, current_used_texture_units);
         current_used_texture_units++;
     };
@@ -23,43 +26,43 @@ void Material::UpdateShaderUniform() {
     shader->UseShaderProgram();
     // ------------------------------------------------------------------------
     if (map_using_status.albedo) {
-        bind_texture("albedo.map", albedo.map);
+        bind_texture("m.albedo.map", albedo.map);
     } else {
-        shader->Set("albedo.value", albedo.value);
+        shader->Set("m.albedo.value", albedo.value);
     }
     // ------------------------------------------------------------------------
     if (map_using_status.metallic) {
-        bind_texture("metallic.map", metallic.map);
+        bind_texture("m.metallic.map", metallic.map);
     } else {
-        shader->Set("metallic.value", metallic.value);
+        shader->Set("m.metallic.value", metallic.value);
     }
     // ------------------------------------------------------------------------
     if (map_using_status.roughness) {
-        bind_texture("roughness.map", roughness.map);
+        bind_texture("m.roughness.map", roughness.map);
     } else {
-        shader->Set("roughness.value", roughness.value);
+        shader->Set("m.roughness.value", roughness.value);
     }
     // ------------------------------------------------------------------------
     if (map_using_status.emissive) {
-        bind_texture("emissive.map", emissive.map);
+        bind_texture("m.emissive.map", emissive.map);
     } else {
-        shader->Set("emissive.value", emissive.value);
+        shader->Set("m.emissive.value", emissive.value);
     }
     // ------------------------------------------------------------------------
     if (map_using_status.normal) {
-        bind_texture("normal", normal);
+        bind_texture("m.normal", normal);
     }
     // ------------------------------------------------------------------------
     if (ao) {
-        bind_texture("ao", ao);
+        bind_texture("m.ao", ao);
     }
     // ------------------------------------------------------------------------
     if (specular) {
-        bind_texture("specular", specular);
+        bind_texture("m.specular", specular);
     }
     // ------------------------------------------------------------------------
     if (height) {
-        bind_texture("height", height);
+        bind_texture("m.height", height);
     }
     // Binding extra texture
     for (const auto &t : extra_textures) {
@@ -69,6 +72,12 @@ void Material::UpdateShaderUniform() {
 
 void Material::SetShader(Shader *ns) {
     shader = ns;
+}
+
+void Material::SetIBLTextures(IBL const &ibl) {
+    AppendTexture("ibl.irradiance", &ibl.irradiance);
+    AppendTexture("ibl.prefilter", &ibl.prefilter);
+    AppendTexture("ibl.brdfLUT", &ibl.brdfLUT);
 }
 
 

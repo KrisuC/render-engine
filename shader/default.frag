@@ -1,5 +1,6 @@
 // General use PBR shader
 #version 410 core
+
 out vec4 FragColor;
 
 in vec2 TexCoords;
@@ -8,7 +9,7 @@ in vec3 Normal;
 
 const float PI = 3.14159265359;
 
-// for calculating specular
+/* for calculating specular */
 uniform vec3 cameraPosition;
 
 /*********** Material Configuration **************/
@@ -29,17 +30,18 @@ uniform struct Material {
         bool roughness;
         bool emissive;
         bool normal;
+        bool ao;
     } map_using_status;
 } m;
 
 
-/*************************************************/
+/**********************IBL*************************/
+uniform struct IBL {
+    samplerCube irradiance;
+    samplerCube prefilter;
+    sampler2D   brdfLUT;
+} ibl;
 
-
-// IBL
-uniform samplerCube irradiance_map;
-uniform samplerCube prefilter_map;
-uniform sampler2D   brdfLUT_map;
 
 /************* Lights Configuration **************/
 const int DIRECTIONAL = 0, POINT = 1, SPOT = 2;
@@ -54,7 +56,8 @@ uniform struct Lights {
     int ltype;
 } lights[MAX_LIGHT];
 uniform int light_cnt = 0;
-/*************************************************/
+
+/************************************************/
 
 
 vec3 fresnelSchlick(float cosTheta, vec3 F0);
@@ -65,30 +68,19 @@ float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness);
 vec3 getNormalFromMap();
 
 void main() {
-    vec3 albedo, normal;
-    float metallic, roughness, ao;
+    vec3 albedo = m.map_using_status.albedo?
+        texture(m.albedo.map, TexCoords).rgb : m.albedo.value;
 
-    if (m.map_using_status.albedo) {
-        albedo = texture(m.albedo.map, TexCoords).rgb;
-    } else {
-        albedo = m.albedo.value;
-    }
-    if (m.map_using_status.metallic) {
-        metallic = texture(m.metallic.map, TexCoords).r;
-    } else {
-        metallic = m.metallic.value;
-    }
-    if (m.map_using_status.roughness) {
-        roughness = texture(m.roughness.map, TexCoords).r;
-    } else {
-        roughness = m.roughness.value;
-    }
-    if (m.map_using_status.normal) {
-        normal = getNormalFromMap();
-    } else {
-        normal = Normal;
-    }
+    float metallic = m.map_using_status.metallic?
+        texture(m.metallic.map, TexCoords).r : m.metallic.value;
 
+    float roughness = m.map_using_status.roughness?
+        texture(m.roughness.map, TexCoords).r : m.roughness.value;
+
+    vec3 normal = m.map_using_status.normal?
+        getNormalFromMap() : Normal;
+
+    float ao = 1.0f;
 
     vec3 N = normalize(normal);
     vec3 V = normalize(cameraPosition - WorldPos);
@@ -129,14 +121,14 @@ void main() {
     vec3 kD = 1.0 - kS;
     kD *= 1.0 - metallic;
 
-    vec3 irradiance = texture(irradiance_map, N).rgb;
+    vec3 irradiance = texture(ibl.irradiance, N).rgb;
     vec3 diffuse    = irradiance * albedo;
 
     // get IBL specular part
     const float MAX_REFLECTION_LOD = 4.0;
     vec3 prefilterdColor
-            = textureLod(prefilter_map, R, roughness*MAX_REFLECTION_LOD).rgb;
-    vec2 brdf = texture(brdfLUT_map,
+            = textureLod(ibl.prefilter, R, roughness*MAX_REFLECTION_LOD).rgb;
+    vec2 brdf = texture(ibl.brdfLUT,
                         vec2( max(dot(N, V), 0.0), roughness )).rg;
     vec3 specular = prefilterdColor * (F * brdf.x + brdf.y);
 
@@ -149,6 +141,10 @@ void main() {
 
     FragColor = vec4(color, 1.0);
 }
+
+
+
+
 
 
 vec3 fresnelSchlick(float cosTheta, vec3 F0) {

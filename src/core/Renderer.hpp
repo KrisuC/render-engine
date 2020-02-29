@@ -7,32 +7,23 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <type_traits>
 
 #include "GameObject.hpp"
+#include "IO.hpp"
 
 
 /*
- * Renderer encapsulates OpenGL loader things, OpenGL API and window asset
+ * Renderer encapsulates OpenGL loader, OpenGL API and main window
  * It's a middle layer between OpenGL API and the Render core, i.e., a
  * platform-independent layer
  *
- * Usage:
- * 1. Render a whole scene
- *
- * Renderer renderer;
- * Scene scene;
- *
- * preparing scene...
- *
- * while (!Renderer.End()) {
- *      Renderer.draw(scene);
- * }
- *
+ * Each Renderer is a window.
  */
 
 class Scene;
 
-class GUIManager;
+class GUI;
 
 class Renderer {
 public:
@@ -62,7 +53,7 @@ private:
 private:
     GLFWwindow *window = nullptr;
 
-    friend class GUIManager;
+    friend class GUI;
 };
 
 

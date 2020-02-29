@@ -13,6 +13,8 @@
 #include <glm/glm.hpp>
 #include "Texture.hpp"
 #include "Shader.hpp"
+#include "IBL.hpp"
+
 
 // Hold and manage all the texture, responsible for binding texture to shader
 // All suppord
@@ -39,12 +41,14 @@ public:
     inline void SetSpecular(Texture *s);
     inline void SetHeight(Texture *h);
 
-    inline void AppendTexture(const std::string &name, Texture *t);
+    inline void AppendTexture(const std::string &name, Texture const*t);
 
     void SetShader(Shader *ns);
     inline Shader& GetShader() { return *shader; }
 
 private:
+    void SetIBLTextures(IBL const& ibl);
+
     void UpdateShaderUniform();
 
     friend class Scene;
@@ -70,11 +74,12 @@ private:
         bool roughness = false;
         bool emissive = false;
         bool normal = false;
+        bool ao;
     } map_using_status;
     // Append some extra shader specific texture
     struct ExtraTexture {
         std::string name;
-        Texture *texture;
+        Texture const *texture;
     };
     std::vector<ExtraTexture> extra_textures;
     int current_used_texture_units = 0;
@@ -87,7 +92,7 @@ private:
 
 
 // ----------------------Inline functions----------------------------
-void Material::AppendTexture(const std::string &name, Texture *t) {
+void Material::AppendTexture(const std::string &name, Texture const *t) {
     extra_textures.push_back({name, t});
 }
 
@@ -112,9 +117,9 @@ void Material::SetEmissive(float e)    { map_using_status.emissive = false; emis
 
 void Material::SetNormal(Texture *n) { map_using_status.normal = true ; normal = n; }
 
-void Material::SetAO(Texture *a)     { ao = a; }
+void Material::SetAO(Texture *a)     { ao = a; map_using_status.ao = true; }
 
-void Material::SetSpecular(Texture *s) { specular = s; }
+void Material::SetSpecular(Texture *s) { specular = s; map_using_status.specular = true; }
 
 void Material::SetHeight(Texture *h)   { height = h; }
 

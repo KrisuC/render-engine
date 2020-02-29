@@ -7,7 +7,7 @@
 GLFWwindow *io::current_glfw_window = nullptr;
 
 bool io::KeyPress(Key k) {
-    return glfwGetKey(current_glfw_window, k) == GLFW_PRESS;
+    return glfwGetKey(current_glfw_window, static_cast<int>(k)) == GLFW_PRESS;
 }
 
 std::pair<double, double> io::MousePosition() {

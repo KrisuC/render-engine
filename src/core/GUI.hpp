@@ -2,8 +2,8 @@
 // Created by Krisu on 2020-02-06.
 //
 
-#ifndef RENDER_ENGINE_GUIMANAGER_HPP
-#define RENDER_ENGINE_GUIMANAGER_HPP
+#ifndef RENDER_ENGINE_GUI_HPP
+#define RENDER_ENGINE_GUI_HPP
 
 
 #include <imgui.h>
@@ -12,14 +12,14 @@
 
 /*
  * Handling GUI things.
- * GUIManager is using imgui, while window is using glfw in implementation
+ * GUI is using imgui, while window is using glfw in implementation
  */
 
 #include "Renderer.hpp"
 
-class GUIManager {
+class GUI {
 public:
-    explicit GUIManager(const Renderer &renderer) : renderer(renderer) {
+    explicit GUI(const Renderer &renderer) : renderer(renderer) {
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
         ImGuiIO &io = ImGui::GetIO();
@@ -30,7 +30,7 @@ public:
         ImGui_ImplOpenGL3_Init("#version 330");
     }
 
-    ~GUIManager() {
+    ~GUI() {
         ImGui_ImplOpenGL3_Shutdown();
         ImGui_ImplGlfw_Shutdown();
         ImGui::DestroyContext();
@@ -52,4 +52,4 @@ private:
     const Renderer &renderer;
 };
 
-#endif //RENDER_ENGINE_GUIMANAGER_HPP
+#endif //RENDER_ENGINE_GUI_HPP

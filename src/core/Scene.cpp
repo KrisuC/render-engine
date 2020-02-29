@@ -12,11 +12,13 @@ void Scene::SetSkybox(Skybox *sb) {
 }
 
 void Scene::Build() {
+    IBL const& ibl = skybox->GetIBL();
     for (auto& gobj : gameObjects) {
         try {
             auto& material = gobj.GetComponent<Material>();
             auto& shader = material.GetShader();
 
+            material.SetIBLTextures(ibl);
             material.UpdateShaderUniform();
             for (const auto& light : lights) {
                 shader.SetLight(light);

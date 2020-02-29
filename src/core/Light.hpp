@@ -32,7 +32,11 @@
  *
  */
 
-enum LightType { Directional = 0, Point = 1, Spot = 2 };
+enum class LightType {
+    Directional = 0,
+    Point = 1,
+    Spot = 2
+};
 
 class Light {
     using vec3 = glm::vec3;
