@@ -34,12 +34,12 @@ public:
 
 class Mesh {
 public:
-    Mesh() = default;
+    Mesh();
     Mesh(std::vector<Vertex> vertices,
          std::vector<unsigned int> indices,
          unsigned int mesh_type=GL_TRIANGLES);
 
-    void Render() const;
+    void Draw() const;
 
 public:
     unsigned int VAO = 0, VBO = 0, EBO = 0;
@@ -52,6 +52,8 @@ private:
 
     unsigned int mesh_type;
 };
+
+
 
 // Rendering some fixed size primitive
 namespace SimpleMesh {

@@ -52,9 +52,4 @@ private:
     const Renderer &renderer;
 };
 
-void Renderer::processKeyboard() {
-    
-}
-
-
 #endif //RENDER_ENGINE_GUIMANAGER_HPP

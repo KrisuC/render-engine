@@ -9,7 +9,6 @@
 #include <GLFW/glfw3.h>
 
 #include "GameObject.hpp"
-#include "Scene.hpp"
 
 
 /*
@@ -31,6 +30,8 @@
  *
  */
 
+class Scene;
+
 class GUIManager;
 
 class Renderer {
@@ -44,16 +45,15 @@ public:
 
     bool End();
 
-    void Render(Scene const& scene);
+    void RenderScene(Scene& scene);
 
-    void Render(GameObject const& gameObject) {
-
-    }
+    void Render(GameObject& gameObject);
 
     void InitializeOpenGL();
 
+    std::pair<int, int> GetWindowSize() const;
+
 private:
-    void processKeyboard();
 
     void beforeRenderPass();
 

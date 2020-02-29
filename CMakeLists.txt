@@ -3,7 +3,7 @@
 cmake_minimum_required(VERSION 3.14)
 project(render-engine)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
 file(GLOB engine_src
         "src/basic/*.cpp"
@@ -18,6 +18,8 @@ target_include_directories(engine PRIVATE
         ${PROJECT_SOURCE_DIR}/src/core
         ${PROJECT_SOURCE_DIR}/src/components
         )
+
+add_compile_definitions(ENGINE_DEBUG)
 
 #------------------------------------------------------------------------------#
 # Below is the settings for 3rd party libraries

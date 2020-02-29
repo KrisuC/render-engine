@@ -9,6 +9,8 @@
 #include <sstream>
 #include <iostream>
 
+#include "Debug.hpp"
+
 Shader::Shader(const char *vertexPath,
                const char *fragmentPath,
                const char *geometryPath) {
@@ -96,6 +98,7 @@ Shader::Shader(const char *vertexPath,
     glDeleteShader(fragment);
     if (geometryPath != nullptr)
         glDeleteShader(geometry);
+    DEBUG_LOG("Creaing Shader:", vertexPath, fragmentPath);
 }
 
 void Shader::UseShaderProgram() {
@@ -185,7 +188,9 @@ Shader::checkCompileErrors(GLuint shader, const std::string& type, std::string p
 Shader::Shader() : Shader(
         "shader/default.vert",
         "shader/default.frag",
-        nullptr) {}
+        nullptr) {
+
+}
 
 void Shader::SetLight(Light const& light) {
     static int light_cnt = 0;
@@ -209,12 +214,26 @@ Shader &Shader::TestShader() {
     return test;
 }
 
-void Shader::SetTransform(Transform const &transform) {
+void Shader::SetModelTransform(Transform const &transform) {
     this->Set("model", transform.synthesis);
 }
 
 void Shader::SetProjectionView(glm::mat4 projection, glm::mat4 view) {
     this->Set("projection", projection);
     this->Set("view", view);
+}
+
+void Shader::processShaderFile(char const *filePath, ShaderType shaderType) {
+    std::ifstream file;
+    file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+    try {
+        file.open(filePath);
+        std::stringstream shaderss;
+        shaderss << file.rdbuf();
+        file.close();
+        std::string code = shaderss.str();
+    } catch(std::ifstream::failure& e) {
+        // TODO
+    }
 }
 

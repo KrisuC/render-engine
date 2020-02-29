@@ -19,7 +19,7 @@
 
 class Material {
 public:
-    Material() = default;
+    Material();
 
     inline void SetAlbedo(Texture *a);
     inline void SetAlbedo(glm::vec3 a);
@@ -42,9 +42,12 @@ public:
     inline void AppendTexture(const std::string &name, Texture *t);
 
     void SetShader(Shader *ns);
-    void UpdateShader();
     inline Shader& GetShader() { return *shader; }
 
+private:
+    void UpdateShaderUniform();
+
+    friend class Scene;
 
 private:
     /* Shader responsible for rendering this Material */

@@ -138,12 +138,21 @@ enum Key {
     last = GLFW_KEY_LAST,
 };
 
-namespace io {
-    extern GLFWwindow *_current_glfw_window_;
+class io {
+public:
+    io() = delete;
 
-    bool KeyPress(Key k);
+    static bool KeyPress(Key k);
 
-    std::pair<double, double> MousePosition();
+    static std::pair<double, double> MousePosition();
+
+private:
+    static void setCurrentWindow(GLFWwindow *window);
+
+private:
+    static GLFWwindow *current_glfw_window;
+
+    friend class Renderer;
 };
 
 

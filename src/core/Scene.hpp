@@ -11,6 +11,7 @@
 #include "Camera.hpp"
 #include "Light.hpp"
 #include "Material.hpp"
+#include "Renderer.hpp"
 
 /*
  * Scene holds all Renderables, Lights and some other asset in the scene
@@ -51,15 +52,11 @@ public:
     /* Setting Shader component due to scene configuration */
     void Build();
 
+private:
     /* Scene update per render pass
-     * Mainly for
-     *
+     * Mainly for Transform
      */
-    void Update() {
-        for (auto& gobj : gameObjects) {
-
-        }
-    }
+    void Update(Renderer const& renderer);
 
 private:
     std::vector<GameObject> gameObjects;
@@ -67,7 +64,7 @@ private:
     Skybox *skybox = nullptr;
     Camera *camera = new Camera{};
 
-    friend Renderer;
+    friend class Renderer;
 };
 
 

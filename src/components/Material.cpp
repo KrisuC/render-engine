@@ -3,8 +3,13 @@
 //
 
 #include "Material.hpp"
+#include "Debug.hpp"
 
-void Material::UpdateShader() {
+Material::Material() {
+    DEBUG_LOG("Creating Material...");
+}
+
+void Material::UpdateShaderUniform() {
     current_used_texture_units = 1;
 
     auto bind_texture = [&]

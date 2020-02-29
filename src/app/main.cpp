@@ -2,13 +2,13 @@
 #include <sstream>
 #include <iostream>
 
-
 #include "Scene.hpp"
 #include "Renderer.hpp"
 #include "Engine.hpp"
 #include "Mesh.hpp"
 #include "Transform.hpp"
 #include "Material.hpp"
+#include "Debug.hpp"
 #include "IO.hpp"
 
 int main(int argc, char *argv[]) {
@@ -21,8 +21,11 @@ int main(int argc, char *argv[]) {
 
     GameObject object;
     object.CreateComponent<Mesh>(SimpleMesh::Sphere());
+
     auto& material = object.CreateComponent<Material>();
-    material.SetShader(&Shader::TestShader());
+    material.SetAlbedo(1, 0, 0);
+    material.SetMetallic(1.0);
+    material.SetRoughness(0.2);
     auto& transform = object.CreateComponent<Transform>();
     transform.Translate(0, 0, -10);
 
@@ -33,13 +36,7 @@ int main(int argc, char *argv[]) {
 
     Renderer *renderer = engine->GetRenderer();
     while (!renderer->End()) {
-        scene->Update();
-        if (io::KeyPress(Key::w)) {
-            std::cout << "pressing w!!!!\n";
-        }
-        auto mp = io::MousePosition();
-        std::cout << mp.first << " " << mp.second << std::endl;
-        renderer->Render(*scene);
+        renderer->RenderScene(*scene);
     }
 
 

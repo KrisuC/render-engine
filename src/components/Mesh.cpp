@@ -4,15 +4,19 @@
 
 #include <utility>
 #include "Mesh.hpp"
+#include "Debug.hpp"
+
+Mesh::Mesh() : Mesh({}, {}, GL_TRIANGLES) {}
 
 Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices,
            unsigned int mesh_type) :
             vertices(std::move(vertices)), indices(std::move(indices)),
             mesh_type(mesh_type) {
     setupMesh();
+    DEBUG_LOG("Creating Mesh with", this->vertices.size(), "vertices...");
 }
 
-void Mesh::Render() const {
+void Mesh::Draw() const {
     // Render mesh
     glBindVertexArray(VAO);
     glDrawElements(mesh_type, (int)indices.size(), GL_UNSIGNED_INT, 0);
@@ -173,16 +177,16 @@ namespace SimpleMesh {
 
     void renderCube() {
         static auto s = Sphere();
-        s.Render();
+        s.Draw();
     }
 
     void renderSphere() {
         static auto c = Cube();
-        c.Render();
+        c.Draw();
     }
 
     void renderQuad() {
         static auto q = Quad();
-        q.Render();
+        q.Draw();
     }
 }

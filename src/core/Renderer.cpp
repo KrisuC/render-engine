@@ -2,8 +2,13 @@
 // Created by Krisu on 2019-12-29.
 //
 
+#include <iostream>
+
 #include "Renderer.hpp"
 #include "IO.hpp"
+#include "GameObject.hpp"
+#include "Scene.hpp"
+#include "Mesh.hpp"
 
 namespace {
     void ErrorCallBack(int error, const char* description) {
@@ -39,7 +44,7 @@ void Renderer::InitializeOpenGL() {
         exit(-1);
     }
     glfwMakeContextCurrent(window);
-    io::_current_glfw_window_ = window;
+    io::setCurrentWindow(window);
 
     if (gladLoadGL() == 0) {
         std::cerr << "GLAD failed to init\n";
@@ -86,14 +91,32 @@ void Renderer::beforeRenderPass() {
 
 void Renderer::afterRenderPass() {
     glfwSwapBuffers(window);
-    processKeyboard();
 }
 
-void Renderer::Render(const Scene &scene) {
-    for (const auto& gobj : scene.gameObjects) {
-        Render(gobj);
+void Renderer::RenderScene(Scene& scene) {
+    scene.Update(*this);
+    for (auto& gobj : scene.gameObjects) {
+        this->Render(gobj);
     }
 }
+
+std::pair<int, int> Renderer::GetWindowSize() const {
+    std::pair<int, int> size;
+    glfwGetWindowSize(window, &size.first, &size.second);
+    return size;
+}
+
+void Renderer::Render(GameObject& gameObject) {
+    try {
+        auto& mesh = gameObject.GetComponent<Mesh>();
+        auto& material = gameObject.GetComponent<Material>();
+        material.GetShader().UseShaderProgram();
+        mesh.Draw();
+    } catch(no_component&) {
+        return ;
+    }
+}
+
 
 
 

@@ -14,15 +14,21 @@
 //       FragmentShader closely related with Material to Set visual effect
 //       Shader organize VertexShader and FragmentShader
 
+enum ShaderType {
+    VertexShader = GL_VERTEX_SHADER,
+    FragmentShader = GL_FRAGMENT_SHADER,
+    GeometryShader = GL_GEOMETRY_SHADER
+};
+
 class Shader {
 public:
-    static Shader& DefaultShader();
-    static Shader& TestShader();
-
     Shader(const GLchar *vertexPath,
            const GLchar *fragmentPath,
            const GLchar *geometryPath = nullptr);
     Shader();
+
+    static Shader& DefaultShader();
+    static Shader& TestShader();
 
     // "Activate" the shader
     void UseShaderProgram();
@@ -44,8 +50,11 @@ public:
 
     // Specific Uniform Settings
     void SetLight(Light const& light);
-    void SetTransform(Transform const& transform);
+    void SetModelTransform(Transform const& transform);
     void SetProjectionView(glm::mat4 projection, glm::mat4 view);
+
+private:
+    void processShaderFile(char const* filePath, ShaderType shaderType);
 
 private:
     // The shader program id
