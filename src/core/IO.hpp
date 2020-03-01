@@ -138,13 +138,23 @@ enum class Key {
     last = GLFW_KEY_LAST,
 };
 
+enum class MouseButton {
+    left = GLFW_MOUSE_BUTTON_LEFT,
+    right = GLFW_MOUSE_BUTTON_RIGHT,
+    middle = GLFW_MOUSE_BUTTON_MIDDLE
+};
+
+using MousePos = glm::vec2;
+
 class io {
 public:
     io() = delete;
 
     static bool KeyPress(Key k);
 
-    static std::pair<double, double> MousePosition();
+    static bool MouseButtonClick(MouseButton m);
+
+    static MousePos GetMousePosition();
 
 private:
     static void setCurrentWindow(GLFWwindow *window);

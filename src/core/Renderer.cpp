@@ -71,7 +71,7 @@ Renderer::~Renderer() {
     glfwTerminate();
 }
 
-bool Renderer::End() {
+bool Renderer::ShouldEnd() {
     static bool firstRun = true;
     if (!firstRun) {
         afterRenderPass();
@@ -114,6 +114,18 @@ void Renderer::Render(GameObject& gameObject) {
     } catch(no_component&) {
         return ;
     }
+}
+
+double Renderer::GetDeltaTime() const {
+    static double last_frame;
+    auto this_frame = glfwGetTime();
+    auto offset = this_frame - last_frame;
+    last_frame = this_frame;
+    return offset;
+}
+
+void Renderer::Close() {
+    glfwSetWindowShouldClose(window, true);
 }
 
 

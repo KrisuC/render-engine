@@ -37,19 +37,19 @@ public:
 
     void SetMSAA(int samples);
 
-    bool End();
+    bool ShouldEnd();
 
     void RenderScene(Scene& scene);
 
     void Render(GameObject& gameObject);
 
-    double GetDeltaTime() const {
-
-    }
+    double GetDeltaTime() const;
 
     void InitializeOpenGL();
 
     std::pair<int, int> GetWindowSize() const;
+
+    void Close();
 
 private:
 
@@ -59,8 +59,6 @@ private:
 
 private:
     GLFWwindow *window = nullptr;
-
-    double lastFrame = glfwGetTime();
 
     friend class GUI;
 };

@@ -10,13 +10,17 @@ bool io::KeyPress(Key k) {
     return glfwGetKey(current_glfw_window, static_cast<int>(k)) == GLFW_PRESS;
 }
 
-std::pair<double, double> io::MousePosition() {
+MousePos io::GetMousePosition() {
     double xpos, ypos;
     glfwGetCursorPos(current_glfw_window, &xpos, &ypos);
-    return std::make_pair(xpos, ypos);
+    return {xpos, ypos};
 }
 
 void io::setCurrentWindow(GLFWwindow *window) {
     current_glfw_window = window;
+}
+
+bool io::MouseButtonClick(MouseButton m) {
+    return glfwGetMouseButton(current_glfw_window,  static_cast<int>(m));
 }
 

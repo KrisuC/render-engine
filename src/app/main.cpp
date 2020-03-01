@@ -12,12 +12,30 @@
 #include "IO.hpp"
 
 void processInput(Camera& camera) {
+    float speed = 20.0 * Engine::GetEngine().GetRenderer().GetDeltaTime();
     if (io::KeyPress(Key::w)) {
         camera.Translate(camera.Front() *  speed);
     }
     if (io::KeyPress(Key::s)) {
         camera.Translate(camera.Front() * -speed);
     }
+    if (io::KeyPress(Key::a)) {
+        camera.Translate(camera.Right() * -speed);
+    }
+    if (io::KeyPress(Key::d)) {
+        camera.Translate(camera.Right() * speed);
+    }
+    if (io::KeyPress(Key::escape)) {
+        Engine::GetEngine().GetRenderer().Close();
+    }
+
+    MousePos current = io::GetMousePosition();
+    static MousePos last = current;
+    if (io::MouseButtonClick(MouseButton::right)) {
+        MousePos offset = current - last;
+        camera.ProcessMouseMovement(offset.x, offset.y);
+    }
+    last = current;
 
 }
 
@@ -45,7 +63,7 @@ int main(int argc, char *argv[]) {
     scene.Build();
 
     Renderer& renderer = engine.GetRenderer();
-    while (!renderer.End()) {
+    while (!renderer.ShouldEnd()) {
         processInput(scene.GetCamera());
         renderer.RenderScene(scene);
     }

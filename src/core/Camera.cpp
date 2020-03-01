@@ -27,7 +27,7 @@ void Camera::ProcessMouseMovement(float xoffset, float yoffset,
     yoffset *= mouseSensitivity;
 
     yaw   += xoffset;
-    pitch += yoffset;
+    pitch -= yoffset;
 
     // Make sure that when pitch is out of bounds, screen doesn't get flipped
     if (constrainPitch) {
@@ -40,7 +40,6 @@ void Camera::ProcessMouseMovement(float xoffset, float yoffset,
 
 void Camera::updateCameraVectors() {
     // Calculate the new Front vector
-    glm::vec3 front;
     front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
     front.y = sin(glm::radians(pitch));
     front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
