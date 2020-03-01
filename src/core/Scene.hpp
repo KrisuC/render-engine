@@ -43,7 +43,13 @@ class Scene {
 public:
     Scene() = default;
 
-    void AddGameObject(GameObject&& gameObject);
+    Scene(Scene const&) = delete;
+    Scene& operator=(Scene const&) = delete;
+
+    Scene(Scene &&) = default;
+    Scene& operator=(Scene &&) = default;
+
+    GameObject& CreateGameObject();
 
     void AddLight(const Light &light);
 
@@ -51,6 +57,8 @@ public:
 
     /* Setting Shader component due to scene configuration */
     void Build();
+
+    Camera& GetCamera() { return camera; }
 
 private:
     /* Scene update per render pass. Mainly for Transform */
@@ -60,7 +68,7 @@ private:
     std::vector<GameObject> gameObjects;
     std::vector<Light> lights;
     Skybox *skybox = nullptr;
-    Camera *camera = new Camera{};
+    Camera camera {};
 
     friend class Renderer;
 };

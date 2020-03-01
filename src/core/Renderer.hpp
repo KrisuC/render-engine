@@ -30,6 +30,9 @@ public:
     Renderer();
     ~Renderer();
 
+    Renderer(Renderer const&) = delete;
+    Renderer& operator=(Renderer const&) = delete;
+
     void SetVsync(bool on);
 
     void SetMSAA(int samples);
@@ -39,6 +42,10 @@ public:
     void RenderScene(Scene& scene);
 
     void Render(GameObject& gameObject);
+
+    double GetDeltaTime() const {
+
+    }
 
     void InitializeOpenGL();
 
@@ -52,6 +59,8 @@ private:
 
 private:
     GLFWwindow *window = nullptr;
+
+    double lastFrame = glfwGetTime();
 
     friend class GUI;
 };

@@ -18,22 +18,22 @@
 
 class Engine {
 public:
-    static Engine* GetEngine();
+    static Engine& GetEngine();
 
     Engine(Engine const& e) = delete;
     Engine& operator=(Engine const& e) = delete;
 
-    ~Engine();
+    ~Engine() = default;
 
-    Scene* CreateScene();
-    Renderer* GetRenderer();
+    Scene& CreateScene();
+    Renderer& GetRenderer();
 
 private:
     Engine();
 
 public:
-    std::vector<Scene*> scenes;
-    Renderer* renderer;
+    std::vector<Scene> scenes;
+    Renderer renderer;
 };
 
 

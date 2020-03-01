@@ -11,31 +11,20 @@
 
 #include "Engine.hpp"
 
-
-
-Engine::~Engine() {
-    for (auto ps : scenes) {
-        delete ps;
-    }
-    delete renderer;
+Scene& Engine::CreateScene() {
+    scenes.emplace_back();
+    return scenes.back();
 }
 
-Scene *Engine::CreateScene() {
-    auto scene = new Scene;
-    scenes.push_back(scene);
-    return scene;
-}
-
-Renderer *Engine::GetRenderer() {
+Renderer& Engine::GetRenderer() {
     return renderer;
 }
 
 Engine::Engine() {
     chdir("..");
-    renderer = new Renderer;
 }
 
-Engine *Engine::GetEngine() {
-    static auto *engine = new Engine();
+Engine& Engine::GetEngine() {
+    static Engine engine;
     return engine;
 }

@@ -26,6 +26,7 @@ public:
 
     GameObject(GameObject const&) = delete;
     GameObject& operator=(GameObject const&) = delete;
+
     GameObject(GameObject &&) = default;
     GameObject& operator=(GameObject &&) = default;
 

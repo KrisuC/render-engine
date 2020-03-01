@@ -11,15 +11,25 @@
 #include "Debug.hpp"
 #include "IO.hpp"
 
+void processInput(Camera& camera) {
+    if (io::KeyPress(Key::w)) {
+        camera.Translate(camera.Front() *  speed);
+    }
+    if (io::KeyPress(Key::s)) {
+        camera.Translate(camera.Front() * -speed);
+    }
+
+}
+
 int main(int argc, char *argv[]) {
     /* Game code begins here */
-    Engine *engine = Engine::GetEngine();
+    Engine& engine = Engine::GetEngine();
 
-    Scene *scene = engine->CreateScene();
-    scene->AddLight(PointLight({2, 2, 2},
+    Scene& scene = engine.CreateScene();
+    scene.AddLight(PointLight({2, 2, 2},
                                {1, 1, 1}));
 
-    GameObject object;
+    GameObject& object = scene.CreateGameObject();
     object.CreateComponent<Mesh>(SimpleMesh::Sphere());
 
     auto& material = object.CreateComponent<Material>();
@@ -31,14 +41,13 @@ int main(int argc, char *argv[]) {
     auto& transform = object.CreateComponent<Transform>();
     transform.Translate(0, 0, -10);
 
-    scene->AddGameObject(std::move(object));
+    scene.SetSkybox(new Skybox);
+    scene.Build();
 
-    scene->SetSkybox(new Skybox);
-    scene->Build();
-
-    Renderer *renderer = engine->GetRenderer();
-    while (!renderer->End()) {
-        renderer->RenderScene(*scene);
+    Renderer& renderer = engine.GetRenderer();
+    while (!renderer.End()) {
+        processInput(scene.GetCamera());
+        renderer.RenderScene(scene);
     }
 
 

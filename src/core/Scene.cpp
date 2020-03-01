@@ -29,10 +29,6 @@ void Scene::Build() {
     }
 }
 
-void Scene::AddGameObject(GameObject &&gameObject) {
-    gameObjects.push_back(std::move(gameObject));
-}
-
 void Scene::AddLight(const Light &light) {
     lights.push_back(light);
 }
@@ -40,9 +36,9 @@ void Scene::AddLight(const Light &light) {
 void Scene::Update(Renderer const &renderer) {
     auto [w, h] = renderer.GetWindowSize();
     auto projection_mat = glm::perspective(
-            glm::radians(camera->Zoom),
+            glm::radians(camera.GetFovy()),
             static_cast<float>(w)/h, 0.1f, 100.0f);
-    auto view_mat = camera->GetViewMatrix();
+    auto view_mat = camera.GetViewMatrix();
 
     for (auto& gobj : gameObjects) {
         /* Update Transform to Shader if GameObject has one */
@@ -56,4 +52,9 @@ void Scene::Update(Renderer const &renderer) {
             continue;
         }
     }
+}
+
+GameObject &Scene::CreateGameObject() {
+    gameObjects.emplace_back();
+    return gameObjects.back();
 }
