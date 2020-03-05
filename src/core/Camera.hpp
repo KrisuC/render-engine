@@ -35,6 +35,7 @@ public:
     inline glm::vec3 Front() const { return front; }
     inline glm::vec3 Up() const { return up; }
     inline glm::vec3 Right() const { return right; }
+    inline glm::vec3 Position() const { return position; }
 
     void Translate(glm::vec3 const& direction);
 

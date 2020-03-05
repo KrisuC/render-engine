@@ -9,7 +9,7 @@ in vec3 Normal;
 
 const float PI = 3.14159265359;
 
-/* for calculating specular */
+/*********** for calculating V *******************/
 uniform vec3 cameraPosition;
 
 /*********** Material Configuration **************/
@@ -93,7 +93,7 @@ void main() {
     for (int i = 0; i < light_cnt; i++) {
         // Per-light raiance
         vec3 L = normalize(lights[i].position - WorldPos);
-        vec3 H = normalize(V + L); // half-way
+        vec3 H = normalize(V + L); // half-way vector
         float dist = length(lights[i].position - WorldPos);
         float attenuation = 1.0 / (dist * dist);
         vec3 radiance = lights[i].color * attenuation;
@@ -121,6 +121,7 @@ void main() {
     vec3 kD = 1.0 - kS;
     kD *= 1.0 - metallic;
 
+    // Sample irradiance map
     vec3 irradiance = texture(ibl.irradiance, N).rgb;
     vec3 diffuse    = irradiance * albedo;
 
@@ -141,6 +142,12 @@ void main() {
 
     FragColor = vec4(color, 1.0);
 }
+
+
+
+
+
+
 
 
 

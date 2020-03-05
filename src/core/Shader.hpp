@@ -55,6 +55,7 @@ public:
     void SetLight(Light const& light);
     void SetTransform(mat4 const& projection, mat4 const& view,
                       mat4 const& model);
+    void SetCameraPosition(vec3 cameraPosition);
 
 private:
     // TODO:

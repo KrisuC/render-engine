@@ -71,7 +71,6 @@ int main(int argc, char *argv[]) {
         processInput(scene.GetCurrentCamera());
         transform.SetRotation(0, 1, 0, glfwGetTime()*10);
         auto scalef = glfwGetTime();
-//        transform.SetScale(scalef, scalef, scalef);
         scene.Update();
 
         renderer.UpdateAfterRendering();

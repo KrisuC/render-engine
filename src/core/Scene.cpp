@@ -38,7 +38,6 @@ GameObject &Scene::CreateGameObject() {
 }
 
 void Scene::Update() {
-    auto& renderer = Engine::GetEngine().GetRenderer();
     // BEFORE
     for (GameObject & gameObject : gameObjects) {
         for (auto it : gameObject.componentsMap) {
@@ -47,6 +46,7 @@ void Scene::Update() {
         }
     }
     // RENDERING
+    auto& renderer = Engine::GetEngine().GetRenderer();
     for (GameObject & gameObject : gameObjects) {
         renderer.Render(gameObject);
     }

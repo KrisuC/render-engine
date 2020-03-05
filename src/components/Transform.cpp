@@ -20,4 +20,5 @@ void Transform::BeforeRenderPass() {
 
     shader.UseShaderProgram();
     shader.SetTransform(projection, view, model);
+    shader.SetCameraPosition(camera.Position());
 }
