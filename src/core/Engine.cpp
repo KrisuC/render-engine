@@ -29,3 +29,7 @@ Engine& Engine::GetEngine() {
     static Engine engine;
     return engine;
 }
+
+Scene &Engine::GetScene(std::vector<Scene>::size_type index) {
+    return scenes[index];
+}

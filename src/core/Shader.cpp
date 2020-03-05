@@ -214,13 +214,11 @@ Shader &Shader::TestShader() {
     return test;
 }
 
-void Shader::SetModelTransform(Transform const &transform) {
-    this->Set("model", transform.synthesis);
-}
-
-void Shader::SetProjectionView(glm::mat4 projection, glm::mat4 view) {
+void Shader::SetTransform(mat4 const& projection, mat4 const& view,
+                          mat4 const& model) {
     this->Set("projection", projection);
     this->Set("view", view);
+    this->Set("model", model);
 }
 
 void Shader::processShaderFile(char const *filePath, ShaderType shaderType) {

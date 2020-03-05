@@ -16,6 +16,14 @@ enum class ShaderType {
 };
 
 class Shader {
+    using vec3 = glm::vec3;
+    using vec2 = glm::vec2;
+    using vec4 = glm::vec4;
+    using mat2 = glm::mat2;
+    using mat3 = glm::mat3;
+    using mat4 = glm::mat4;
+    using string = std::string;
+
 public:
     Shader(const GLchar *vertexPath,
            const GLchar *fragmentPath,
@@ -29,26 +37,27 @@ public:
     void UseShaderProgram();
 
     // Uniform setting
-    void Set(const std::string &name, bool value) const;
-    void Set(const std::string &name, int value) const;
-    void Set(const std::string &name, unsigned value) const;
-    void Set(const std::string &name, float value) const;
-    void Set(const std::string &name, const glm::vec2 &value) const;
-    void Set(const std::string &name, float x, float y) const;
-    void Set(const std::string &name, const glm::vec3 &value) const;
-    void Set(const std::string &name, float x, float y, float z) const;
-    void Set(const std::string &name, const glm::vec4 &value) const;
-    void Set(const std::string &name, float x, float y, float z, float w) const;
-    void Set(const std::string &name, const glm::mat2 &mat) const;
-    void Set(const std::string &name, const glm::mat3 &mat) const;
-    void Set(const std::string &name, const glm::mat4 &mat) const;
+    void Set(const string &name, bool value) const;
+    void Set(const string &name, int value) const;
+    void Set(const string &name, unsigned value) const;
+    void Set(const string &name, float value) const;
+    void Set(const string &name, vec2 const& value) const;
+    void Set(const string &name, float x, float y) const;
+    void Set(const string &name, vec3 const& value) const;
+    void Set(const string &name, float x, float y, float z) const;
+    void Set(const string &name, vec4 const& value) const;
+    void Set(const string &name, float x, float y, float z, float w) const;
+    void Set(const string &name, mat2 const& mat) const;
+    void Set(const string &name, mat3 const& mat) const;
+    void Set(const string &name, mat4 const& mat) const;
 
     // Specific Uniform Settings
     void SetLight(Light const& light);
-    void SetModelTransform(Transform const& transform);
-    void SetProjectionView(glm::mat4 projection, glm::mat4 view);
+    void SetTransform(mat4 const& projection, mat4 const& view,
+                      mat4 const& model);
 
 private:
+    // TODO:
     void processShaderFile(char const* filePath, ShaderType shaderType);
 
 private:

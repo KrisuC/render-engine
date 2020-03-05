@@ -61,36 +61,19 @@ public:
 
     void Update() {
         auto& renderer = Engine::GetEngine().GetRenderer();
-        auto [w, h] = renderer.GetWindowSize();
-        auto projection_mat = glm::perspective(
-                glm::radians(camera.GetFovy()),
-                static_cast<float>(w)/h, 0.1f, 100.0f);
-        auto view_mat = camera.GetViewMatrix();
 
-        for (auto& gobj : gameObjects) {
-            /* Update Transform to Shader if GameObject has one */
-            try {
-                auto& transform = gobj.GetComponent<Transform>();
-                auto& shader = gobj.GetComponent<Material>().GetShader();
-
-                shader.SetModelTransform(transform);
-                shader.SetProjectionView(projection_mat, view_mat);
-            } catch (NoComponent&) {
-                continue;
-            }
-        }
         for (GameObject & gameObject : gameObjects) {
             for (auto it : gameObject.componentsMap) {
                 auto & component = it.second;
                 component->BeforeRenderPass();
             }
         }
-        for (auto& gobj : gameObjects) {
-            renderer.Render(gobj);
+        for (auto& gameObject : gameObjects) {
+            renderer.Render(gameObject);
         }
     }
 
-    Camera& GetCamera() { return camera; }
+    Camera& GetCurrentCamera() { return camera; }
 
 private:
     std::vector<GameObject> gameObjects;

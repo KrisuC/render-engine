@@ -34,7 +34,12 @@ public:
 
     template<typename T, typename... Args>
     T& CreateComponent(Args&&... args) {
+        static_assert(std::is_base_of_v<Component, T>,
+                      "T must be derived class of Component");
+
         T* p_component = new T{args...};
+        p_component->owner = this;
+
         componentsMap.insert(std::make_pair(
                 typeid(T).hash_code(), p_component));
         return *p_component;

@@ -11,10 +11,11 @@
 #include <iostream>
 #include <memory>
 #include <glm/glm.hpp>
+
 #include "Texture.hpp"
-#include "Shader.hpp"
 #include "IBL.hpp"
 #include "Component.hpp"
+#include "Shader.hpp"
 
 
 // Hold and manage all the texture, responsible for binding texture to shader

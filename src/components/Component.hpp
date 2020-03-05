@@ -22,6 +22,8 @@
  * }
  */
 
+class GameObject;
+
 class Component {
 public:
 
@@ -32,7 +34,14 @@ public:
     virtual void InRenderPass() { }
 
     virtual void AfterRenderPass() { }
+    
+    GameObject& GetGameObject() { return *owner; }
 
+private:
+    /* owner of this Component */
+    GameObject *owner = nullptr;
+    
+    friend class GameObject;
 };
 
 

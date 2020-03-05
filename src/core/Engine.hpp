@@ -18,20 +18,35 @@ class Engine {
 public:
     static Engine& GetEngine();
 
-    Engine(Engine const& e) = delete;
-    Engine& operator=(Engine const& e) = delete;
+    Engine(Engine const&) = delete;
+    Engine& operator=(Engine const&) = delete;
+
+    Engine(Engine &&) = delete;
+    Engine& operator=(Engine &&) = delete;
 
     ~Engine() = default;
 
     Scene& CreateScene();
     Renderer& GetRenderer();
 
+    Scene& GetScene(std::vector<Scene>::size_type index);
+
+    void MakeCurrentScene(Scene& scene) {
+        currentScene = &scene;
+    }
+
+    Scene& GetCurrentScene() {
+        assert(currentScene != nullptr);
+        return *currentScene;
+    };
+
 private:
     Engine();
 
-public:
+private:
     std::vector<Scene> scenes;
-    Renderer renderer;
+    Scene* currentScene = nullptr;
+    Renderer renderer{};
 };
 
 

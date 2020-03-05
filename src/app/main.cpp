@@ -51,20 +51,22 @@ int main(int argc, char *argv[]) {
     object.CreateComponent<Mesh>(SimpleMesh::Sphere());
 
     auto& material = object.CreateComponent<Material>();
-    material.SetShader(&Shader::TestShader());
+//    material.SetShader(&Shader::TestShader());
     material.SetShader(&Shader::DefaultShader());
     material.SetAlbedo(1, 0, 0);
     material.SetMetallic(1.0);
     material.SetRoughness(0.2);
     auto& transform = object.CreateComponent<Transform>();
-    transform.Translate(0, 0, -10);
+    transform.SetPosition(0, 0, -10);
 
     scene.SetSkybox(std::make_unique<Skybox>());
     scene.Build();
 
+    engine.MakeCurrentScene(scene);
+
     Renderer& renderer = engine.GetRenderer();
     while (!renderer.ShouldEnd()) {
-        processInput(scene.GetCamera());
+        processInput(scene.GetCurrentCamera());
         scene.Update();
     }
 
