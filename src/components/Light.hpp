@@ -8,6 +8,8 @@
 #include <glm/glm.hpp>
 #include <stdexcept>
 
+#include "Component.hpp"
+
 /*
  * Light is responsible for holding a specific Type of light
  * 3 types of lights are supported
@@ -29,7 +31,6 @@
  * auto position = {...};
  * auto color = {...};
  * Light plight = PointLight(position, color);
- *
  */
 
 enum class LightType {
@@ -38,7 +39,7 @@ enum class LightType {
     Spot = 2
 };
 
-class Light {
+class Light : public Component {
     using vec3 = glm::vec3;
 
 public:

@@ -7,20 +7,19 @@
 void Scene::Build() {
     IBL const& ibl = up_skybox->GetIBL();
     for (auto& up_gameObject : up_gameObjects) {
-        // Setting IBL
+        /* Check if it's renderable */
         try {
             auto& material = up_gameObject->GetComponent<Material>();
             auto& shader = material.GetShader();
 
             material.SetIBLTextures(ibl);
             material.UpdateShaderUniform();
-            for (const auto& light : lights) {
-                shader.SetLight(light);
-            }
+
         } catch (NoComponent&) {
             continue;
         }
-        // Call BeforeRenderLoop() for all components
+
+        /* Call BeforeRenderLoop() for all components */
         for (auto it : up_gameObject->componentsMap) {
             auto & component = it.second;
             component->BeforeRenderLoop();

@@ -22,6 +22,7 @@ Renderer& Engine::GetRenderer() {
 }
 
 Engine::Engine() {
+    /* Setting asset directory */
     chdir("..");
 }
 

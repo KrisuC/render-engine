@@ -46,16 +46,16 @@ int main(int argc, char *argv[]) {
     Scene& scene = engine.CreateScene();
     engine.MakeCurrentScene(scene);
 
-    scene.CreateLight(PointLight({2, 2, 2},
-                                 {1, 1, 1}));
+    scene.CreateLight(PointLight({0, 6, -6},
+                                 {100, 100, 100}));
 
     GameObject& metalSphere = scene.CreateGameObject();
     metalSphere.CreateComponent<Mesh>(SimpleMesh::Sphere());
     auto& m_sphere = metalSphere.CreateComponent<Material>(); {
         m_sphere.SetShader(&Shader::DefaultShader());
         m_sphere.SetAlbedo(1, 1, 1);
-        m_sphere.SetMetallic(0.9);
-        m_sphere.SetRoughness(0.02);
+        m_sphere.SetMetallic(0.1);
+        m_sphere.SetRoughness(0.8);
     }
     auto& tr_sphere = metalSphere.CreateComponent<Transform>(); {
         tr_sphere.SetPosition(0, 0, -10);
