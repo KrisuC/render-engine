@@ -49,11 +49,11 @@ public:
 
     void Close();
 
-private:
+public:
 
-    void beforeRenderPass();
+    void UpdateBeforeRendering();
 
-    void afterRenderPass();
+    void UpdateAfterRendering();
 
 private:
     GLFWwindow *window = nullptr;
@@ -61,6 +61,7 @@ private:
     friend class GUI;
     friend class Scene;
 };
+
 
 
 #endif //RENDER_ENGINE_RENDERER_HPP

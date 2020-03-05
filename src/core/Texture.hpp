@@ -8,6 +8,8 @@
 #include <glad/glad.h>
 #include <cassert>
 #include <string>
+#include "Debug.hpp"
+
 
 /*
  * Resouce owner of a texture

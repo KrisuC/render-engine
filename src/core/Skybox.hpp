@@ -37,8 +37,8 @@ private:
     Shader prefilterShader {"shader/cubemap.vert",
                             "shader/prefilter-map.frag"};
 
-    Shader brdfLUTShader {"shader/brdf.vert",
-                          "shader/brdf.frag"};
+    Shader brdfLUTShader {"shader/brdflut.vert",
+                          "shader/brdflut.frag"};
 
     unsigned int envCubemap = 0;
 

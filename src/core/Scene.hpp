@@ -54,10 +54,9 @@ public:
 
     void CreateLight(const Light &light);
 
-    template <typename... Args>
-    void CreateSkybox(Args... args) {
-        up_skybox = std::make_unique<Skybox>(args...);
-    }
+    template <typename... Args> void CreateSkybox(Args... args);
+
+    Skybox& GetSkybox() { return *up_skybox; }
 
     /* Setting Shader component due to scene configuration */
     void Build();
@@ -74,6 +73,15 @@ private:
 
     friend class Renderer;
 };
+
+
+
+
+template<typename... Args>
+void Scene::CreateSkybox(Args... args) {
+    up_skybox = std::make_unique<Skybox>(args...);
+}
+
 
 
 

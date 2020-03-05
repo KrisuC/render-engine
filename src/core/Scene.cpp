@@ -40,7 +40,6 @@ GameObject &Scene::CreateGameObject() {
 void Scene::Update() {
     auto& renderer = Engine::GetEngine().GetRenderer();
     // BEFORE
-    renderer.beforeRenderPass();
     for (GameObject & gameObject : gameObjects) {
         for (auto it : gameObject.componentsMap) {
             auto & component = it.second;
@@ -53,7 +52,6 @@ void Scene::Update() {
     }
     up_skybox->Render();
     // AFTER
-    renderer.afterRenderPass();
     for (GameObject & gameObject : gameObjects) {
         for (auto it : gameObject.componentsMap) {
             auto & component = it.second;

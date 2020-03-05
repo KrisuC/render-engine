@@ -65,10 +65,17 @@ int main(int argc, char *argv[]) {
 
     Renderer& renderer = engine.GetRenderer();
 
+
+
     scene.Build();
     while (!renderer.ShouldEnd()) {
+        renderer.UpdateBeforeRendering();
         processInput(scene.GetCurrentCamera());
-        scene.Update();
+
+        DEBUG_TEXTURE2D(scene.GetSkybox().GetIBL().brdfLUT);
+//        scene.Update();
+
+        renderer.UpdateAfterRendering();
     }
 
 

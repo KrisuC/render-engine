@@ -44,7 +44,7 @@ Skybox::Skybox(Texture const& skyboxTexture) : texture(skyboxTexture)  {
     glGenFramebuffers(1, &captureFBO);
     glGenRenderbuffers(1, &captureRBO);
 
-    unsigned int dim = 512;
+    unsigned int dim = 4096;
 
     glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
     glBindRenderbuffer(GL_RENDERBUFFER, captureRBO);
@@ -229,7 +229,7 @@ Skybox::Skybox(Texture const& skyboxTexture) : texture(skyboxTexture)  {
 }
 
 Skybox::Skybox() :
-Skybox(Texture("asset/texture/skybox/GrandCanyon.jpg",false) ) {}
+Skybox(Texture("asset/texture/skybox/GrandCanyon.hdr",false) ) {}
 
 
 
