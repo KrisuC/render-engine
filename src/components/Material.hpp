@@ -81,7 +81,7 @@ private:
         bool roughness = false;
         bool emissive = false;
         bool normal = false;
-        bool ao;
+        bool ao = false;
     } map_using_status;
     // Append some extra shader specific texture
     struct ExtraTexture {
@@ -89,7 +89,6 @@ private:
         Texture const *texture;
     };
     std::vector<ExtraTexture> extra_textures;
-    int current_used_texture_units = 0;
 };
 
 

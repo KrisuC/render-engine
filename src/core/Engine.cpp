@@ -13,8 +13,8 @@
 #include "Scene.hpp"
 
 Scene& Engine::CreateScene() {
-    scenes.emplace_back();
-    return scenes.back();
+    scenes.emplace_back(std::make_unique<Scene>());
+    return *scenes.back();
 }
 
 Renderer& Engine::GetRenderer() {
@@ -31,5 +31,14 @@ Engine& Engine::GetEngine() {
 }
 
 Scene &Engine::GetScene(std::vector<Scene>::size_type index) {
-    return scenes[index];
+    return *scenes[index];
+}
+
+Scene &Engine::GetCurrentScene() {
+    assert(currentScene != nullptr);
+    return *currentScene;
+}
+
+void Engine::MakeCurrentScene(Scene &scene) {
+    currentScene = &scene;
 }

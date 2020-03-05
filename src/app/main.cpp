@@ -49,17 +49,31 @@ int main(int argc, char *argv[]) {
     scene.CreateLight(PointLight({2, 2, 2},
                                  {1, 1, 1}));
 
-    GameObject& object = scene.CreateGameObject();
-    object.CreateComponent<Mesh>(SimpleMesh::Sphere());
+    GameObject& metalSphere = scene.CreateGameObject();
+    metalSphere.CreateComponent<Mesh>(SimpleMesh::Sphere());
+    auto& m_sphere = metalSphere.CreateComponent<Material>(); {
+        m_sphere.SetShader(&Shader::DefaultShader());
+        m_sphere.SetAlbedo(1, 1, 1);
+        m_sphere.SetMetallic(0.9);
+        m_sphere.SetRoughness(0.02);
+    }
+    auto& tr_sphere = metalSphere.CreateComponent<Transform>(); {
+        tr_sphere.SetPosition(0, 0, -10);
+    }
 
-    auto& material = object.CreateComponent<Material>();
-//    material.SetShader(&Shader::TestShader());
-    material.SetShader(&Shader::DefaultShader());
-    material.SetAlbedo(1, 1, 1);
-    material.SetMetallic(1.0);
-    material.SetRoughness(0.2);
-    auto& transform = object.CreateComponent<Transform>();
-    transform.SetPosition(0, 0, -10);
+    GameObject& ground = scene.CreateGameObject();
+    ground.CreateComponent<Mesh>(SimpleMesh::Quad());
+    auto& m_ground = ground.CreateComponent<Material>(); {
+        m_ground.SetShader(&Shader::TestShader());
+        m_ground.SetAlbedo(0.5, 0.5, 0.5);
+        m_ground.SetMetallic(0.1);
+        m_ground.SetRoughness(0.9);
+    }
+    auto& tr_ground = ground.CreateComponent<Transform>(); {
+        tr_ground.SetPosition(0, -2, -10);
+        tr_ground.SetRotation(1, 0, 0, 90);
+        tr_ground.SetScale(10, 10, 10);
+    }
 
     scene.CreateSkybox();
 
@@ -69,8 +83,8 @@ int main(int argc, char *argv[]) {
     while (!renderer.ShouldEnd()) {
         renderer.UpdateBeforeRendering();
         processInput(scene.GetCurrentCamera());
-        transform.SetRotation(0, 1, 0, glfwGetTime()*10);
-        auto scalef = glfwGetTime();
+
+//        tr_sphere.SetRotation(0, 1, 0, glfwGetTime() * 10);
         scene.Update();
 
         renderer.UpdateAfterRendering();

@@ -21,10 +21,6 @@
  * Each Renderer is a window.
  */
 
-class Scene;
-
-class GUI;
-
 class Renderer {
 public:
     Renderer();
@@ -49,8 +45,6 @@ public:
 
     void Close();
 
-public:
-
     void UpdateBeforeRendering();
 
     void UpdateAfterRendering();
@@ -59,7 +53,6 @@ private:
     GLFWwindow *window = nullptr;
 
     friend class GUI;
-    friend class Scene;
 };
 
 

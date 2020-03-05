@@ -69,4 +69,5 @@ private:
                                            std::string path);
 };
 
+
 #endif /* shader_hpp */

@@ -11,7 +11,7 @@ void Transform::BeforeRenderPass() {
     auto& camera = Engine::GetEngine().GetCurrentScene().GetCurrentCamera();
     auto [w, h] = Engine::GetEngine().GetRenderer().GetWindowSize();
     glm::mat4 projection = glm::perspective(glm::radians(camera.GetFovy()),
-            static_cast<float>(w)/h, 0.1f, 100.0f);
+            static_cast<float>(w)/h, 0.1f, 1000.0f);
     glm::mat4 view = camera.GetViewMatrix();
 
     glm::mat4 model = glm::translate(glm::mat4(1), this->position);

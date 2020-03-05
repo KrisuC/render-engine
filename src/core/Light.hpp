@@ -44,36 +44,15 @@ class Light {
 public:
     explicit Light(LightType lightType) : ltype(lightType) { }
 
-    inline void SetPosition(vec3 pos) {
-        // assert(ltype == LightType::Point || ltype == LightType::Spot);
-        position = pos;
-    }
+    inline void SetPosition(vec3 pos);
 
-    inline void SetDirection(vec3 dir) {
-        // assert(ltype == LightType::Directional || ltype == LightType::Spot);
-        direciton = dir;
-    }
+    inline void SetDirection(vec3 dir);
 
-    inline void SetColor(vec3 c) {
-        color = c;
-    }
+    inline void SetColor(vec3 c);
 
-    inline void SetConeAngleInRadian(float cone) {
-        // assert(ltype == LightType::Spot);
-        cone_angle_in_radian = cone;
-    }
+    inline void SetConeAngleInRadian(float cone);
 
-    inline bool IsPointLight() const {
-        return ltype == LightType::Point;
-    }
-
-    inline bool IsSpotLight() const {
-        return ltype == LightType::Spot;
-    }
-
-    inline bool IsDirectionalLight() const {
-        return ltype == LightType::Directional;
-    }
+    inline void SetCastShadows(bool cast);
 
 private:
     LightType ltype;
@@ -83,8 +62,36 @@ private:
     vec3 color {};
     float cone_angle_in_radian {};
 
+    bool castShadows = true;
+
     friend class Shader;
 };
+
+
+
+void Light::SetDirection(Light::vec3 dir) {
+    assert(ltype == LightType::Directional || ltype == LightType::Spot);
+    direciton = dir;
+}
+
+void Light::SetColor(Light::vec3 c) {
+    color = c;
+}
+
+void Light::SetPosition(Light::vec3 pos) {
+    // assert(ltype == LightType::Point || ltype == LightType::Spot);
+    position = pos;
+}
+
+void Light::SetConeAngleInRadian(float cone) {
+    assert(ltype == LightType::Spot);
+    cone_angle_in_radian = cone;
+}
+
+void Light::SetCastShadows(bool cast) {
+    castShadows = cast;
+}
+
 
 Light PointLight(glm::vec3 position, glm::vec3 color);
 

@@ -6,10 +6,10 @@
 
 void Scene::Build() {
     IBL const& ibl = up_skybox->GetIBL();
-    for (auto& gameObject : gameObjects) {
+    for (auto& up_gameObject : up_gameObjects) {
         // Setting IBL
         try {
-            auto& material = gameObject.GetComponent<Material>();
+            auto& material = up_gameObject->GetComponent<Material>();
             auto& shader = material.GetShader();
 
             material.SetIBLTextures(ibl);
@@ -21,7 +21,7 @@ void Scene::Build() {
             continue;
         }
         // Call BeforeRenderLoop() for all components
-        for (auto it : gameObject.componentsMap) {
+        for (auto it : up_gameObject->componentsMap) {
             auto & component = it.second;
             component->BeforeRenderLoop();
         }
@@ -33,27 +33,27 @@ void Scene::CreateLight(const Light &light) {
 }
 
 GameObject &Scene::CreateGameObject() {
-    gameObjects.emplace_back();
-    return gameObjects.back();
+    up_gameObjects.emplace_back(std::make_unique<GameObject>());
+    return *up_gameObjects.back();
 }
 
 void Scene::Update() {
     // BEFORE
-    for (GameObject & gameObject : gameObjects) {
-        for (auto it : gameObject.componentsMap) {
+    for (auto& up_gameObject : up_gameObjects) {
+        for (auto it : up_gameObject->componentsMap) {
             auto & component = it.second;
             component->BeforeRenderPass();
         }
     }
     // RENDERING
     auto& renderer = Engine::GetEngine().GetRenderer();
-    for (GameObject & gameObject : gameObjects) {
-        renderer.Render(gameObject);
+    for (auto& up_gameObject : up_gameObjects) {
+        renderer.Render(*up_gameObject);
     }
     up_skybox->Render();
     // AFTER
-    for (GameObject & gameObject : gameObjects) {
-        for (auto it : gameObject.componentsMap) {
+    for (auto& up_gameObject : up_gameObjects) {
+        for (auto it : up_gameObject->componentsMap) {
             auto & component = it.second;
             component->AfterRenderPass();
         }

@@ -9,10 +9,11 @@
 
 #include "Renderer.hpp"
 
-
 /*
  * Engine hold all the Scene(s) and Component(s)
  */
+
+class Scene;
 
 class Engine {
 public:
@@ -27,26 +28,22 @@ public:
     ~Engine() = default;
 
     Scene& CreateScene();
+
     Renderer& GetRenderer();
 
     Scene& GetScene(std::vector<Scene>::size_type index);
 
-    void MakeCurrentScene(Scene& scene) {
-        currentScene = &scene;
-    }
+    void MakeCurrentScene(Scene& scene);
 
-    Scene& GetCurrentScene() {
-        assert(currentScene != nullptr);
-        return *currentScene;
-    };
+    Scene& GetCurrentScene();;
 
 private:
     Engine();
 
 private:
-    std::vector<Scene> scenes;
+    std::vector<std::unique_ptr<Scene>> scenes;
     Scene* currentScene = nullptr;
-    Renderer renderer{};
+    Renderer renderer {};
 };
 
 

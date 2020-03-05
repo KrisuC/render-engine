@@ -13,6 +13,7 @@ file(GLOB engine_src
         )
 
 add_executable(engine ${engine_src})
+add_executable(test src/app/test.cpp)
 
 target_include_directories(engine PRIVATE
         ${PROJECT_SOURCE_DIR}/src/core
