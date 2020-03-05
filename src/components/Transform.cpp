@@ -18,5 +18,6 @@ void Transform::BeforeRenderPass() {
     model = glm::rotate(model, this->rotation_angle, this->rotation_axis);
     model = glm::translate(model, this->position);
 
+    shader.UseShaderProgram();
     shader.SetTransform(projection, view, model);
 }

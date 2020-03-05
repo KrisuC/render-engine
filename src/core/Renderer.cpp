@@ -72,12 +72,6 @@ Renderer::~Renderer() {
 }
 
 bool Renderer::ShouldEnd() {
-    static bool firstRun = true;
-    if (!firstRun) {
-        afterRenderPass();
-    }
-    firstRun = false;
-    beforeRenderPass();
     return glfwWindowShouldClose(window);
 }
 

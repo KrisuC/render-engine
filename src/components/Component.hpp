@@ -26,15 +26,16 @@ class GameObject;
 
 class Component {
 public:
-
+    /*  will be called before render loop for all components */
     virtual void BeforeRenderLoop() { }
 
+    /* will be called in the render loop, before each frame rendererd */
     virtual void BeforeRenderPass() { }
 
-    virtual void InRenderPass() { }
-
+    /* will be called in the render loop, after each frame rendererd */
     virtual void AfterRenderPass() { }
-    
+
+    /* get the owner of the Component */
     GameObject& GetGameObject() { return *owner; }
 
 private:

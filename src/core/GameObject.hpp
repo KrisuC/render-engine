@@ -13,11 +13,6 @@
 
 /*
  * GameObject is an entity to be rendered in the scene.
- * A GameObject is a composite of a Mesh, a Material and a Shader who will
- * be applied to the GameObject at Render pass
- *
- * Mesh, Material and Shader are NOT maintained by GameObject but by other
- * classes (maybe Scene or some user-defined Type)
  */
 
 class NoComponent : std::exception {  };

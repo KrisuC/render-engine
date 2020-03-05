@@ -11,11 +11,22 @@
 #include "Skybox.hpp"
 #include "Texture.hpp"
 #include "Mesh.hpp"
+#include "Scene.hpp"
 
 void Skybox::Render() {
-    shader.UseShaderProgram();
+    renderShader.UseShaderProgram();
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap);
+
+    auto& camera = Engine::GetEngine().GetCurrentScene().GetCurrentCamera();
+    auto [w, h] = Engine::GetEngine().GetRenderer().GetWindowSize();
+    glm::mat4 projection = glm::perspective(glm::radians(camera.GetFovy()),
+                                            static_cast<float>(w)/h, 0.1f, 100.0f);
+    glm::mat4 view = camera.GetViewMatrix();
+
+    renderShader.Set("view", view);
+    renderShader.Set("projection", projection);
+
     SimpleMesh::renderCube();
 }
 

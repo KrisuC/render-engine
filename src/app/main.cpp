@@ -44,8 +44,10 @@ int main(int argc, char *argv[]) {
     Engine& engine = Engine::GetEngine();
 
     Scene& scene = engine.CreateScene();
-    scene.AddLight(PointLight({2, 2, 2},
-                               {1, 1, 1}));
+    engine.MakeCurrentScene(scene);
+
+    scene.CreateLight(PointLight({2, 2, 2},
+                                 {1, 1, 1}));
 
     GameObject& object = scene.CreateGameObject();
     object.CreateComponent<Mesh>(SimpleMesh::Sphere());
@@ -59,12 +61,11 @@ int main(int argc, char *argv[]) {
     auto& transform = object.CreateComponent<Transform>();
     transform.SetPosition(0, 0, -10);
 
-    scene.SetSkybox(std::make_unique<Skybox>());
-    scene.Build();
-
-    engine.MakeCurrentScene(scene);
+    scene.CreateSkybox();
 
     Renderer& renderer = engine.GetRenderer();
+
+    scene.Build();
     while (!renderer.ShouldEnd()) {
         processInput(scene.GetCurrentCamera());
         scene.Update();
@@ -72,7 +73,6 @@ int main(int argc, char *argv[]) {
 
 
     /* Game code ends here */
-
 
     return 0;
 }

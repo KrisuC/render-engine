@@ -52,26 +52,17 @@ public:
 
     GameObject& CreateGameObject();
 
-    void AddLight(const Light &light);
+    void CreateLight(const Light &light);
 
-    void SetSkybox(std::unique_ptr<Skybox> up_sb);
+    template <typename... Args>
+    void CreateSkybox(Args... args) {
+        up_skybox = std::make_unique<Skybox>(args...);
+    }
 
     /* Setting Shader component due to scene configuration */
     void Build();
 
-    void Update() {
-        auto& renderer = Engine::GetEngine().GetRenderer();
-
-        for (GameObject & gameObject : gameObjects) {
-            for (auto it : gameObject.componentsMap) {
-                auto & component = it.second;
-                component->BeforeRenderPass();
-            }
-        }
-        for (auto& gameObject : gameObjects) {
-            renderer.Render(gameObject);
-        }
-    }
+    void Update();
 
     Camera& GetCurrentCamera() { return camera; }
 

@@ -35,11 +35,6 @@ public:
 
 class Mesh : public Component {
 public:
-    void InRenderPass() override {
-        Draw();
-    };
-
-public:
     Mesh();
     Mesh(std::vector<Vertex> vertices,
          std::vector<unsigned int> indices,

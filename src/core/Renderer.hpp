@@ -59,6 +59,7 @@ private:
     GLFWwindow *window = nullptr;
 
     friend class GUI;
+    friend class Scene;
 };
 
 

@@ -11,7 +11,7 @@
 #include "IBL.hpp"
 
 
-
+// TODO: rewrite skybox
 class Skybox {
 public:
     Skybox();
@@ -25,8 +25,8 @@ public:
     inline IBL const& GetIBL() { return ibl; }
 
 private:
-    Shader shader {"shader/skybox.vert",
-                   "shader/skybox.frag"};
+    Shader renderShader {"shader/skybox.vert",
+                         "shader/skybox.frag"};
 
     Shader equirectToCubemapShader {"shader/cubemap.vert",
                                     "shader/equirectangular-to-cubemap.frag"};
