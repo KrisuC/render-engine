@@ -20,7 +20,7 @@ void Scene::Build() {
         } catch (NoComponent&) {
             continue;
         }
-        // Updating all component
+        // Call BeforeRenderLoop() for all components
         for (auto it : gameObject.componentsMap) {
             auto & component = it.second;
             component->BeforeRenderLoop();

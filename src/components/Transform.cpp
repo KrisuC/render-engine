@@ -14,9 +14,9 @@ void Transform::BeforeRenderPass() {
             static_cast<float>(w)/h, 0.1f, 100.0f);
     glm::mat4 view = camera.GetViewMatrix();
 
-    glm::mat4 model = glm::scale(glm::mat4(1.0f), this->scale);
+    glm::mat4 model = glm::translate(glm::mat4(1), this->position);
     model = glm::rotate(model, this->rotation_angle, this->rotation_axis);
-    model = glm::translate(model, this->position);
+    model = glm::scale(model, this->scale);
 
     shader.UseShaderProgram();
     shader.SetTransform(projection, view, model);

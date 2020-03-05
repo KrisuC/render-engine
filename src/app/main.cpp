@@ -55,7 +55,7 @@ int main(int argc, char *argv[]) {
     auto& material = object.CreateComponent<Material>();
 //    material.SetShader(&Shader::TestShader());
     material.SetShader(&Shader::DefaultShader());
-    material.SetAlbedo(1, 0, 0);
+    material.SetAlbedo(1, 1, 1);
     material.SetMetallic(1.0);
     material.SetRoughness(0.2);
     auto& transform = object.CreateComponent<Transform>();
@@ -63,17 +63,16 @@ int main(int argc, char *argv[]) {
 
     scene.CreateSkybox();
 
-    Renderer& renderer = engine.GetRenderer();
-
-
-
     scene.Build();
+
+    Renderer& renderer = engine.GetRenderer();
     while (!renderer.ShouldEnd()) {
         renderer.UpdateBeforeRendering();
         processInput(scene.GetCurrentCamera());
-
-        DEBUG_TEXTURE2D(scene.GetSkybox().GetIBL().brdfLUT);
-//        scene.Update();
+        transform.SetRotation(0, 1, 0, glfwGetTime()*10);
+        auto scalef = glfwGetTime();
+//        transform.SetScale(scalef, scalef, scalef);
+        scene.Update();
 
         renderer.UpdateAfterRendering();
     }

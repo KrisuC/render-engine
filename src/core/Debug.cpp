@@ -9,19 +9,6 @@
 
 #ifdef ENGINE_DEBUG
 
-template <typename T>
-void DEBUG_LOG(T first) {
-    std::clog << first << std::endl;
-}
-
-template <typename T, typename...Args>
-void DEBUG_LOG(T first, Args...args) {
-    std::clog << first << " ";
-    if constexpr (sizeof...(args) > 0) {
-        DEBUG_LOG(args...);
-    }
-}
-
 void DEBUG_TEXTURE2D(const Texture &t) {
     static Shader debugShader {"shader/debug-texture.vert",
                                "shader/debug-texture.frag"};
