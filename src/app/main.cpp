@@ -59,13 +59,13 @@ int main(int argc, char *argv[]) {
     auto& transform = object.CreateComponent<Transform>();
     transform.Translate(0, 0, -10);
 
-    scene.SetSkybox(new Skybox);
+    scene.SetSkybox(std::make_unique<Skybox>());
     scene.Build();
 
     Renderer& renderer = engine.GetRenderer();
     while (!renderer.ShouldEnd()) {
         processInput(scene.GetCamera());
-        renderer.RenderScene(scene);
+        Scene.Update();
     }
 
 

@@ -24,6 +24,7 @@
 
 #include "Shader.hpp"
 #include "Texture.hpp"
+#include "Component.hpp"
 
 class Vertex {
 public:
@@ -32,7 +33,12 @@ public:
     glm::vec2 texCoords;
 };
 
-class Mesh {
+class Mesh : public Component {
+public:
+    void InRenderPass() override {
+        Draw();
+    };
+
 public:
     Mesh();
     Mesh(std::vector<Vertex> vertices,

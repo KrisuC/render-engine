@@ -4,18 +4,16 @@
 
 #include "Scene.hpp"
 
-void Scene::SetSkybox(Skybox *sb) {
-    if (!skybox) {
-        delete skybox;
-    }
-    skybox = sb;
+void Scene::SetSkybox(std::unique_ptr<Skybox> up_sb) {
+    up_skybox = std::move(up_sb);
 }
 
 void Scene::Build() {
-    IBL const& ibl = skybox->GetIBL();
-    for (auto& gobj : gameObjects) {
+    IBL const& ibl = up_skybox->GetIBL();
+    for (auto& gameObject : gameObjects) {
+        // Setting IBL
         try {
-            auto& material = gobj.GetComponent<Material>();
+            auto& material = gameObject.GetComponent<Material>();
             auto& shader = material.GetShader();
 
             material.SetIBLTextures(ibl);
@@ -23,8 +21,13 @@ void Scene::Build() {
             for (const auto& light : lights) {
                 shader.SetLight(light);
             }
-        } catch (no_component&) {
+        } catch (NoComponent&) {
             continue;
+        }
+        // Updating all component
+        for (auto it : gameObject.componentsMap) {
+            auto & component = it.second;
+            component->BeforeRenderLoop();
         }
     }
 }
@@ -48,7 +51,7 @@ void Scene::Update(Renderer const &renderer) {
 
             shader.SetModelTransform(transform);
             shader.SetProjectionView(projection_mat, view_mat);
-        } catch (no_component&) {
+        } catch (NoComponent&) {
             continue;
         }
     }

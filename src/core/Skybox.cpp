@@ -20,9 +20,9 @@ void Skybox::Render() {
 }
 
 Skybox::Skybox(Texture const& skyboxTexture) : texture(skyboxTexture)  {
-    unsigned int irradianceMap = 0;
-    unsigned int prefilterMap = 0;
-    unsigned int brdfLUTTexture = 0;
+    unsigned int irradianceMapID = 0;
+    unsigned int prefilterMapID = 0;
+    unsigned int brdfLUTTextureID = 0;
 
     // convert equirectangular to cubemap
     glEnable(GL_DEPTH_TEST);
@@ -90,8 +90,8 @@ Skybox::Skybox(Texture const& skyboxTexture) : texture(skyboxTexture)  {
     // Generating maps for IBL
     {
         // generate irradiance map
-        glGenTextures(1, &irradianceMap);
-        glBindTexture(GL_TEXTURE_CUBE_MAP, irradianceMap);
+        glGenTextures(1, &irradianceMapID);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, irradianceMapID);
         for (int i = 0; i < 6; i++) {
             glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F, 32,
                          32,
@@ -124,7 +124,7 @@ Skybox::Skybox(Texture const& skyboxTexture) : texture(skyboxTexture)  {
                 irradianceShader.Set("view", captureViews[i]);
                 glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                                        GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
-                                       irradianceMap, 0);
+                                       irradianceMapID, 0);
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
                 SimpleMesh::renderCube();
@@ -135,8 +135,8 @@ Skybox::Skybox(Texture const& skyboxTexture) : texture(skyboxTexture)  {
         //--------------------------------------------------------------------
         // generate prefilter map for skybox specular lighting
         int res_prfmap = 128;
-        glGenTextures(1, &prefilterMap);
-        glBindTexture(GL_TEXTURE_CUBE_MAP, prefilterMap);
+        glGenTextures(1, &prefilterMapID);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, prefilterMapID);
         for (int i = 0; i < 6; i++) {
             glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F,
                          res_prfmap, res_prfmap, 0, GL_RGB, GL_FLOAT, nullptr);
@@ -174,7 +174,7 @@ Skybox::Skybox(Texture const& skyboxTexture) : texture(skyboxTexture)  {
                     prefilterShader.Set("view", captureViews[i]);
                     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                                            GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
-                                           prefilterMap, mip);
+                                           prefilterMapID, mip);
 
                     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
                     SimpleMesh::renderCube();
@@ -185,9 +185,9 @@ Skybox::Skybox(Texture const& skyboxTexture) : texture(skyboxTexture)  {
 
         //--------------------------------------------------------------------
         // brdf precomte
-        glGenTextures(1, &brdfLUTTexture);
+        glGenTextures(1, &brdfLUTTextureID);
 
-        glBindTexture(GL_TEXTURE_2D, brdfLUTTexture);
+        glBindTexture(GL_TEXTURE_2D, brdfLUTTextureID);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, 512, 512, 0, GL_RG, GL_FLOAT,
                      0);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -201,7 +201,7 @@ Skybox::Skybox(Texture const& skyboxTexture) : texture(skyboxTexture)  {
             glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 512,
                                   512);
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                                   GL_TEXTURE_2D, brdfLUTTexture, 0);
+                                   GL_TEXTURE_2D, brdfLUTTextureID, 0);
 
             glViewport(0, 0, 512, 512);
             brdfLUTShader.UseShaderProgram();
@@ -210,11 +210,11 @@ Skybox::Skybox(Texture const& skyboxTexture) : texture(skyboxTexture)  {
         }
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
-    ibl = {irradianceMap, prefilterMap, brdfLUTTexture};
-}
-
-void Skybox::prepare() {
-
+    Texture irradiance(irradianceMapID, TextureType::CubeMap);
+    Texture prefilter(prefilterMapID, TextureType::CubeMap);
+    Texture brdfLUTTexture(brdfLUTTextureID, TextureType::Texture2D);
+    ibl = std::move(IBL(std::move(irradiance),
+            std::move(prefilter), std::move(brdfLUTTexture)));
 }
 
 Skybox::Skybox() :

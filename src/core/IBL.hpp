@@ -15,10 +15,12 @@
 class IBL {
 public:
     IBL() = default;
-    IBL(unsigned irradianceMap, unsigned prefilterMap, unsigned brdfLUTTexture):
-        irradiance(irradianceMap, TextureType::CubeMap),
-        prefilter(prefilterMap, TextureType::CubeMap),
-        brdfLUT(brdfLUTTexture, TextureType::Texture2D) { }
+    IBL(Texture && irradiance,
+        Texture && prefilter,
+        Texture && brdfLUT) :
+          irradiance(std::move(irradiance)),
+          prefilter(std::move(prefilter)),
+          brdfLUT(std::move(brdfLUT)) { }
 
     Texture irradiance;
     Texture prefilter;

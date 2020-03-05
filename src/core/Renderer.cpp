@@ -111,7 +111,7 @@ void Renderer::Render(GameObject& gameObject) {
         auto& material = gameObject.GetComponent<Material>();
         material.GetShader().UseShaderProgram();
         mesh.Draw();
-    } catch(no_component&) {
+    } catch(NoComponent&) {
         return ;
     }
 }

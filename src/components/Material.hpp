@@ -14,12 +14,18 @@
 #include "Texture.hpp"
 #include "Shader.hpp"
 #include "IBL.hpp"
+#include "Component.hpp"
 
 
 // Hold and manage all the texture, responsible for binding texture to shader
 // All suppord
 
-class Material {
+class Material : public Component {
+public:
+    void BeforeRenderPass() override {
+        UpdateShaderUniform();
+    }
+
 public:
     Material();
 

@@ -7,7 +7,9 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
-class Transform {
+#include "Component.hpp"
+
+class Transform : public Component {
 public:
     Transform() : synthesis(glm::mat4(1.0f)) {}
 

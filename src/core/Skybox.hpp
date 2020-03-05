@@ -10,18 +10,19 @@
 #include "Texture.hpp"
 #include "IBL.hpp"
 
-// TODO: store precomputed map into actual files.
+
+
 class Skybox {
 public:
     Skybox();
     explicit Skybox(Texture const& skyboxTexture);
 
+    Skybox(Skybox const&) = delete;
+    Skybox& operator=(Skybox const&) = delete;
+
     void Render();
 
     inline IBL const& GetIBL() { return ibl; }
-
-private:
-    void prepare();
 
 private:
     Shader shader {"shader/skybox.vert",
@@ -40,6 +41,8 @@ private:
                           "shader/brdf.frag"};
 
     unsigned int envCubemap = 0;
+
+    /* Skybox Texture */
     Texture const& texture;
 
     IBL ibl;

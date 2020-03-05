@@ -53,10 +53,19 @@ public:
 
     void AddLight(const Light &light);
 
-    void SetSkybox(Skybox *sb);
+    void SetSkybox(std::unique_ptr<Skybox> up_sb);
 
     /* Setting Shader component due to scene configuration */
     void Build();
+
+    void Update() {
+        for (GameObject & gameObject : gameObjects) {
+            for (auto it : gameObject.componentsMap) {
+                auto & component = it.second;
+                component->BeforeRenderPass();
+            }
+        }
+    }
 
     Camera& GetCamera() { return camera; }
 
@@ -67,7 +76,7 @@ private:
 private:
     std::vector<GameObject> gameObjects;
     std::vector<Light> lights;
-    Skybox *skybox = nullptr;
+    std::unique_ptr<Skybox> up_skybox;
     Camera camera {};
 
     friend class Renderer;
