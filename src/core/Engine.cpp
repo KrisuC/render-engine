@@ -10,6 +10,7 @@
 #endif
 
 #include "Engine.hpp"
+#include "Scene.hpp"
 
 Scene& Engine::CreateScene() {
     scenes.emplace_back();

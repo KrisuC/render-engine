@@ -92,13 +92,6 @@ void Renderer::afterRenderPass() {
     glfwSwapBuffers(window);
 }
 
-void Renderer::RenderScene(Scene& scene) {
-    scene.Update(*this);
-    for (auto& gobj : scene.gameObjects) {
-        this->Render(gobj);
-    }
-}
-
 std::pair<int, int> Renderer::GetWindowSize() const {
     std::pair<int, int> size;
     glfwGetWindowSize(window, &size.first, &size.second);

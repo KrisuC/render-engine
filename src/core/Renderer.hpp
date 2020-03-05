@@ -39,8 +39,6 @@ public:
 
     bool ShouldEnd();
 
-    void RenderScene(Scene& scene);
-
     void Render(GameObject& gameObject);
 
     double GetDeltaTime() const;

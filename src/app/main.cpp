@@ -65,7 +65,7 @@ int main(int argc, char *argv[]) {
     Renderer& renderer = engine.GetRenderer();
     while (!renderer.ShouldEnd()) {
         processInput(scene.GetCamera());
-        Scene.Update();
+        scene.Update();
     }
 
 

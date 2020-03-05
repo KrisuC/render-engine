@@ -7,8 +7,6 @@
 
 #include <vector>
 
-#include "Scene.hpp"
-#include "Renderer.hpp"
 #include "Renderer.hpp"
 
 
