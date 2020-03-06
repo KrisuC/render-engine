@@ -53,7 +53,9 @@ public:
 
     inline void SetCastShadows(bool cast);
 
-private:
+    // deprecated:
+
+public:
     LightType ltype;
 
     float cone_angle_in_radian {};
