@@ -12,6 +12,7 @@ const float PI = 3.14159265359;
 /*********** for calculating V *******************/
 uniform vec3 cameraPosition;
 
+
 /*********** Material Configuration **************/
 uniform struct Material {
     struct Vec3fMap { sampler2D map; vec3 value; bool use_map; }
@@ -20,14 +21,6 @@ uniform struct Material {
     struct FloatMap { sampler2D map; float value; bool use_map; }
         metallic,   roughness,  ao,         height;
 } m;
-
-
-/**********************IBL*************************/
-uniform struct IBL {
-    samplerCube irradiance;
-    samplerCube prefilter;
-    sampler2D   brdfLUT;
-} ibl;
 
 
 /************* Lights Configuration **************/
@@ -42,12 +35,20 @@ uniform struct Lights {
 
     int ltype;
 } lights[MAX_LIGHT];
-uniform int light_cnt = 0;
+uniform int lights_cnt = 0;
+
+
+/**********************IBL*************************/
+uniform struct IBL {
+    samplerCube irradiance;
+    samplerCube prefilter;
+    sampler2D   brdfLUT;
+} ibl;
 
 /************************************************/
 
 
-vec3 fresnelSchlick(float cosTheta, vec3 F0);
+vec3 FresnelSchlick(float cosTheta, vec3 F0);
 vec3 fresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness);
 float DistributionGGX(vec3 N, vec3 H, float roughness);
 float GeometrySchlickGGX(float NdotV, float roughness);
@@ -76,8 +77,10 @@ void main() {
     vec3 F0 = vec3(0.04);
     F0 = mix(F0, albedo, metallic); // for non-metal, F0 is always 0.04
 
+    float NdotV = max(dot(N, V), 0.0);
+
     vec3 Lo = vec3(0.0);
-    for (int i = 0; i < light_cnt; i++) {
+    for (int i = 0; i < lights_cnt; i++) {
         // Per-light raiance
         vec3 L = normalize(lights[i].position - WorldPos);
         vec3 H = normalize(V + L); // half-way vector
@@ -85,21 +88,27 @@ void main() {
         float attenuation = 1.0 / (dist * dist);
         vec3 radiance = lights[i].color * attenuation;
 
+        float NdotL = max(dot(N, L), 0.0);
+        float HdotV = max(dot(H, V), 0.0);
+
         // Cook-Torrance BRDF
         float NDF = DistributionGGX(N, H, roughness);
         float G   = GeometrySmith(N, V, L, roughness);
-        vec3  F   = fresnelSchlick(max(dot(H, V), 0.0), F0);
+        vec3  F   = FresnelSchlick(HdotV, F0);
 
-        vec3 nominator    = NDF * G * F;
-        float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0);
-        vec3 specular = nominator / max(denominator, 0.001);
+        vec3  nominator   = NDF * G * F;
+        /* ------------------------------------------------ */
+        float denominator = 4.0 * NdotV * NdotL;
 
-        vec3 kS = F; // energy of light get relected
-        vec3 kD = vec3(1.0) - kS; // refracted
-        kD *= 1.0 - metallic;
+        vec3  specular = nominator / max(denominator, 0.001);
 
-        float NdotL = max(dot(N, L), 0.0);
-        Lo += (kD * albedo / PI + specular) * radiance * NdotL; // no diffuse for metalic
+        vec3 kS = F;              // specular term
+        vec3 kD = vec3(1.0) - kS; // defuse term
+        kD *= 1.0 - metallic;     // no diffuse for metallic
+
+        vec3 diffuse = kD * albedo / PI;
+
+        Lo += (diffuse + specular) * radiance * NdotL;
     }
     // using IBL as ambient lighting
     vec3 F = fresnelSchlickRoughness(max(dot(N, V), 0.0), F0, roughness);
@@ -117,7 +126,7 @@ void main() {
     vec3 prefilterdColor
             = textureLod(ibl.prefilter, R, roughness*MAX_REFLECTION_LOD).rgb;
     vec2 brdf = texture(ibl.brdfLUT,
-                        vec2( max(dot(N, V), 0.0), roughness )).rg;
+                        vec2(NdotV, roughness )).rg;
     vec3 specular = prefilterdColor * (F * brdf.x + brdf.y);
 
     vec3 ambient = (kD * diffuse + specular) * ao;

@@ -14,10 +14,13 @@ void Scene::Build() {
 
             material.SetIBLTextures(ibl);
             material.UpdateShaderUniform();
-            for (const auto& light : lights) {
-                shader.SetLight(light);
+
+            shader.UseShaderProgram();
+            for (int i = 0; i < lights.size(); i++) {
+                shader.SetLight(lights[i], i);
             }
         } catch (NoComponent&) {
+            // TODO: Change with better mechanism
             continue;
         }
 

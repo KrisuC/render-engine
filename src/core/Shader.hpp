@@ -53,7 +53,7 @@ public:
     void Set(const string &name, mat4 const& mat) const;
 
     // Specific Uniform Settings
-    void SetLight(Light const& light);
+    void SetLight(Light const &light, int light_index);
     void SetTransform(mat4 const& projection, mat4 const& view,
                       mat4 const& model);
     void SetCameraPosition(vec3 cameraPosition);
