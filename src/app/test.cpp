@@ -1,13 +1,21 @@
 #include <vector>
 #include <iostream>
+#include <variant>
 
 using namespace std;
 
+template <typename T>
+class MyClass {
+public:
+    T value;
+    MyClass *ptr;
+};
+
+using FC = MyClass<float>;
+using IC = MyClass<int>;
+
 int main() {
-    vector<int> vec {1, 2, 3, 4, 5, 6};
-    int& ref_to_elem = vec[0];
-    for (int i = 0; i < 10; i++) {
-        vec.push_back(0);
-    }
-    assert(&ref_to_elem == &vec[0]);
+    variant<FC, IC> v;
+    std::get<IC>(v).value;
+    v.index();
 }

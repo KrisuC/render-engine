@@ -31,6 +31,8 @@
  * auto position = {...};
  * auto color = {...};
  * Light plight = PointLight(position, color);
+ *
+ * Required: Transform
  */
 
 enum class LightType {
@@ -45,44 +47,26 @@ class Light : public Component {
 public:
     explicit Light(LightType lightType) : ltype(lightType) { }
 
-    inline void SetPosition(vec3 pos);
-
-    inline void SetDirection(vec3 dir);
-
-    inline void SetColor(vec3 c);
-
     inline void SetConeAngleInRadian(float cone);
+
+    inline void SetColor(float r, float g, float b);
 
     inline void SetCastShadows(bool cast);
 
 private:
     LightType ltype;
 
-    vec3 position {};
-    vec3 direciton {};
-    vec3 color {};
     float cone_angle_in_radian {};
-
+    glm::vec3 color;
     bool castShadows = true;
+
+    // deprecated:
+    glm::vec3 position{};
+    glm::vec3 direction{};
 
     friend class Shader;
 };
 
-
-
-void Light::SetDirection(Light::vec3 dir) {
-    assert(ltype == LightType::Directional || ltype == LightType::Spot);
-    direciton = dir;
-}
-
-void Light::SetColor(Light::vec3 c) {
-    color = c;
-}
-
-void Light::SetPosition(Light::vec3 pos) {
-    // assert(ltype == LightType::Point || ltype == LightType::Spot);
-    position = pos;
-}
 
 void Light::SetConeAngleInRadian(float cone) {
     assert(ltype == LightType::Spot);
@@ -91,6 +75,10 @@ void Light::SetConeAngleInRadian(float cone) {
 
 void Light::SetCastShadows(bool cast) {
     castShadows = cast;
+}
+
+void Light::SetColor(float r, float g, float b) {
+    color = {r, g, b};
 }
 
 

@@ -16,6 +16,8 @@
  * GameObject is an entity to be rendered in the scene.
  */
 
+// TODO: Add child-parent relationship
+
 class NoComponent : std::exception {  };
 
 class GameObject {

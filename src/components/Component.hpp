@@ -11,13 +11,17 @@
  *
  * All Components' BeforeRenderLoop() called...
  *
- * while (!renderer.ShouldEnd()) {
+ * while renderLoop not end {
  *
- *      All Components' BeforeRenderPass() called...
- *
- *      All Components' InRenderPass() called...
- *
- *      All Components' AfterRenderPass() called...
+ *      for object in objectList {
+ *          for component in object {
+ *              component.BeforeRenderPass
+ *          }
+ *          render(object)
+ *          for component in object {
+ *              component.AfterRenderPass
+ *          }
+ *      }
  *
  * }
  */

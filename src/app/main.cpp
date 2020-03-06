@@ -48,32 +48,38 @@ int main(int argc, char *argv[]) {
 
     scene.CreateLight(PointLight({0, 6, -6},
                                  {100, 100, 100}));
-
-    GameObject& metalSphere = scene.CreateGameObject();
-    metalSphere.CreateComponent<Mesh>(SimpleMesh::Sphere());
-    auto& m_sphere = metalSphere.CreateComponent<Material>(); {
+    // --1--
+    GameObject& sphere = scene.CreateGameObject();
+    sphere.CreateComponent<Mesh>(SimpleMesh::Sphere());
+    auto& m_sphere = sphere.CreateComponent<Material>(); {
         m_sphere.SetShader(&Shader::DefaultShader());
         m_sphere.SetAlbedo(1, 1, 1);
         m_sphere.SetMetallic(0.1);
         m_sphere.SetRoughness(0.8);
     }
-    auto& tr_sphere = metalSphere.CreateComponent<Transform>(); {
+    auto& tr_sphere = sphere.CreateComponent<Transform>(); {
         tr_sphere.SetPosition(0, 0, -10);
     }
-
+    // --2--
     GameObject& ground = scene.CreateGameObject();
     ground.CreateComponent<Mesh>(SimpleMesh::Quad());
     auto& m_ground = ground.CreateComponent<Material>(); {
-        m_ground.SetShader(&Shader::TestShader());
-        m_ground.SetAlbedo(0.5, 0.5, 0.5);
-        m_ground.SetMetallic(0.1);
-        m_ground.SetRoughness(0.9);
+        m_ground.SetShader(&Shader::DefaultShader());
+        m_ground.SetAlbedo(1, 1, 1);
+        m_ground.SetMetallic(0.9);
+        m_ground.SetRoughness(0.1);
     }
     auto& tr_ground = ground.CreateComponent<Transform>(); {
         tr_ground.SetPosition(0, -2, -10);
         tr_ground.SetRotation(1, 0, 0, 90);
         tr_ground.SetScale(10, 10, 10);
     }
+    // --3--
+//    GameObject& lamp = scene.CreateGameObject();
+//    lamp.CreateComponent<Mesh>(SimpleMesh::Cube());
+//    auto& m_lamp = lamp.CreateComponent<Material>(); {
+//
+//    }
 
     scene.CreateSkybox();
 

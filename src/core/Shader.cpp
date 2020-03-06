@@ -198,7 +198,7 @@ void Shader::SetLight(Light const& light) {
             "lights[" + std::to_string(light_cnt) + "]";
 
     this->Set(lstr + ".position", light.position);
-    this->Set(lstr + ".direction", light.direciton);
+    this->Set(lstr + ".direction", light.direction);
     this->Set(lstr + ".color", light.color);
     this->Set(lstr + ".cone_angle_in_radian", light.cone_angle_in_radian);
     this->Set("light_cnt", ++light_cnt);

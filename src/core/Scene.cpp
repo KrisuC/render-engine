@@ -14,7 +14,9 @@ void Scene::Build() {
 
             material.SetIBLTextures(ibl);
             material.UpdateShaderUniform();
-
+            for (const auto& light : lights) {
+                shader.SetLight(light);
+            }
         } catch (NoComponent&) {
             continue;
         }
@@ -37,21 +39,18 @@ GameObject &Scene::CreateGameObject() {
 }
 
 void Scene::Update() {
-    // BEFORE
+
+    auto& renderer = Engine::GetEngine().GetRenderer();
     for (auto& up_gameObject : up_gameObjects) {
+        // BEFORE
         for (auto it : up_gameObject->componentsMap) {
             auto & component = it.second;
             component->BeforeRenderPass();
         }
-    }
-    // RENDERING
-    auto& renderer = Engine::GetEngine().GetRenderer();
-    for (auto& up_gameObject : up_gameObjects) {
+        // RENDERING
         renderer.Render(*up_gameObject);
-    }
-    up_skybox->Render();
-    // AFTER
-    for (auto& up_gameObject : up_gameObjects) {
+        up_skybox->Render();
+        // AFTER
         for (auto it : up_gameObject->componentsMap) {
             auto & component = it.second;
             component->AfterRenderPass();

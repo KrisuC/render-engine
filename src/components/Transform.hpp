@@ -20,7 +20,7 @@ public:
 
 class Transform : public Component {
 public:
-    /* Update all Transform of GameObject before InRenderPass called */
+    /* Update all Transform of GameObject before render called */
     void BeforeRenderPass() override;
 
 public:
