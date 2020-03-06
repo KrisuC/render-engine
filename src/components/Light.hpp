@@ -57,7 +57,7 @@ private:
     LightType ltype;
 
     float cone_angle_in_radian {};
-    glm::vec3 color;
+    glm::vec3 color{};
     bool castShadows = true;
 
     // deprecated:

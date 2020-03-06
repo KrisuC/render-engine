@@ -66,8 +66,8 @@ int main(int argc, char *argv[]) {
     auto& m_ground = ground.CreateComponent<Material>(); {
         m_ground.SetShader(&Shader::DefaultShader());
         m_ground.SetAlbedo(1, 1, 1);
-        m_ground.SetMetallic(0.9);
-        m_ground.SetRoughness(0.1);
+        m_ground.SetMetallic(0.3);
+        m_ground.SetRoughness(0.5);
     }
     auto& tr_ground = ground.CreateComponent<Transform>(); {
         tr_ground.SetPosition(0, -2, -10);

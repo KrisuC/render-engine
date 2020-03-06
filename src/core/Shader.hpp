@@ -36,7 +36,8 @@ public:
     // "Activate" the shader
     void UseShaderProgram();
 
-    // Uniform setting
+    /* Uniform setting : const because Set will not change which shader program
+     * Shader holds */
     void Set(const string &name, bool value) const;
     void Set(const string &name, int value) const;
     void Set(const string &name, unsigned value) const;
@@ -58,6 +59,7 @@ public:
     void SetCameraPosition(vec3 cameraPosition);
 
 private:
+    int getUniformLocation(string const& name) const;
     // TODO:
     void processShaderFile(char const* filePath, ShaderType shaderType);
 

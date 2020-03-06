@@ -106,56 +106,56 @@ void Shader::UseShaderProgram() {
 }
 
 void Shader::Set(const std::string &name, bool value) const {
-    glUniform1i(glGetUniformLocation(id, name.c_str()), (int)value);
+    glUniform1i(getUniformLocation(name), (int)value);
 }
 
 void Shader::Set(const std::string &name, int value) const {
-    glUniform1i(glGetUniformLocation(id, name.c_str()), value);
+    glUniform1i(getUniformLocation(name), value);
 }
 
 void Shader::Set(const std::string &name, unsigned value) const {
-    glUniform1i(glGetUniformLocation(id, name.c_str()), value);
+    glUniform1i(getUniformLocation(name), value);
 }
 
 void Shader::Set(const std::string &name, float value) const {
-    glUniform1f(glGetUniformLocation(id, name.c_str()), value);
+    glUniform1f(getUniformLocation(name), value);
 }
 
 void Shader::Set(const std::string &name, const glm::vec2 &value) const {
-    glUniform2fv(glGetUniformLocation(id, name.c_str()), 1, &value[0]);
+    glUniform2fv(getUniformLocation(name), 1, &value[0]);
 }
 
 void Shader::Set(const std::string &name, float x, float y) const {
-    glUniform2f(glGetUniformLocation(id, name.c_str()), x, y);
+    glUniform2f(getUniformLocation(name), x, y);
 }
 
 void Shader::Set(const std::string &name, const glm::vec3 &value) const {
-    glUniform3fv(glGetUniformLocation(id, name.c_str()), 1, &value[0]);
+    glUniform3fv(getUniformLocation(name), 1, &value[0]);
 }
 
 void Shader::Set(const std::string &name, float x, float y, float z) const {
-    glUniform3f(glGetUniformLocation(id, name.c_str()), x, y, z);
+    glUniform3f(getUniformLocation(name), x, y, z);
 }
 
 void Shader::Set(const std::string &name, const glm::vec4 &value) const {
-    glUniform4fv(glGetUniformLocation(id, name.c_str()), 1, &value[0]);
+    glUniform4fv(getUniformLocation(name), 1, &value[0]);
 }
 
 void Shader::Set(const std::string &name, float x, float y, float z,
                  float w) const {
-    glUniform4f(glGetUniformLocation(id, name.c_str()), x, y, z, w);
+    glUniform4f(getUniformLocation(name), x, y, z, w);
 }
 
 void Shader::Set(const std::string &name, const glm::mat2 &mat) const {
-    glUniformMatrix2fv(glGetUniformLocation(id, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+    glUniformMatrix2fv(getUniformLocation(name), 1, GL_FALSE, &mat[0][0]);
 }
 
 void Shader::Set(const std::string &name, const glm::mat3 &mat) const {
-    glUniformMatrix3fv(glGetUniformLocation(id, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+    glUniformMatrix3fv(getUniformLocation(name), 1, GL_FALSE, &mat[0][0]);
 }
 
 void Shader::Set(const std::string &name, const glm::mat4 &mat) const {
-    glUniformMatrix4fv(glGetUniformLocation(id, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+    glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, &mat[0][0]);
 }
 
 
@@ -201,6 +201,7 @@ void Shader::SetLight(Light const& light) {
     this->Set(lstr + ".direction", light.direction);
     this->Set(lstr + ".color", light.color);
     this->Set(lstr + ".cone_angle_in_radian", light.cone_angle_in_radian);
+
     this->Set("light_cnt", ++light_cnt);
 }
 
@@ -238,4 +239,12 @@ void Shader::processShaderFile(char const *filePath, ShaderType shaderType) {
 
 void Shader::SetCameraPosition(Shader::vec3 cameraPosition) {
     Set("cameraPosition", cameraPosition);
+}
+
+int Shader::getUniformLocation(const Shader::string &name) const {
+    int loc = glGetUniformLocation(this->id, name.c_str());
+    if (loc == -1) {
+        throw std::runtime_error("Shader uniform not exist: " + name);
+    }
+    return loc;
 }

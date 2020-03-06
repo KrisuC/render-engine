@@ -58,14 +58,14 @@ public:
 
     template <typename... Args> void CreateSkybox(Args... args);
 
-    Skybox& GetSkybox() { return *up_skybox; }
+    inline Skybox& GetSkybox() { return *up_skybox; }
 
     /* Setting Shader component due to scene configuration */
     void Build();
 
     void Update();
 
-    Camera& GetCurrentCamera() { return camera; }
+    inline Camera& GetCurrentCamera() { return camera; }
 
 private:
     /* Using a pointer to GameObject is a must because when vector change

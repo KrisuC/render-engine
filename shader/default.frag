@@ -14,24 +14,11 @@ uniform vec3 cameraPosition;
 
 /*********** Material Configuration **************/
 uniform struct Material {
-    struct { sampler2D map; vec3 value; } albedo;
-    struct { sampler2D map; float value; } metallic;
-    struct { sampler2D map; float value; } roughness;
-    struct { sampler2D map; float value; } emissive;
-    sampler2D normal;
-    sampler2D ao;
-    sampler2D specular;
-    sampler2D height;
+    struct Vec3fMap { sampler2D map; vec3 value; bool use_map; }
+        albedo,     normal,     specular,   emissive;
 
-    struct {
-        bool albedo;
-        bool metallic;
-        bool specular;
-        bool roughness;
-        bool emissive;
-        bool normal;
-        bool ao;
-    } map_using_status;
+    struct FloatMap { sampler2D map; float value; bool use_map; }
+        metallic,   roughness,  ao,         height;
 } m;
 
 
@@ -68,19 +55,19 @@ float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness);
 vec3 getNormalFromMap();
 
 void main() {
-    vec3 albedo = m.map_using_status.albedo?
+    vec3 albedo = m.albedo.use_map?
         texture(m.albedo.map, TexCoords).rgb : m.albedo.value;
 
-    float metallic = m.map_using_status.metallic?
+    float metallic = m.metallic.use_map?
         texture(m.metallic.map, TexCoords).r : m.metallic.value;
 
-    float roughness = m.map_using_status.roughness?
+    float roughness = m.roughness.use_map?
         texture(m.roughness.map, TexCoords).r : m.roughness.value;
 
-    vec3 normal = m.map_using_status.normal?
+    vec3 normal = m.normal.use_map?
         getNormalFromMap() : Normal;
 
-    float ao = 1.0f;
+    float ao = m.ao.use_map? texture(m.ao.map, TexCoords).r : 1.0f;
 
     vec3 N = normalize(normal);
     vec3 V = normalize(cameraPosition - WorldPos);
@@ -200,7 +187,7 @@ float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness) {
 
 
 vec3 getNormalFromMap() {
-    vec3 tangentNormal = texture(m.normal, TexCoords).xyz * 2.0 - 1.0;
+    vec3 tangentNormal = texture(m.normal.map, TexCoords).xyz * 2.0 - 1.0;
 
     vec3 Q1  = dFdx(WorldPos);
     vec3 Q2  = dFdy(WorldPos);
