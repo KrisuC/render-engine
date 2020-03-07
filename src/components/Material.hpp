@@ -27,7 +27,8 @@
 class Material : public Component {
 public:
     void BeforeRenderPass() override {
-        UpdateShaderUniform();
+        /* updating shader uniform before each object rendered */
+        updateShaderUniform();
     }
 
 public:
@@ -57,15 +58,15 @@ public:
     inline Shader& GetShader() { return *p_shader; }
 
 private:
-    void SetIBLTextures(IBL const& ibl);
+    void setIBLTextures(IBL const& ibl);
 
-    void UpdateShaderUniform();
+    void updateShaderUniform();
 
     friend class Scene;
 
 private:
     /* Shader responsible for rendering this Material */
-    Shader *p_shader = &Shader::DefaultShader();
+    Shader *p_shader = &Shader::GetDefaultShader();
 
     /* All material properties */
     std::array<MaterialProperty, MaterialPropertyTypeCount> materialProperties {};

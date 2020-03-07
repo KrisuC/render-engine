@@ -26,24 +26,27 @@ public:
 public:
     Transform() = default;
 
-    inline void SetPosition(float x, float y, float z) {
-        this->position = {x, y, z};
-    }
+    void Translate(float dx, float dy, float dz);
 
-    inline void SetRotation(float axis_x, float axis_y, float axis_z,
-            float angle_in_degree) {
-        this->rotation_axis = {axis_x, axis_y, axis_z};
-        this->rotation_angle = glm::radians(angle_in_degree);
-    }
+    void SetPosition(glm::vec3 p);
 
-    inline void SetScale(float x, float y, float z) {
-        this->scale = {x, y, z};
-    }
+    void SetPosition(float x, float y, float z);
 
+    void SetRotation(float axis_x, float axis_y, float axis_z,
+            float angle_in_degree);
+
+    void SetRotation(glm::vec3 axis, float angle_in_degree);
+
+    void SetScale(float x, float y, float z);
+
+    void SetScale(glm::vec3 s);
+
+    void SetScale(float factor);
 
 
 private:
     glm::vec3 position {0, 0, 0};
+    /* store angle in radians */
     glm::vec3 rotation_axis {0, 1, 0};
     float rotation_angle {0};
     glm::vec3 scale {1, 1, 1};

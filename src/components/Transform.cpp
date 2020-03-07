@@ -22,3 +22,38 @@ void Transform::BeforeRenderPass() {
     shader.SetTransform(projection, view, model);
     shader.SetCameraPosition(camera.Position());
 }
+
+void Transform::Translate(float dx, float dy, float dz) {
+    this->position += glm::vec3{dx, dy, dz};
+}
+
+void Transform::SetPosition(glm::vec3 p) {
+    this->position = p;
+}
+
+void Transform::SetPosition(float x, float y, float z) {
+    this->position = {x, y, z};
+}
+
+void Transform::SetRotation(float axis_x, float axis_y, float axis_z,
+                            float angle_in_degree) {
+    this->rotation_axis = {axis_x, axis_y, axis_z};
+    this->rotation_angle = glm::radians(angle_in_degree);
+}
+
+void Transform::SetRotation(glm::vec3 axis, float angle_in_degree) {
+    this->rotation_axis = axis;
+    this->rotation_angle = glm::radians(angle_in_degree);
+}
+
+void Transform::SetScale(float x, float y, float z) {
+    this->scale = {x, y, z};
+}
+
+void Transform::SetScale(glm::vec3 s) {
+    this->scale = s;
+}
+
+void Transform::SetScale(float factor) {
+    this->scale = glm::vec3 {factor};
+}

@@ -205,12 +205,12 @@ void Shader::SetLight(Light const &light, int light_index) {
     DEBUG_LOG("Adding light...", light_index);
 }
 
-Shader &Shader::DefaultShader() {
+Shader &Shader::GetDefaultShader() {
     static Shader default_shader;
     return default_shader;
 }
 
-Shader &Shader::TestShader() {
+Shader &Shader::GetTestShader() {
     static Shader test { "shader/test.vert",
                          "shader/test.frag" };
     return test;

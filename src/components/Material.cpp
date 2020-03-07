@@ -7,9 +7,13 @@
 
 Material::Material() {
     DEBUG_LOG("Creating Material...");
+
+    SetAlbedo(1, 1, 1);
+    SetMetallic(0);
+    SetEmissive(0, 0, 0);
 }
 
-void Material::UpdateShaderUniform() {
+void Material::updateShaderUniform() {
     /* Binding Material Properties */
     for (int i = 0; i < materialProperties.size(); i++) {
         auto& materialProperty = materialProperties[i];
@@ -42,7 +46,7 @@ void Material::SetShader(Shader *ns) {
     p_shader = ns;
 }
 
-void Material::SetIBLTextures(IBL const &ibl) {
+void Material::setIBLTextures(IBL const &ibl) {
     AppendTexture("ibl.irradiance", &ibl.irradiance);
     AppendTexture("ibl.prefilter", &ibl.prefilter);
     AppendTexture("ibl.brdfLUT", &ibl.brdfLUT);

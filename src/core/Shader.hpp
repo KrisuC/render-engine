@@ -30,8 +30,8 @@ public:
            const GLchar *geometryPath = nullptr);
     Shader();
 
-    static Shader& DefaultShader();
-    static Shader& TestShader();
+    static Shader& GetDefaultShader();
+    static Shader& GetTestShader();
 
     // "Activate" the shader
     void UseShaderProgram();

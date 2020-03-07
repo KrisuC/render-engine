@@ -21,6 +21,12 @@ uniform struct Material {
     struct FloatMap { sampler2D map; float value; bool use_map; }
         metallic,   roughness,  ao,         height;
 } m;
+vec3 GetAlbedoFromMaterial();
+float GetMetallicFromMaterial();
+float GetRoughnessFromMaterial();
+vec3 GetNormalFromMaterial();
+float GetAOFromMaterial();
+vec3 GetEmissiveFromMaterial();
 
 
 /************* Lights Configuration **************/
@@ -55,27 +61,16 @@ float GeometrySchlickGGX(float NdotV, float roughness);
 float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness);
 vec3  GetNormalFromMap();
 
+
 void main() {
     /* Fetching material information */
-    vec3 albedo     = m.albedo.use_map?
-        texture(m.albedo.map, TexCoords).rgb :
-        m.albedo.value;
+    vec3 albedo = GetAlbedoFromMaterial();
+    float metallic  = GetMetallicFromMaterial();
+    float roughness = GetRoughnessFromMaterial();
+    vec3 normal     = GetNormalFromMaterial();
+    float ao        = GetAOFromMaterial();
+    vec3 emissive   = GetEmissiveFromMaterial();
 
-    float metallic  = m.metallic.use_map?
-        texture(m.metallic.map, TexCoords).r :
-        m.metallic.value;
-
-    float roughness = m.roughness.use_map?
-        texture(m.roughness.map, TexCoords).r :
-        m.roughness.value;
-
-    vec3 normal     = m.normal.use_map?
-        GetNormalFromMap() :
-        Normal;
-
-    float ao        = m.ao.use_map?
-        texture(m.ao.map, TexCoords).r :
-        1.0f;
 
     vec3 N = normalize(normal);
     vec3 V = normalize(cameraPosition - WorldPos);
@@ -87,7 +82,7 @@ void main() {
     float NdotV = max(dot(N, V), 0.0);
 
     /* Lighting */
-    vec3 Lo = vec3(0.0);
+    vec3 Lo = emissive;
     for (int i = 0; i < lights_cnt; i++) {
         vec3  L            =   normalize(lights[i].position - WorldPos);
         vec3  H            =   normalize(V + L); // half-way vector
@@ -139,8 +134,8 @@ void main() {
     vec3 color = ambient + Lo;
 
     /* tone mapping */
-    color = color / (color + vec3(1.0)); // HDR
-    color = pow(color, vec3(1.0 / 2.2)); // gamma
+    color = color / (color + vec3(1.0));    // HDR
+    color = pow(color, vec3(1.0 / 2.2));    // gamma correction
 
     FragColor = vec4(color, 1.0);
 }
@@ -216,6 +211,35 @@ vec3 GetNormalFromMap() {
 
     return normalize(TBN * tangentNormal);
 }
+
+vec3 GetAlbedoFromMaterial() {
+    return m.albedo.use_map?    texture(m.albedo.map, TexCoords).rgb :
+                                m.albedo.value;
+}
+
+float GetMetallicFromMaterial() {
+    return m.metallic.use_map?  texture(m.metallic.map, TexCoords).r :
+                                m.metallic.value;
+}
+
+float GetRoughnessFromMaterial() {
+    return m.roughness.use_map? texture(m.roughness.map, TexCoords).r :
+                                m.roughness.value;
+}
+
+vec3 GetNormalFromMaterial() {
+    return m.normal.use_map? GetNormalFromMap() : Normal;
+}
+
+float GetAOFromMaterial() {
+    return m.ao.use_map? texture(m.ao.map, TexCoords).r :1.0f;
+}
+
+vec3 GetEmissiveFromMaterial() {
+    return m.emissive.use_map? texture(m.emissive.map, TexCoords).rgb :
+                               m.emissive.value;
+}
+
 
 
 

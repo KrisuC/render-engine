@@ -12,8 +12,8 @@ void Scene::Build() {
             auto& material = up_gameObject->GetComponent<Material>();
             auto& shader = material.GetShader();
 
-            material.SetIBLTextures(ibl);
-            material.UpdateShaderUniform();
+            material.setIBLTextures(ibl);
+            material.updateShaderUniform();
 
             shader.UseShaderProgram();
             for (int i = 0; i < lights.size(); i++) {
