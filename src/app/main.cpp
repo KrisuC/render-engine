@@ -46,7 +46,7 @@ int main(int argc, char *argv[]) {
     Scene& scene = engine.CreateScene();
     engine.MakeCurrentScene(scene);
 
-    auto color = glm::vec3 { 0, 1, 0 };
+    auto color = glm::vec3 { 100};
     scene.CreateLight(PointLight({0, 6, -6}, color));
 
     // --1--
@@ -90,10 +90,7 @@ int main(int argc, char *argv[]) {
     while (!renderer.ShouldEnd()) {
         renderer.UpdateBeforeRendering();
         processInput(scene.GetCurrentCamera());
-//        auto& shader = sphere.GetComponent<Material>().GetShader();
-//        shader.Set("lights[0].color", 0, 1, 1);
-//        shader.Set("lights[0].position", 0, 6, -6);
-//        shader.Set("lights_cnt", 1);
+        auto& shader = sphere.GetComponent<Material>().GetShader();
 //        tr_sphere.SetRotation(0, 1, 0, glfwGetTime() * 10);
         scene.Update();
 
