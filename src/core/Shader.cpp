@@ -244,7 +244,7 @@ void Shader::SetCameraPosition(Shader::vec3 cameraPosition) {
 int Shader::getUniformLocation(const Shader::string &name) const {
     int loc = glGetUniformLocation(this->id, name.c_str());
     if (loc == -1) {
-        throw std::runtime_error("Shader uniform not exist: " + name);
+        // throw std::runtime_error("Shader uniform not exist: " + name);
     }
     return loc;
 }

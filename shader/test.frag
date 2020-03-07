@@ -8,36 +8,18 @@ in vec3 Normal;
 
 const float PI = 3.14159265359;
 
-// for calculating specular
+/*********** for calculating V *******************/
 uniform vec3 cameraPosition;
+
 
 /*********** Material Configuration **************/
 uniform struct Material {
-    struct { sampler2D map; vec3 value; } albedo;
-    struct { sampler2D map; float value; } metallic;
-    struct { sampler2D map; float value; } roughness;
-    struct { sampler2D map; float value; } emissive;
-    sampler2D normal;
-    sampler2D ao;
-    sampler2D specular;
-    sampler2D height;
+    struct Vec3fMap { sampler2D map; vec3 value; bool use_map; }
+    albedo,     normal,     specular,   emissive;
 
-    struct {
-        bool albedo;
-        bool metallic;
-        bool specular;
-        bool roughness;
-        bool emissive;
-        bool normal;
-    } map_using_status;
+    struct FloatMap { sampler2D map; float value; bool use_map; }
+    metallic,   roughness,  ao,         height;
 } m;
-
-
-/**********************IBL*************************/
-uniform samplerCube irradiance_map;
-uniform samplerCube prefilter_map;
-uniform sampler2D   brdfLUT_map;
-
 
 
 /************* Lights Configuration **************/
@@ -52,7 +34,15 @@ uniform struct Lights {
 
     int ltype;
 } lights[MAX_LIGHT];
-uniform int light_cnt = 0;
+uniform int lights_cnt = 0;
+
+
+/**********************IBL*************************/
+uniform struct IBL {
+    samplerCube irradiance;
+    samplerCube prefilter;
+    sampler2D   brdfLUT;
+} ibl;
 
 /************************************************/
 
@@ -61,7 +51,7 @@ uniform int light_cnt = 0;
 
 
 void main() {
-    FragColor = vec4(m.albedo.value, 1.0);
+    FragColor = vec4(0, 1, 1, 1.0);
 }
 
 

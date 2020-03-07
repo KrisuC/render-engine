@@ -48,12 +48,12 @@ uniform struct IBL {
 /************************************************/
 
 
-vec3 FresnelSchlick(float cosTheta, vec3 F0);
-vec3 fresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness);
+vec3  FresnelSchlick(float cosTheta, vec3 F0);
+vec3  FresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness);
 float DistributionGGX(vec3 N, vec3 H, float roughness);
 float GeometrySchlickGGX(float NdotV, float roughness);
 float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness);
-vec3 getNormalFromMap();
+vec3  GetNormalFromMap();
 
 void main() {
     vec3 albedo = m.albedo.use_map?
@@ -66,7 +66,7 @@ void main() {
         texture(m.roughness.map, TexCoords).r : m.roughness.value;
 
     vec3 normal = m.normal.use_map?
-        getNormalFromMap() : Normal;
+        GetNormalFromMap() : Normal;
 
     float ao = m.ao.use_map? texture(m.ao.map, TexCoords).r : 1.0f;
 
@@ -82,11 +82,11 @@ void main() {
     vec3 Lo = vec3(0.0);
     for (int i = 0; i < lights_cnt; i++) {
         // Per-light raiance
-        vec3 L = normalize(lights[i].position - WorldPos);
-        vec3 H = normalize(V + L); // half-way vector
-        float dist = length(lights[i].position - WorldPos);
-        float attenuation = 1.0 / (dist * dist);
-        vec3 radiance = lights[i].color * attenuation;
+        vec3  L            =   normalize(lights[i].position - WorldPos);
+        vec3  H            =   normalize(V + L); // half-way vector
+        float dist         =   length(lights[i].position - WorldPos);
+        float attenuation  =   1.0 / (dist * dist);
+        vec3  radiance     =   lights[i].color * attenuation;
 
         float NdotL = max(dot(N, L), 0.0);
         float HdotV = max(dot(H, V), 0.0);
@@ -111,7 +111,7 @@ void main() {
         Lo += (diffuse + specular) * radiance * NdotL;
     }
     // using IBL as ambient lighting
-    vec3 F = fresnelSchlickRoughness(max(dot(N, V), 0.0), F0, roughness);
+    vec3 F = FresnelSchlickRoughness(max(dot(N, V), 0.0), F0, roughness);
 
     vec3 kS = F;
     vec3 kD = 1.0 - kS;
@@ -150,12 +150,12 @@ void main() {
 
 
 
-vec3 fresnelSchlick(float cosTheta, vec3 F0) {
+vec3 FresnelSchlick(float cosTheta, vec3 F0) {
     return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
 }
 
 
-vec3 fresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness) {
+vec3 FresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness) {
     return F0 + (max(vec3(1.0 - roughness), F0) - F0) * pow(1.0 - cosTheta, 5.0);
 }
 
@@ -195,7 +195,7 @@ float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness) {
 }
 
 
-vec3 getNormalFromMap() {
+vec3 GetNormalFromMap() {
     vec3 tangentNormal = texture(m.normal.map, TexCoords).xyz * 2.0 - 1.0;
 
     vec3 Q1  = dFdx(WorldPos);

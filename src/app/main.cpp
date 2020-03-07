@@ -62,19 +62,19 @@ int main(int argc, char *argv[]) {
         tr_sphere.SetPosition(0, 0, -10);
     }
     // --2--
-//    GameObject& ground = scene.CreateGameObject();
-//    ground.CreateComponent<Mesh>(SimpleMesh::Quad());
-//    auto& m_ground = ground.CreateComponent<Material>(); {
-//        m_ground.SetShader(&Shader::DefaultShader());
-//        m_ground.SetAlbedo(1, 1, 1);
-//        m_ground.SetMetallic(0.3);
-//        m_ground.SetRoughness(0.5);
-//    }
-//    auto& tr_ground = ground.CreateComponent<Transform>(); {
-//        tr_ground.SetPosition(0, -2, -10);
-//        tr_ground.SetRotation(1, 0, 0, -90);
-//        tr_ground.SetScale(10, 10, 10);
-//    }
+    GameObject& ground = scene.CreateGameObject();
+    ground.CreateComponent<Mesh>(SimpleMesh::Quad());
+    auto& m_ground = ground.CreateComponent<Material>(); {
+        m_ground.SetShader(&Shader::DefaultShader());
+        m_ground.SetAlbedo(1, 1, 1);
+        m_ground.SetMetallic(0.3);
+        m_ground.SetRoughness(0.5);
+    }
+    auto& tr_ground = ground.CreateComponent<Transform>(); {
+        tr_ground.SetPosition(0, -2, -10);
+        tr_ground.SetRotation(1, 0, 0, -90);
+        tr_ground.SetScale(10, 10, 10);
+    }
     // --3--
 //    GameObject& lamp = scene.CreateGameObject();
 //    lamp.CreateComponent<Mesh>(SimpleMesh::Cube());
@@ -90,11 +90,10 @@ int main(int argc, char *argv[]) {
     while (!renderer.ShouldEnd()) {
         renderer.UpdateBeforeRendering();
         processInput(scene.GetCurrentCamera());
-
-        auto& shader = sphere.GetComponent<Material>().GetShader();
-        shader.Set("lights[0].color", 0, 1, 1);
-        shader.Set("lights[0].position", 0, 6, -6);
-        shader.Set("lights_cnt", 1);
+//        auto& shader = sphere.GetComponent<Material>().GetShader();
+//        shader.Set("lights[0].color", 0, 1, 1);
+//        shader.Set("lights[0].position", 0, 6, -6);
+//        shader.Set("lights_cnt", 1);
 //        tr_sphere.SetRotation(0, 1, 0, glfwGetTime() * 10);
         scene.Update();
 
