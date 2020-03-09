@@ -42,6 +42,7 @@ private:
 
 private:
     std::vector<std::unique_ptr<Scene>> scenes;
+
     Scene* currentScene = nullptr;
     Renderer renderer {};
 };

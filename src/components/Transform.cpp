@@ -8,18 +8,15 @@
 
 void Transform::BeforeRenderPass() {
     auto& shader = GetGameObject().GetComponent<Material>().GetShader();
-    auto& camera = Engine::GetEngine().GetCurrentScene().GetCurrentCamera();
-    auto [w, h] = Engine::GetEngine().GetRenderer().GetWindowSize();
-    glm::mat4 projection = glm::perspective(glm::radians(camera.GetFovy()),
-            static_cast<float>(w)/h, 0.1f, 1000.0f);
-    glm::mat4 view = camera.GetViewMatrix();
 
     glm::mat4 model = glm::translate(glm::mat4(1), this->position);
     model = glm::rotate(model, this->rotation_angle, this->rotation_axis);
     model = glm::scale(model, this->scale);
 
     shader.UseShaderProgram();
-    shader.SetTransform(projection, view, model);
+    shader.SetModel(model);
+    
+    auto& camera = Engine::GetEngine().GetCurrentScene().GetCurrentCamera();
     shader.SetCameraPosition(camera.Position());
 }
 

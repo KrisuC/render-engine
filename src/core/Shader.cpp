@@ -216,13 +216,6 @@ Shader &Shader::GetTestShader() {
     return test;
 }
 
-void Shader::SetTransform(mat4 const& projection, mat4 const& view,
-                          mat4 const& model) {
-    this->Set("projection", projection);
-    this->Set("view", view);
-    this->Set("model", model);
-}
-
 void Shader::processShaderFile(char const *filePath, ShaderType shaderType) {
     std::ifstream file;
     file.exceptions(std::ifstream::failbit | std::ifstream::badbit);

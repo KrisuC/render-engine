@@ -36,7 +36,6 @@ void processInput(Camera& camera) {
         camera.ProcessMouseMovement(offset.x, offset.y);
     }
     last = current;
-
 }
 
 int main(int argc, char *argv[]) {
@@ -92,10 +91,25 @@ int main(int argc, char *argv[]) {
 
     scene.Build();
 
+    Camera& camera = scene.GetCurrentCamera();
+    auto [w, h] = Engine::GetEngine().GetRenderer().GetWindowSize();
+
+
+    UniformBlock proj_view_matrices { 2* sizeof(glm::mat4), 0 };
+    proj_view_matrices.BindShader(Shader::GetDefaultShader(),
+                                 "GlobalTransform");
+
     Renderer& renderer = engine.GetRenderer();
     while (!renderer.ShouldEnd()) {
         renderer.UpdateBeforeRendering();
         processInput(scene.GetCurrentCamera());
+
+        glm::mat4 projection = glm::perspective(glm::radians(camera.GetFovy()),
+                                                static_cast<float>(w)/h, 0.1f, 1000.0f);
+        glm::mat4 view = camera.GetViewMatrix();
+
+        proj_view_matrices.SetBufferSubData(0, sizeof(glm::mat4), glm::value_ptr(projection));
+        proj_view_matrices.SetBufferSubData(sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(view));
 
         scene.Update();
 

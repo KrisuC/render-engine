@@ -3,9 +3,11 @@
 
 out vec4 FragColor;
 
-in vec2 TexCoords;
-in vec3 WorldPos;
-in vec3 Normal;
+in FROM_VS_TO_FS {
+    vec2 texCoords;
+    vec3 worldPos;
+    vec3 normal;
+} frag;
 
 const float PI = 3.14159265359;
 
@@ -73,7 +75,7 @@ void main() {
 
 
     vec3 N = normalize(normal);
-    vec3 V = normalize(cameraPosition - WorldPos);
+    vec3 V = normalize(cameraPosition - frag.worldPos);
     vec3 R = reflect(-V, N);
 
     vec3 F0 = vec3(0.04);
@@ -84,9 +86,9 @@ void main() {
     /* Lighting */
     vec3 Lo = emissive;
     for (int i = 0; i < lights_cnt; i++) {
-        vec3  L            =   normalize(lights[i].position - WorldPos);
+        vec3  L            =   normalize(lights[i].position - frag.worldPos);
         vec3  H            =   normalize(V + L); // half-way vector
-        float dist         =   length(lights[i].position - WorldPos);
+        float dist         =   length(lights[i].position - frag.worldPos);
         float attenuation  =   1.0 / (dist * dist);
         vec3  radiance     =   lights[i].color * attenuation;
 
@@ -197,14 +199,14 @@ float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness) {
 
 
 vec3 GetNormalFromMap() {
-    vec3 tangentNormal = texture(m.normal.map, TexCoords).xyz * 2.0 - 1.0;
+    vec3 tangentNormal = texture(m.normal.map, frag.texCoords).xyz * 2.0 - 1.0;
 
-    vec3 Q1  = dFdx(WorldPos);
-    vec3 Q2  = dFdy(WorldPos);
-    vec2 st1 = dFdx(TexCoords);
-    vec2 st2 = dFdy(TexCoords);
+    vec3 Q1  = dFdx(frag.worldPos);
+    vec3 Q2  = dFdy(frag.worldPos);
+    vec2 st1 = dFdx(frag.texCoords);
+    vec2 st2 = dFdy(frag.texCoords);
 
-    vec3 N   = normalize(Normal);
+    vec3 N   = normalize(frag.normal);
     vec3 T  = normalize(Q1*st2.t - Q2*st1.t);
     vec3 B  = -normalize(cross(N, T));
     mat3 TBN = mat3(T, B, N);
@@ -213,30 +215,30 @@ vec3 GetNormalFromMap() {
 }
 
 vec3 GetAlbedoFromMaterial() {
-    return m.albedo.use_map?    texture(m.albedo.map, TexCoords).rgb :
+    return m.albedo.use_map?    texture(m.albedo.map, frag.texCoords).rgb :
                                 m.albedo.value;
 }
 
 float GetMetallicFromMaterial() {
-    return m.metallic.use_map?  texture(m.metallic.map, TexCoords).r :
+    return m.metallic.use_map?  texture(m.metallic.map, frag.texCoords).r :
                                 m.metallic.value;
 }
 
 float GetRoughnessFromMaterial() {
-    return m.roughness.use_map? texture(m.roughness.map, TexCoords).r :
+    return m.roughness.use_map? texture(m.roughness.map, frag.texCoords).r :
                                 m.roughness.value;
 }
 
 vec3 GetNormalFromMaterial() {
-    return m.normal.use_map? GetNormalFromMap() : Normal;
+    return m.normal.use_map? GetNormalFromMap() : frag.normal;
 }
 
 float GetAOFromMaterial() {
-    return m.ao.use_map? texture(m.ao.map, TexCoords).r :1.0f;
+    return m.ao.use_map? texture(m.ao.map, frag.texCoords).r :1.0f;
 }
 
 vec3 GetEmissiveFromMaterial() {
-    return m.emissive.use_map? texture(m.emissive.map, TexCoords).rgb :
+    return m.emissive.use_map? texture(m.emissive.map, frag.texCoords).rgb :
                                m.emissive.value;
 }
 

@@ -13,6 +13,8 @@
 #include "Mesh.hpp"
 #include "Scene.hpp"
 
+
+
 void Skybox::Render() {
     renderShader.UseShaderProgram();
     glActiveTexture(GL_TEXTURE0);

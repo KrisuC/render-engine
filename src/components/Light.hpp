@@ -42,7 +42,11 @@ enum class LightType {
 };
 
 class Light : public Component {
-    using vec3 = glm::vec3;
+public:
+    /* Setting lighting information before render loop */
+    void BeforeRenderLoop() {
+
+    }
 
 public:
     explicit Light(LightType lightType) : ltype(lightType) { }
