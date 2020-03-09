@@ -185,13 +185,6 @@ Shader::checkCompileErrors(GLuint shader, const std::string& type, std::string p
     }
 }
 
-Shader::Shader() : Shader(
-        "shader/default.vert",
-        "shader/default.frag",
-        nullptr) {
-
-}
-
 void Shader::SetLight(Light const &light, int light_index) {
     static const std::string lstr =
             "lights[" + std::to_string(light_index) + "]";
@@ -203,17 +196,6 @@ void Shader::SetLight(Light const &light, int light_index) {
 
     this->Set("lights_cnt", light_index + 1);
     DEBUG_LOG("Adding light...", light_index);
-}
-
-Shader &Shader::GetDefaultShader() {
-    static Shader default_shader;
-    return default_shader;
-}
-
-Shader &Shader::GetTestShader() {
-    static Shader test { "shader/test.vert",
-                         "shader/test.frag" };
-    return test;
 }
 
 void Shader::processShaderFile(char const *filePath, ShaderType shaderType) {

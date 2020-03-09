@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "Renderer.hpp"
+#include "Shader.hpp"
 
 /*
  * Engine hold all the Scene(s) and Component(s)
@@ -17,7 +18,7 @@ class Scene;
 
 class Engine {
 public:
-    static Engine& GetEngine();
+    static Engine& GetInstance();
 
     Engine(Engine const&) = delete;
     Engine& operator=(Engine const&) = delete;
@@ -28,6 +29,13 @@ public:
     ~Engine() = default;
 
     Scene& CreateScene();
+
+    template <typename...Args>
+    Shader& CreateShader(Args &&... args);
+
+    Shader& GetDefaultShader();
+
+    Shader& GetTestShader();
 
     Renderer& GetRenderer();
 
@@ -42,6 +50,7 @@ private:
 
 private:
     std::vector<std::unique_ptr<Scene>> scenes;
+    std::vector<std::unique_ptr<Shader>> shaders;
 
     Scene* currentScene = nullptr;
     Renderer renderer {};

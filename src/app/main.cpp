@@ -12,7 +12,7 @@
 #include "IO.hpp"
 
 void processInput(Camera& camera) {
-    float speed = 20.0 * Engine::GetEngine().GetRenderer().GetDeltaTime();
+    float speed = 20.0 * Engine::GetInstance().GetRenderer().GetDeltaTime();
     if (io::KeyPress(Key::w)) {
         camera.Translate(camera.Front() *  speed);
     }
@@ -26,7 +26,7 @@ void processInput(Camera& camera) {
         camera.Translate(camera.Right() * speed);
     }
     if (io::KeyPress(Key::escape)) {
-        Engine::GetEngine().GetRenderer().Close();
+        Engine::GetInstance().GetRenderer().Close();
     }
 
     MousePos current = io::GetMousePosition();
@@ -40,7 +40,7 @@ void processInput(Camera& camera) {
 
 int main(int argc, char *argv[]) {
     /* Game code begins here */
-    Engine& engine = Engine::GetEngine();
+    Engine& engine = Engine::GetInstance();
 
     Scene& scene = engine.CreateScene();
     engine.MakeCurrentScene(scene);
@@ -49,7 +49,7 @@ int main(int argc, char *argv[]) {
     GameObject& sphere = scene.CreateGameObject();
     sphere.CreateComponent<Mesh>(SimpleMesh::Sphere());
     auto& m_sphere = sphere.CreateComponent<Material>(); {
-        m_sphere.SetShader(&Shader::GetDefaultShader());
+        m_sphere.SetShader(&engine.GetDefaultShader());
         m_sphere.SetAlbedo(1, 1, 1);
         m_sphere.SetMetallic(0.1);
         m_sphere.SetRoughness(0.8);
@@ -61,7 +61,7 @@ int main(int argc, char *argv[]) {
     GameObject& ground = scene.CreateGameObject();
     ground.CreateComponent<Mesh>(SimpleMesh::Quad());
     auto& m_ground = ground.CreateComponent<Material>(); {
-        m_ground.SetShader(&Shader::GetDefaultShader());
+        m_ground.SetShader(&engine.GetDefaultShader());
         m_ground.SetAlbedo(1, 1, 1);
         m_ground.SetMetallic(0.3);
         m_ground.SetRoughness(0.5);
@@ -79,7 +79,7 @@ int main(int argc, char *argv[]) {
     GameObject& lamp = scene.CreateGameObject();
     lamp.CreateComponent<Mesh>(SimpleMesh::Sphere());
     auto& m_lamp = lamp.CreateComponent<Material>(); {
-        m_lamp.SetShader(&Shader::GetDefaultShader());
+        m_lamp.SetShader(&engine.GetDefaultShader());
         m_lamp.SetEmissive(light_color);
     }
     auto& tr_lamp = lamp.CreateComponent<Transform>(); {
@@ -92,11 +92,11 @@ int main(int argc, char *argv[]) {
     scene.Build();
 
     Camera& camera = scene.GetCurrentCamera();
-    auto [w, h] = Engine::GetEngine().GetRenderer().GetWindowSize();
+    auto [w, h] = Engine::GetInstance().GetRenderer().GetWindowSize();
 
 
     UniformBlock proj_view_matrices { 2* sizeof(glm::mat4), 0 };
-    proj_view_matrices.BindShader(Shader::GetDefaultShader(),
+    proj_view_matrices.BindShader(engine.GetDefaultShader(),
                                  "GlobalTransform");
 
     Renderer& renderer = engine.GetRenderer();

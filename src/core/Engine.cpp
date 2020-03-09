@@ -26,7 +26,7 @@ Engine::Engine() {
     chdir("..");
 }
 
-Engine& Engine::GetEngine() {
+Engine& Engine::GetInstance() {
     static Engine engine;
     return engine;
 }
@@ -42,4 +42,23 @@ Scene &Engine::GetCurrentScene() {
 
 void Engine::MakeCurrentScene(Scene &scene) {
     currentScene = &scene;
+}
+
+template<typename... Args>
+Shader &Engine::CreateShader(Args &&... args) {
+    auto up_shader = std::make_unique<Shader>(std::forward<Args>(args)...);
+    Shader& ret = *up_shader;
+    shaders.push_back(std::move(up_shader));
+    return ret;
+}
+
+Shader &Engine::GetDefaultShader() {
+    static Shader& default_ = CreateShader("shader/default.vert",
+                                           "shader/default.frag");
+    return default_;
+}
+
+Shader &Engine::GetTestShader() {
+    static Shader& test = CreateShader("shader/test.vert", "shader/test.frag");
+    return test;
 }

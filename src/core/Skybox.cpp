@@ -20,8 +20,8 @@ void Skybox::Render() {
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap);
 
-    auto& camera = Engine::GetEngine().GetCurrentScene().GetCurrentCamera();
-    auto [w, h] = Engine::GetEngine().GetRenderer().GetWindowSize();
+    auto& camera = Engine::GetInstance().GetCurrentScene().GetCurrentCamera();
+    auto [w, h] = Engine::GetInstance().GetRenderer().GetWindowSize();
     glm::mat4 projection = glm::perspective(glm::radians(camera.GetFovy()),
                                             static_cast<float>(w)/h, 0.1f, 100.0f);
     glm::mat4 view = camera.GetViewMatrix();

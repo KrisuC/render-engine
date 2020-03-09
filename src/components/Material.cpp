@@ -4,9 +4,12 @@
 
 #include "Material.hpp"
 #include "Debug.hpp"
+#include "Engine.hpp"
 
 Material::Material() {
     DEBUG_LOG("Creating Material...");
+
+    p_shader = &Engine::GetInstance().GetDefaultShader();
 
     SetAlbedo(1, 1, 1);
     SetMetallic(0);

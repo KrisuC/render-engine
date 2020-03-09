@@ -15,8 +15,8 @@ void Transform::BeforeRenderPass() {
 
     shader.UseShaderProgram();
     shader.SetModel(model);
-    
-    auto& camera = Engine::GetEngine().GetCurrentScene().GetCurrentCamera();
+
+    auto& camera = Engine::GetInstance().GetCurrentScene().GetCurrentCamera();
     shader.SetCameraPosition(camera.Position());
 }
 

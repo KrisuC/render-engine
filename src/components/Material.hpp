@@ -66,7 +66,7 @@ private:
 
 private:
     /* Shader responsible for rendering this Material */
-    Shader *p_shader = &Shader::GetDefaultShader();
+    Shader *p_shader;
 
     /* All material properties */
     std::array<MaterialProperty, MaterialPropertyTypeCount> materialProperties {};

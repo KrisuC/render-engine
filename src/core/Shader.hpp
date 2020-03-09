@@ -7,7 +7,6 @@
 #include <string>
 
 #include "Light.hpp"
-#include "Transform.hpp"
 #include "UniformBlock.hpp"
 
 enum class ShaderType {
@@ -29,10 +28,6 @@ public:
     Shader(const GLchar *vertexPath,
            const GLchar *fragmentPath,
            const GLchar *geometryPath = nullptr);
-    Shader();
-
-    static Shader& GetDefaultShader();
-    static Shader& GetTestShader();
 
     // "Activate" the shader
     void UseShaderProgram();
