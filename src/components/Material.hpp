@@ -54,7 +54,7 @@ public:
 
     inline void AppendTexture(const std::string &name, Texture const*t);
 
-    void SetShader(Shader *ns);
+    void SetShader(Shader &ns);
     inline Shader& GetShader() { return *p_shader; }
 
 private:

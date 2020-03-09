@@ -45,8 +45,8 @@ void Material::updateShaderUniform() {
     }
 }
 
-void Material::SetShader(Shader *ns) {
-    p_shader = ns;
+void Material::SetShader(Shader & ns) {
+    p_shader = &ns;
 }
 
 void Material::setIBLTextures(IBL const &ibl) {

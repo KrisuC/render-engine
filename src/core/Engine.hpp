@@ -6,9 +6,11 @@
 #define RENDER_ENGINE_ENGINE_HPP
 
 #include <vector>
+#include <functional>
 
 #include "Renderer.hpp"
 #include "Shader.hpp"
+#include "UniformBlock.hpp"
 
 /*
  * Engine hold all the Scene(s) and Component(s)
@@ -43,14 +45,30 @@ public:
 
     void MakeCurrentScene(Scene& scene);
 
-    Scene& GetCurrentScene();;
+    Scene& GetCurrentScene();
+
+    /* Managing Uniform Block */
+    void CreateUniformBlock(const std::string &uniform_name, int bytes);
+
+    void EnableUniformBlock(const std::string &uniform_name);
+
+    void DisableUniformBlock(const std::string &uniform_name);
+
+    UniformBlock& GetUniformBlock(const std::string &uniform_name);
+
+    friend Scene;
 
 private:
+    using UBop = std::function<UniformBlock&(UniformBlock&)>;
+    UniformBlock& findUniformBlockAndF(const std::string &uniform_name, const UBop& f);
+
     Engine();
 
 private:
     std::vector<std::unique_ptr<Scene>> scenes;
     std::vector<std::unique_ptr<Shader>> shaders;
+
+    std::vector<UniformBlock> uniformBlocks;
 
     Scene* currentScene = nullptr;
     Renderer renderer {};

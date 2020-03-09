@@ -28,9 +28,6 @@ public:
                     float yaw = YAW,
                     float pitch = PITCH);
 
-    Camera(Camera const&) = delete;
-
-
     glm::mat4 GetViewMatrix();
 
     inline float GetFovy() const { return fovy; }

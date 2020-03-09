@@ -4,6 +4,8 @@
 
 #include "Scene.hpp"
 
+#include <glm/gtc/type_ptr.hpp>
+
 void Scene::Build() {
     IBL const& ibl = up_skybox->GetIBL();
     for (auto& up_gameObject : up_gameObjects) {
@@ -42,8 +44,18 @@ GameObject &Scene::CreateGameObject() {
 }
 
 void Scene::Update() {
+    Engine& engine = Engine::GetInstance();
+    UniformBlock& proj_view_matrices =
+            engine.GetUniformBlock("GlobalTransform");
+    auto [w, h] = engine.GetRenderer().GetWindowSize();
 
-    auto& renderer = Engine::GetInstance().GetRenderer();
+    glm::mat4 projection = glm::perspective(glm::radians(camera.GetFovy()),
+                                            static_cast<float>(w)/h, 0.1f, 1000.0f);
+    glm::mat4 view = camera.GetViewMatrix();
+    proj_view_matrices.SetBufferSubData(0, sizeof(glm::mat4), glm::value_ptr(projection));
+    proj_view_matrices.SetBufferSubData(sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(view));
+
+    auto& renderer = engine.GetRenderer();
     for (auto& up_gameObject : up_gameObjects) {
         // BEFORE
         for (auto it : up_gameObject->componentsMap) {

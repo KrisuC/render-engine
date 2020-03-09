@@ -3,9 +3,14 @@
 //
 
 #include "UniformBlock.hpp"
+
+#include <utility>
 #include "Shader.hpp"
 
-UniformBlock::UniformBlock(int bytes, int binding_point) {
+UniformBlock::UniformBlock(int bytes, int binding_point,
+                           std::string uniform_block_name)
+        : uniformBlockName(std::move(uniform_block_name)){
+
     glGenBuffers(1, &ubo);
 
     glBindBuffer(GL_UNIFORM_BUFFER, ubo);
@@ -22,7 +27,13 @@ void UniformBlock::SetBufferSubData(int offset, int size, float *value) {
 }
 
 void
-UniformBlock::BindShader(Shader const &shader, const char *uniform_block_name) {
-    unsigned ub_index = glGetUniformBlockIndex(shader.id, uniform_block_name);
+UniformBlock::BindShader(Shader const &shader) {
+    unsigned ub_index = glGetUniformBlockIndex(shader.id, uniformBlockName.c_str());
     glUniformBlockBinding(shader.id, ub_index, 0);
+}
+
+UniformBlock::~UniformBlock() { glDeleteBuffers(1, &ubo); }
+
+UniformBlock::UniformBlock(UniformBlock &&rhs) noexcept {
+    std::swap(this->ubo, rhs.ubo);
 }

@@ -49,7 +49,7 @@ int main(int argc, char *argv[]) {
     GameObject& sphere = scene.CreateGameObject();
     sphere.CreateComponent<Mesh>(SimpleMesh::Sphere());
     auto& m_sphere = sphere.CreateComponent<Material>(); {
-        m_sphere.SetShader(&engine.GetDefaultShader());
+        m_sphere.SetShader(engine.GetDefaultShader());
         m_sphere.SetAlbedo(1, 1, 1);
         m_sphere.SetMetallic(0.1);
         m_sphere.SetRoughness(0.8);
@@ -61,7 +61,7 @@ int main(int argc, char *argv[]) {
     GameObject& ground = scene.CreateGameObject();
     ground.CreateComponent<Mesh>(SimpleMesh::Quad());
     auto& m_ground = ground.CreateComponent<Material>(); {
-        m_ground.SetShader(&engine.GetDefaultShader());
+        m_ground.SetShader(engine.GetDefaultShader());
         m_ground.SetAlbedo(1, 1, 1);
         m_ground.SetMetallic(0.3);
         m_ground.SetRoughness(0.5);
@@ -79,7 +79,7 @@ int main(int argc, char *argv[]) {
     GameObject& lamp = scene.CreateGameObject();
     lamp.CreateComponent<Mesh>(SimpleMesh::Sphere());
     auto& m_lamp = lamp.CreateComponent<Material>(); {
-        m_lamp.SetShader(&engine.GetDefaultShader());
+        m_lamp.SetShader(engine.GetDefaultShader());
         m_lamp.SetEmissive(light_color);
     }
     auto& tr_lamp = lamp.CreateComponent<Transform>(); {
@@ -91,25 +91,10 @@ int main(int argc, char *argv[]) {
 
     scene.Build();
 
-    Camera& camera = scene.GetCurrentCamera();
-    auto [w, h] = Engine::GetInstance().GetRenderer().GetWindowSize();
-
-
-    UniformBlock proj_view_matrices { 2* sizeof(glm::mat4), 0 };
-    proj_view_matrices.BindShader(engine.GetDefaultShader(),
-                                 "GlobalTransform");
-
     Renderer& renderer = engine.GetRenderer();
     while (!renderer.ShouldEnd()) {
         renderer.UpdateBeforeRendering();
         processInput(scene.GetCurrentCamera());
-
-        glm::mat4 projection = glm::perspective(glm::radians(camera.GetFovy()),
-                                                static_cast<float>(w)/h, 0.1f, 1000.0f);
-        glm::mat4 view = camera.GetViewMatrix();
-
-        proj_view_matrices.SetBufferSubData(0, sizeof(glm::mat4), glm::value_ptr(projection));
-        proj_view_matrices.SetBufferSubData(sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(view));
 
         scene.Update();
 
