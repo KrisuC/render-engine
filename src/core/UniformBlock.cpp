@@ -20,7 +20,7 @@ UniformBlock::UniformBlock(int bytes, int binding_point,
     glBindBufferRange(GL_UNIFORM_BUFFER, 0, ubo, 0, bytes);
 }
 
-void UniformBlock::SetBufferSubData(int offset, int size, float *value) {
+void UniformBlock::SetBufferSubData(int offset, int size, void *value) {
     glBindBuffer(GL_UNIFORM_BUFFER, ubo);
     glBufferSubData(GL_UNIFORM_BUFFER, offset, size, value);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
@@ -34,6 +34,7 @@ UniformBlock::BindShader(Shader const &shader) {
 
 UniformBlock::~UniformBlock() { glDeleteBuffers(1, &ubo); }
 
-UniformBlock::UniformBlock(UniformBlock &&rhs) noexcept {
-    std::swap(this->ubo, rhs.ubo);
+UniformBlock::UniformBlock(UniformBlock &&rhs) noexcept:
+    ubo(rhs.ubo), uniformBlockName(rhs.uniformBlockName), enabled(rhs.enabled)  {
+    rhs.ubo = 0;
 }

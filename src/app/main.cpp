@@ -39,7 +39,7 @@ void processInput(Camera& camera) {
 }
 
 int main(int argc, char *argv[]) {
-    /* Game code begins here */
+
     Engine& engine = Engine::GetInstance();
 
     Scene& scene = engine.CreateScene();
@@ -100,9 +100,6 @@ int main(int argc, char *argv[]) {
 
         renderer.UpdateAfterRendering();
     }
-
-
-    /* Game code ends here */
 
     return 0;
 }

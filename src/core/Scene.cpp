@@ -7,6 +7,11 @@
 #include <glm/gtc/type_ptr.hpp>
 
 void Scene::Build() {
+    auto& default_shader = Engine::GetInstance().GetDefaultShader();
+    for (int i = 0; i < lights.size(); i++) {
+        default_shader.SetLight(lights[i], i);
+    }
+
     IBL const& ibl = up_skybox->GetIBL();
     for (auto& up_gameObject : up_gameObjects) {
         /* Check if it's renderable */
@@ -18,9 +23,6 @@ void Scene::Build() {
             material.updateShaderUniform();
 
             shader.UseShaderProgram();
-            for (int i = 0; i < lights.size(); i++) {
-                shader.SetLight(lights[i], i);
-            }
         } catch (NoComponent&) {
             // TODO: Change with better mechanism
             continue;

@@ -11,10 +11,6 @@ in FROM_VS_TO_FS {
 
 const float PI = 3.14159265359;
 
-/*********** for calculating V *******************/
-uniform vec3 cameraPosition;
-
-
 /*********** Material Configuration **************/
 uniform struct Material {
     struct Vec3fMap { sampler2D map; vec3 value; bool use_map; }
@@ -30,21 +26,25 @@ vec3 GetNormalFromMaterial();
 float GetAOFromMaterial();
 vec3 GetEmissiveFromMaterial();
 
-
 /************* Lights Configuration **************/
 const int DIRECTIONAL = 0, POINT = 1, SPOT = 2;
 const int MAX_LIGHT = 20;
 
-uniform struct Lights {
-    vec3 position;
-    vec3 direction;
-    vec3 color;
-    float cone_angle_in_radian;
+layout (std140) uniform LightInformation {
+    struct Lights {
+        vec3 position;               // 0-4 (unit: 4 byte)
+        vec3 direction;              // 4-8
+        vec3 color;                  // 8-12
+        float cone_angle_in_radian;  // 12-13
 
-    int ltype;
-} lights[MAX_LIGHT];
-uniform int lights_cnt = 0;
+        int ltype;                   // 13-14
+    } lights[MAX_LIGHT];             // 14 * MAX_LIGHT(20) == 280 bytes
 
+    int lights_cnt;                  // 280-281
+
+    vec3 cameraPosition;             // 281-285
+                                     // 285 * 4 == 1140 bytes
+};
 
 /**********************IBL*************************/
 uniform struct IBL {

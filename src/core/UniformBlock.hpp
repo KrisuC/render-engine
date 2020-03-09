@@ -28,7 +28,7 @@ public:
     void BindShader(Shader const& shader);
 
     /* Setting buffer data */
-    void SetBufferSubData(int offset, int size, float *value);
+    void SetBufferSubData(int offset, int size, void *value);
 
     ~UniformBlock();
 
