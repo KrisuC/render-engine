@@ -9,6 +9,7 @@
 #include "GameObject.hpp"
 #include "Scene.hpp"
 #include "Mesh.hpp"
+#include "Material.hpp"
 
 namespace {
     void ErrorCallBack(int error, const char* description) {

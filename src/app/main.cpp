@@ -10,6 +10,8 @@
 #include "Material.hpp"
 #include "Debug.hpp"
 #include "IO.hpp"
+#include "LightInformation.hpp"
+#include "GlobalTransformation.hpp"
 
 void processInput(Camera& camera);
 
@@ -17,12 +19,8 @@ int main(int argc, char *argv[]) {
 
     Engine& engine = Engine::GetInstance();
 
-    /* Creating the default uniform blocks*/
-    engine.CreateUniformBlock("LightInformation", 1024);
-    engine.CreateUniformBlock("GlobalTransform", 2*sizeof(glm::mat4));
-
-    engine.EnableUniformBlock("GlobalTransform");
-    engine.EnableUniformBlock("LightInformation");
+    engine.EnableUniformBuffer<LightInformation>();
+    engine.EnableUniformBuffer<GlobalTransformation>();
 
     Scene& scene = engine.CreateScene();
     engine.MakeCurrentScene(scene);
@@ -31,7 +29,7 @@ int main(int argc, char *argv[]) {
     GameObject& sphere = scene.CreateGameObject();
     sphere.CreateComponent<Mesh>(SimpleMesh::Sphere());
     auto& m_sphere = sphere.CreateComponent<Material>(); {
-        m_sphere.SetShader(engine.GetDefaultShader());
+        m_sphere.SetShader(engine.GetTestShader());
         m_sphere.SetAlbedo(1, 1, 1);
         m_sphere.SetMetallic(0.1);
         m_sphere.SetRoughness(0.8);
@@ -43,7 +41,7 @@ int main(int argc, char *argv[]) {
     GameObject& ground = scene.CreateGameObject();
     ground.CreateComponent<Mesh>(SimpleMesh::Quad());
     auto& m_ground = ground.CreateComponent<Material>(); {
-        m_ground.SetShader(engine.GetDefaultShader());
+        m_ground.SetShader(engine.GetTestShader());
         m_ground.SetAlbedo(1, 1, 1);
         m_ground.SetMetallic(0.3);
         m_ground.SetRoughness(0.5);
@@ -61,7 +59,7 @@ int main(int argc, char *argv[]) {
     GameObject& lamp = scene.CreateGameObject();
     lamp.CreateComponent<Mesh>(SimpleMesh::Sphere());
     auto& m_lamp = lamp.CreateComponent<Material>(); {
-        m_lamp.SetShader(engine.GetDefaultShader());
+        m_lamp.SetShader(engine.GetTestShader());
         m_lamp.SetEmissive(light_color);
     }
     auto& tr_lamp = lamp.CreateComponent<Transform>(); {
@@ -89,9 +87,9 @@ int main(int argc, char *argv[]) {
 
 
 void processInput(Camera &camera) {
-    float speed = 20.0 * Engine::GetInstance().GetRenderer().GetDeltaTime();
+    float speed = 20.0f * Engine::GetInstance().GetRenderer().GetDeltaTime();
     if (io::KeyPress(Key::w)) {
-        camera.Translate(camera.Front() *  speed);
+        camera.Translate(camera.Front() * speed);
     }
     if (io::KeyPress(Key::s)) {
         camera.Translate(camera.Front() * -speed);

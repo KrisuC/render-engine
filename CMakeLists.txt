@@ -9,6 +9,7 @@ file(GLOB engine_src
         "src/basic/*.cpp"
         "src/core/*.cpp"
         "src/components/*.cpp"
+        "src/uniform-blocks/*cpp"
         "src/app/main.cpp"
         )
 
@@ -18,6 +19,7 @@ add_executable(test src/app/test.cpp)
 target_include_directories(engine PRIVATE
         ${PROJECT_SOURCE_DIR}/src/core
         ${PROJECT_SOURCE_DIR}/src/components
+        ${PROJECT_SOURCE_DIR}/src/uniform-blocks
         )
 
 add_compile_definitions(ENGINE_DEBUG)

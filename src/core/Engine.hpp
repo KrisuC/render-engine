@@ -7,10 +7,13 @@
 
 #include <vector>
 #include <functional>
+#include <type_traits>
 
 #include "Renderer.hpp"
 #include "Shader.hpp"
 #include "UniformBlock.hpp"
+#include "GlobalTransformation.hpp"
+#include "LightInformation.hpp"
 
 /*
  * Engine hold all the Scene(s) and Component(s)
@@ -47,31 +50,74 @@ public:
 
     Scene& GetCurrentScene();
 
-    /* Managing Uniform Block */
-    void CreateUniformBlock(const std::string &uniform_name, int bytes);
+    template <typename T>
+    void EnableUniformBuffer();
 
-    void EnableUniformBlock(const std::string &uniform_name);
+    template <typename T>
+    void DisableUniformBuffer();
 
-    void DisableUniformBlock(const std::string &uniform_name);
-
-    UniformBlock& GetUniformBlock(const std::string &uniform_name);
-
-    friend Scene;
+    template <typename T>
+    T& GetUniformBuffer();
 
 private:
-    using UBop = std::function<UniformBlock&(UniformBlock&)>;
-    UniformBlock& findUniformBlockAndF(const std::string &uniform_name, const UBop& f);
+    /* Managing Uniform Block */
+    template <typename T> void setUniformBlockEnabled(bool enabled);
+
 
     Engine();
 
 private:
     std::vector<std::unique_ptr<Scene>> scenes;
     std::vector<std::unique_ptr<Shader>> shaders;
-    std::vector<std::unique_ptr<UniformBlock>> uniformBlocks;
+    /* size_t for storing type_info::hash_code */
+    std::unordered_map<
+        size_t, std::unique_ptr<UniformBlock>
+    > uniform_blocks;
 
     Scene* currentScene = nullptr;
     Renderer renderer {};
+
+    friend Scene;
 };
+
+
+
+template<typename T>
+void Engine::EnableUniformBuffer() {
+    setUniformBlockEnabled<T>(true);
+}
+
+template<typename T>
+void Engine::DisableUniformBuffer() {
+    setUniformBlockEnabled<T>(false);
+}
+
+template<typename T>
+void Engine::setUniformBlockEnabled(bool enabled) {
+    static_assert(std::is_base_of_v<UniformBlock, T>,
+                  "uniform block must be derived of UniformBlock");
+    auto hash = typeid(T).hash_code();
+    auto it = uniform_blocks.find(hash);
+    if (it == uniform_blocks.end()) { // not exist
+        auto p = static_cast<UniformBlock*>(new T);
+        auto up = std::unique_ptr<UniformBlock>(p);
+        uniform_blocks.insert({hash, std::move(up)});
+        it = uniform_blocks.find(hash);
+    }
+    it->second->SetEnabled(enabled);
+}
+
+template<typename T>
+T& Engine::GetUniformBuffer() {
+    static_assert(std::is_base_of_v<UniformBlock, T>,
+                  "uniform block must be derived of UniformBlock");
+    auto it = uniform_blocks.find(typeid(T).hash_code());
+    if (it == uniform_blocks.end()) {
+        throw std::runtime_error("uniform block not found");
+    }
+    return *static_cast<T*>(it->second.get());
+}
+
 
 
 #endif //RENDER_ENGINE_ENGINE_HPP

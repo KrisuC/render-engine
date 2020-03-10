@@ -8,13 +8,10 @@
 #include <vector>
 #include <utility>
 
-#include "GameObject.hpp"
-#include "Skybox.hpp"
+
 #include "Camera.hpp"
-#include "Light.hpp"
-#include "Material.hpp"
-#include "Renderer.hpp"
-#include "Engine.hpp"
+#include "Skybox.hpp"
+
 
 /*
  * Scene holds all Renderables, Lights and some other asset in the scene
@@ -41,6 +38,8 @@
  */
 
 class Renderer;
+class GameObject;
+class Light;
 
 class Scene {
 public:
@@ -79,14 +78,10 @@ private:
 };
 
 
-
-
 template<typename... Args>
 void Scene::CreateSkybox(Args... args) {
     up_skybox = std::make_unique<Skybox>(args...);
 }
-
-
 
 
 

@@ -31,33 +31,10 @@ public:
     GameObject& operator=(GameObject &&) = default;
 
     template<typename T, typename... Args>
-    T& CreateComponent(Args&&... args) {
-        static_assert(std::is_base_of_v<Component, T>,
-                      "T must be derived class of Component");
-
-        auto component_id = type_hash<T>();
-        if (componentsMap.find(component_id) != componentsMap.end()) {
-            throw std::runtime_error("Recreation of component is forbidden");
-        }
-
-        T* p_component = new T{args...};
-        p_component->owner = this;
-
-        componentsMap.insert(std::make_pair(
-                component_id, p_component));
-        return *p_component;
-    }
+    T& CreateComponent(Args&&... args);
 
     template<typename T>
-    T& GetComponent() {
-        const auto id = typeid(T).hash_code();
-        auto iter = componentsMap.find(id);
-        if (iter != componentsMap.end()) {
-            return *static_cast<T*>(iter->second);
-        } else {
-            throw NoComponent();
-        }
-    }
+    T& GetComponent();
 
 private:
     template <typename T>
@@ -67,12 +44,46 @@ private:
 
 private:
     std::unordered_map<
-            decltype(type_hash<Component>()),
-            Component*
-    > componentsMap;
+            size_t,
+            std::unique_ptr<Component>
+    > components_map;
 
     friend class Scene;
 };
+
+
+template<typename T, typename... Args>
+T& GameObject::CreateComponent(Args &&... args) {
+    static_assert(std::is_base_of_v<Component, T>,
+                  "T must be derived class of Component");
+
+    auto hash = type_hash<T>();
+    if (components_map.find(hash) != components_map.end()) {
+        throw std::runtime_error("Recreation of component is forbidden");
+    }
+
+    auto up_component = std::make_unique<T>(std::forward<Args>(args)...);
+    up_component->owner = this;
+    /* get reference pointer for return */
+    T* ret_p = up_component.get();
+
+    components_map.insert({hash, std::move(up_component)});
+    return *ret_p;
+}
+
+template<typename T>
+T& GameObject::GetComponent() {
+    static_assert(std::is_base_of_v<Component, T>,
+                  "T must be derived class of Component");
+
+    const auto id = typeid(T).hash_code();
+    auto iter = components_map.find(id);
+    if (iter != components_map.end()) {
+        return *static_cast<T*>(iter->second.get());
+    } else {
+        throw NoComponent();
+    }
+}
 
 
 #endif //RENDER_ENGINE_GAMEOBJECT_HPP

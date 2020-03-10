@@ -43,7 +43,7 @@ layout (std140) uniform LightInformation {
 
     vec3 cameraPosition;             // 240-244N
     int lights_cnt;                  // 243-244N
-                                     // 244 * 4 < 1024 bytes
+// 244 * 4 < 1024 bytes
 };
 
 /**********************IBL*************************/
@@ -54,6 +54,7 @@ uniform struct IBL {
 } ibl;
 
 /*************************************************/
+
 
 
 void main() {

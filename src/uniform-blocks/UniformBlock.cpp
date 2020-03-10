@@ -9,10 +9,12 @@
 #include "Shader.hpp"
 #include "Debug.hpp"
 
-UniformBlock::UniformBlock(int bytes, int shader_binding_point,
-                           std::string uniform_block_name)
+// TODO: make current_binding update thread safe
+int UniformBlock::current_total_binding = 0;
+
+UniformBlock::UniformBlock(std::string uniform_block_name, int bytes)
         : uniform_block_name(std::move(uniform_block_name)),
-          shader_binding_point(shader_binding_point) {
+          binding_point(current_total_binding++) {
 
     glGenBuffers(1, &ubo);
 
@@ -20,17 +22,17 @@ UniformBlock::UniformBlock(int bytes, int shader_binding_point,
     glBufferData(GL_UNIFORM_BUFFER, bytes, nullptr, GL_STATIC_DRAW);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-    glBindBufferRange(GL_UNIFORM_BUFFER, shader_binding_point, ubo, 0, bytes);
+    glBindBufferRange(GL_UNIFORM_BUFFER, binding_point, ubo, 0, bytes);
 
     DEBUG_LOG("Creating Uniform Buffer:", this->uniform_block_name, "with size:", bytes);
 }
 
-void UniformBlock::SetBufferSubData(int offset, int size, void *value) {
+void UniformBlock::SetBufferSubData(int offset, int size, const void *value) {
     glBindBuffer(GL_UNIFORM_BUFFER, ubo);
     glBufferSubData(GL_UNIFORM_BUFFER, offset, size, value);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-    // DEBUG_LOG("Setting subdata of", uniformBlockName, "with offset:", offset, "size:", size);
+    // DEBUG_LOG("Setting subdata of", uniform_block_name, "with offset:", offset, "size:", size);
 }
 
 void
@@ -39,12 +41,16 @@ UniformBlock::BindShader(Shader const &shader) {
     if (uniform_block_index == GL_INVALID_INDEX) {
         throw std::runtime_error("Failed to get uniform index");
     }
-    glUniformBlockBinding(shader.id, uniform_block_index, shader_binding_point);
+    glUniformBlockBinding(shader.id, uniform_block_index, binding_point);
 }
 
 UniformBlock::~UniformBlock() { glDeleteBuffers(1, &ubo); }
 
-//UniformBlock::UniformBlock(UniformBlock &&rhs) noexcept:
-//    ubo(rhs.ubo), uniformBlockName(rhs.uniformBlockName), enabled(rhs.enabled), shader_binding_point(rhs.shader_binding_point)  {
-//    rhs.ubo = 0;
-//}
+UniformBlock::UniformBlock(UniformBlock &&rhs) noexcept:
+    ubo(rhs.ubo),
+    uniform_block_name(std::move(rhs.uniform_block_name)),
+    enabled(rhs.enabled),
+    binding_point(rhs.binding_point)  {
+
+    rhs.ubo = 0; // prevent from destructor free buffer storage
+}
