@@ -7,11 +7,6 @@
 #include <glm/gtc/type_ptr.hpp>
 
 void Scene::Build() {
-    auto& default_shader = Engine::GetInstance().GetDefaultShader();
-    for (int i = 0; i < lights.size(); i++) {
-        default_shader.SetLight(lights[i], i);
-    }
-
     IBL const& ibl = up_skybox->GetIBL();
     for (auto& up_gameObject : up_gameObjects) {
         /* Check if it's renderable */
@@ -47,6 +42,7 @@ GameObject &Scene::CreateGameObject() {
 
 void Scene::Update() {
     Engine& engine = Engine::GetInstance();
+    // GLobalTransform Uniform Block
     UniformBlock& proj_view_matrices =
             engine.GetUniformBlock("GlobalTransform");
     auto [w, h] = engine.GetRenderer().GetWindowSize();
@@ -56,6 +52,26 @@ void Scene::Update() {
     glm::mat4 view = camera.GetViewMatrix();
     proj_view_matrices.SetBufferSubData(0, sizeof(glm::mat4), glm::value_ptr(projection));
     proj_view_matrices.SetBufferSubData(sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(view));
+
+    // LightInformation Uniform Block
+    UniformBlock& lightInfo = engine.GetUniformBlock("LightInformation");
+    const int N = sizeof(float);
+    using glm::value_ptr;
+    for (int i = 0; i < lights.size(); i++) {
+        const int elem_offset = 240 * N * i; // element of struct's size
+        lightInfo.SetBufferSubData(elem_offset + 0, 3 * N, value_ptr(lights[i].position));
+        lightInfo.SetBufferSubData(elem_offset + 3 * N,  N, &lights[i].cone_angle_in_radian);
+
+        lightInfo.SetBufferSubData(elem_offset + 4 * N, 3 * N, value_ptr(lights[i].direction));
+        lightInfo.SetBufferSubData(elem_offset + 7 * N, N, &lights[i].ltype);
+
+        lightInfo.SetBufferSubData(elem_offset + 8 * N, 3 * N, value_ptr(lights[i].color));
+    }
+    int lights_size = lights.size();
+    glm::vec3 camera_pos = camera.Position();
+    lightInfo.SetBufferSubData(240*N, 3*N, value_ptr(camera_pos));
+    lightInfo.SetBufferSubData(243*N, N, &lights_size);
+
 
     auto& renderer = engine.GetRenderer();
     for (auto& up_gameObject : up_gameObjects) {

@@ -24,12 +24,6 @@ Renderer& Engine::GetRenderer() {
 Engine::Engine() {
     /* Setting asset directory */
     chdir("..");
-    /* Creating the default uniform blocks*/
-    CreateUniformBlock("GlobalTransform", sizeof(glm::mat4) * 2);
-    CreateUniformBlock("LightInformation", 1141);
-
-    EnableUniformBlock("GlobalTransform");
-    EnableUniformBlock("LightInformation");
 }
 
 
@@ -59,10 +53,10 @@ Shader &Engine::CreateShader(Args &&... args) {
     auto up_shader = std::make_unique<Shader>(std::forward<Args>(args)...);
     Shader& ret = *up_shader;
     shaders.push_back(std::move(up_shader));
-    /* binding uniform block to newly created shader */
+    /* binding all enabled uniform blocks to newly created shader */
     for (auto & uniformBlock : uniformBlocks) {
-        if (uniformBlock.enabled) {
-            uniformBlock.BindShader(ret);
+        if (uniformBlock->enabled) {
+            uniformBlock->BindShader(ret);
         }
     }
     return ret;
@@ -84,27 +78,30 @@ Shader &Engine::GetTestShader() {
 
 void Engine::CreateUniformBlock(const std::string &uniform_name, int bytes) {
     static int current_uniform_bind_id = 0;
-    uniformBlocks.emplace_back(bytes, current_uniform_bind_id++, uniform_name);
+
+    auto p_new_uniform_block = std::make_unique<UniformBlock>(bytes, current_uniform_bind_id, uniform_name);
+    current_uniform_bind_id++;
+    uniformBlocks.push_back(std::move(p_new_uniform_block));
 }
 
 
 void Engine::EnableUniformBlock(const std::string &uniform_name) {
 
     findUniformBlockAndF(uniform_name,
-            [](UniformBlock& ub)-> UniformBlock& { ub.enabled = true; return ub; });
+            [](UniformBlock& ub) -> UniformBlock& { ub.enabled = true; return ub; });
 }
 
 
 void Engine::DisableUniformBlock(const std::string &uniform_name) {
     findUniformBlockAndF(uniform_name,
-            [](UniformBlock& ub)-> UniformBlock& { ub.enabled = false; return ub; });
+            [](UniformBlock& ub) -> UniformBlock& { ub.enabled = false; return ub; });
 }
 
 
 UniformBlock& Engine::findUniformBlockAndF(const std::string &uniform_name, const UBop& f) {
     for (auto & uniformBlock : uniformBlocks) {
-        if (uniformBlock.uniformBlockName == uniform_name) {
-            return f(uniformBlock);
+        if (uniformBlock->uniform_block_name == uniform_name) {
+            return f(*uniformBlock);
         }
     }
     throw std::runtime_error("No such Uniform Block exists");

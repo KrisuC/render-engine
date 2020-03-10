@@ -15,16 +15,16 @@ class Shader;
 
 class UniformBlock {
 public:
-    /* Generate uniform block buffer */
-    explicit UniformBlock(int bytes, int binding_point,
+    /* Generate uniform block buffer, bind buffer to the binding point */
+    explicit UniformBlock(int bytes, int shader_binding_point,
                           std::string uniform_block_name);
 
     UniformBlock(UniformBlock const&) = delete;
     UniformBlock& operator=(UniformBlock const&) = delete;
 
-    UniformBlock(UniformBlock && rhs) noexcept;
+    UniformBlock(UniformBlock && rhs) noexcept = default;
 
-    /* Bind Shader's uniform block to this buffer */
+    /* Bind Shader's uniform block to the binding point */
     void BindShader(Shader const& shader);
 
     /* Setting buffer data */
@@ -34,9 +34,10 @@ public:
 
 private:
     unsigned ubo = 0;
-    std::string uniformBlockName;
+    std::string uniform_block_name;
     /* for convenient...make it easier to enable/disable uniform block in Engine */
     bool enabled = false;
+    int shader_binding_point;
 
     friend class Engine;
     friend class Shader;

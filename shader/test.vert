@@ -7,9 +7,13 @@ out vec2 TexCoords;
 out vec3 WorldPos;
 out vec3 Normal;
 
-uniform mat4 projection;
-uniform mat4 view;
+layout (std140) uniform GlobalTransform {
+    mat4 projection;
+    mat4 view;
+};
+
 uniform mat4 model;
+
 
 void main() {
     TexCoords = aTexCoords;

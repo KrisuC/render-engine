@@ -11,36 +11,18 @@
 #include "Debug.hpp"
 #include "IO.hpp"
 
-void processInput(Camera& camera) {
-    float speed = 20.0 * Engine::GetInstance().GetRenderer().GetDeltaTime();
-    if (io::KeyPress(Key::w)) {
-        camera.Translate(camera.Front() *  speed);
-    }
-    if (io::KeyPress(Key::s)) {
-        camera.Translate(camera.Front() * -speed);
-    }
-    if (io::KeyPress(Key::a)) {
-        camera.Translate(camera.Right() * -speed);
-    }
-    if (io::KeyPress(Key::d)) {
-        camera.Translate(camera.Right() * speed);
-    }
-    if (io::KeyPress(Key::escape)) {
-        Engine::GetInstance().GetRenderer().Close();
-    }
-
-    MousePos current = io::GetMousePosition();
-    static MousePos last = current;
-    if (io::MouseButtonClick(MouseButton::right)) {
-        MousePos offset = current - last;
-        camera.ProcessMouseMovement(offset.x, offset.y);
-    }
-    last = current;
-}
+void processInput(Camera& camera);
 
 int main(int argc, char *argv[]) {
 
     Engine& engine = Engine::GetInstance();
+
+    /* Creating the default uniform blocks*/
+    engine.CreateUniformBlock("LightInformation", 1024);
+    engine.CreateUniformBlock("GlobalTransform", 2*sizeof(glm::mat4));
+
+    engine.EnableUniformBlock("GlobalTransform");
+    engine.EnableUniformBlock("LightInformation");
 
     Scene& scene = engine.CreateScene();
     engine.MakeCurrentScene(scene);
@@ -72,7 +54,7 @@ int main(int argc, char *argv[]) {
         tr_ground.SetScale(10, 10, 10);
     }
     // --3--
-    auto light_color = glm::vec3 {100};
+    auto light_color = glm::vec3 {100, 100, 0 };
     auto light_position = glm::vec3 {0, 6, -6};
     scene.CreateLight(PointLight(light_position, light_color));
 
@@ -105,3 +87,30 @@ int main(int argc, char *argv[]) {
 }
 
 
+
+void processInput(Camera &camera) {
+    float speed = 20.0 * Engine::GetInstance().GetRenderer().GetDeltaTime();
+    if (io::KeyPress(Key::w)) {
+        camera.Translate(camera.Front() *  speed);
+    }
+    if (io::KeyPress(Key::s)) {
+        camera.Translate(camera.Front() * -speed);
+    }
+    if (io::KeyPress(Key::a)) {
+        camera.Translate(camera.Right() * -speed);
+    }
+    if (io::KeyPress(Key::d)) {
+        camera.Translate(camera.Right() * speed);
+    }
+    if (io::KeyPress(Key::escape)) {
+        Engine::GetInstance().GetRenderer().Close();
+    }
+
+    MousePos current = io::GetMousePosition();
+    static MousePos last = current;
+    if (io::MouseButtonClick(MouseButton::right)) {
+        MousePos offset = current - last;
+        camera.ProcessMouseMovement(offset.x, offset.y);
+    }
+    last = current;
+}

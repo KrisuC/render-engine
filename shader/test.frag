@@ -2,15 +2,13 @@
 
 out vec4 FragColor;
 
-in vec2 TexCoords;
-in vec3 WorldPos;
-in vec3 Normal;
+in FROM_VS_TO_FS {
+    vec2 texCoords;
+    vec3 worldPos;
+    vec3 normal;
+} frag;
 
 const float PI = 3.14159265359;
-
-/*********** for calculating V *******************/
-uniform vec3 cameraPosition;
-
 
 /*********** Material Configuration **************/
 uniform struct Material {
@@ -20,22 +18,33 @@ uniform struct Material {
     struct FloatMap { sampler2D map; float value; bool use_map; }
     metallic,   roughness,  ao,         height;
 } m;
-
+vec3 GetAlbedoFromMaterial();
+float GetMetallicFromMaterial();
+float GetRoughnessFromMaterial();
+vec3 GetNormalFromMaterial();
+float GetAOFromMaterial();
+vec3 GetEmissiveFromMaterial();
 
 /************* Lights Configuration **************/
 const int DIRECTIONAL = 0, POINT = 1, SPOT = 2;
 const int MAX_LIGHT = 20;
 
-uniform struct Lights {
-    vec3 position;
-    vec3 direction;
-    vec3 color;
-    float cone_angle_in_radian;
+layout (std140) uniform LightInformation {
+    struct Lights {
+        vec3 position;               // 0-4N (N: 4 byte - a float)
+        float cone_angle_in_radian;  // 3-4N
 
-    int ltype;
-} lights[MAX_LIGHT];
-uniform int lights_cnt = 0;
+        vec3 direction;              // 4-8N
+        int ltype;                   // 7-8N
 
+        vec3 color;                  // 8-12N
+
+    } lights[MAX_LIGHT];             // 0-240N [12N * MAX_LIGHT(20) == 240N]
+
+    vec3 cameraPosition;             // 240-244N
+    int lights_cnt;                  // 243-244N
+                                     // 244 * 4 < 1024 bytes
+};
 
 /**********************IBL*************************/
 uniform struct IBL {
@@ -44,10 +53,7 @@ uniform struct IBL {
     sampler2D   brdfLUT;
 } ibl;
 
-/************************************************/
-
-
-
+/*************************************************/
 
 
 void main() {

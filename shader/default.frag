@@ -32,18 +32,19 @@ const int MAX_LIGHT = 20;
 
 layout (std140) uniform LightInformation {
     struct Lights {
-        vec3 position;               // 0-4 (unit: 4 byte)
-        vec3 direction;              // 4-8
-        vec3 color;                  // 8-12
-        float cone_angle_in_radian;  // 12-13
+        vec3 position;               // 0-4N (N: 4 byte - a float)
+        float cone_angle_in_radian;  // 3-4N
 
-        int ltype;                   // 13-14
-    } lights[MAX_LIGHT];             // 14 * MAX_LIGHT(20) == 280 bytes
+        vec3 direction;              // 4-8N
+        int ltype;                   // 7-8N
 
-    int lights_cnt;                  // 280-281
+        vec3 color;                  // 8-12N
 
-    vec3 cameraPosition;             // 281-285
-                                     // 285 * 4 == 1140 bytes
+    } lights[MAX_LIGHT];             // 0-240N [12N * MAX_LIGHT(20) == 240N]
+
+    vec3 cameraPosition;             // 240-244N
+    int lights_cnt;                  // 243-244N
+                                     // 244 * 4 < 1024 bytes
 };
 
 /**********************IBL*************************/

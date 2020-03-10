@@ -10,7 +10,6 @@ out FROM_VS_TO_FS {
     vec3 normal;
 } frag;
 
-/* ubo */
 layout (std140) uniform GlobalTransform {
     mat4 projection;
     mat4 view;

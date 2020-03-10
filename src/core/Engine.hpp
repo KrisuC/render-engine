@@ -67,8 +67,7 @@ private:
 private:
     std::vector<std::unique_ptr<Scene>> scenes;
     std::vector<std::unique_ptr<Shader>> shaders;
-
-    std::vector<UniformBlock> uniformBlocks;
+    std::vector<std::unique_ptr<UniformBlock>> uniformBlocks;
 
     Scene* currentScene = nullptr;
     Renderer renderer {};
