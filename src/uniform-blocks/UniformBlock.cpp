@@ -9,12 +9,14 @@
 #include "Shader.hpp"
 #include "Debug.hpp"
 
-// TODO: make current_binding update thread safe
 int UniformBlock::current_total_binding = 0;
 
 UniformBlock::UniformBlock(std::string uniform_block_name, int bytes)
-        : uniform_block_name(std::move(uniform_block_name)),
-          binding_point(current_total_binding++) {
+        : uniform_block_name(std::move(uniform_block_name)) {
+
+    // TODO: make current_binding update thread safe
+    binding_point = current_total_binding;
+    current_total_binding++;
 
     glGenBuffers(1, &ubo);
 

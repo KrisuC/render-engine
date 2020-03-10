@@ -12,7 +12,7 @@
 #include "Renderer.hpp"
 #include "Shader.hpp"
 #include "UniformBlock.hpp"
-#include "GlobalTransformation.hpp"
+#include "GlobalTransform.hpp"
 #include "LightInformation.hpp"
 
 /*
@@ -100,11 +100,12 @@ void Engine::setUniformBlockEnabled(bool enabled) {
     auto it = uniform_blocks.find(hash);
     if (it == uniform_blocks.end()) { // not exist
         auto p = static_cast<UniformBlock*>(new T);
+        p->SetEnabled(enabled);
         auto up = std::unique_ptr<UniformBlock>(p);
         uniform_blocks.insert({hash, std::move(up)});
-        it = uniform_blocks.find(hash);
+    } else {
+        it->second->SetEnabled(enabled);
     }
-    it->second->SetEnabled(enabled);
 }
 
 template<typename T>

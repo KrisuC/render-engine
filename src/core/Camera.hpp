@@ -29,6 +29,7 @@ public:
                     float pitch = PITCH);
 
     glm::mat4 GetViewMatrix();
+    glm::mat4 GetProjectionMatrix();
 
     inline float GetFovy() const { return fovy; }
 

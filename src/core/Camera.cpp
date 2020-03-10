@@ -3,6 +3,7 @@
 //
 
 #include "Camera.hpp"
+#include "Engine.hpp"
 
 Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch) :
         front(glm::vec3(0.0f, 0.0f, -1.0f)),
@@ -12,6 +13,15 @@ Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch) :
 
     updateCameraVectors();
 }
+
+
+glm::mat4 Camera::GetProjectionMatrix() {
+    auto [w, h] = Engine::GetInstance().GetRenderer().GetWindowSize();
+    glm::mat4 projection = glm::perspective(glm::radians(GetFovy()),
+                                            static_cast<float>(w)/h, 0.1f, 1000.0f);
+    return projection;
+}
+
 
 glm::mat4 Camera::GetViewMatrix() {
     return glm::lookAt(position, position + front, up);

@@ -2,11 +2,6 @@
 
 out vec4 FragColor;
 
-in FROM_VS_TO_FS {
-    vec2 texCoords;
-    vec3 worldPos;
-    vec3 normal;
-} frag;
 
 const float PI = 3.14159265359;
 

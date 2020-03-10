@@ -56,11 +56,12 @@ Shader &Engine::CreateShader(Args &&... args) {
     Shader& ret = *up_shader;
     shaders.push_back(std::move(up_shader));
     /* binding all enabled uniform blocks to newly created shader */
-//    for (auto & uniformBlock : uniformBlocks) {
-//        if (uniformBlock->enabled) {
-//            uniformBlock->BindShader(ret);
-//        }
-//    }
+    for (auto& it : uniform_blocks) {
+        auto& uniform_block = it.second;
+        if (uniform_block->IsEnabled()) {
+            uniform_block->BindShader(ret);
+        }
+    }
     return ret;
 }
 

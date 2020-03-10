@@ -28,6 +28,8 @@ public:
 
     void SetEnabled(bool flag) { enabled = flag; }
 
+    bool IsEnabled() const { return enabled; }
+
     ~UniformBlock();
 
 protected:

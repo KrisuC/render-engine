@@ -11,7 +11,7 @@
 #include "Debug.hpp"
 #include "IO.hpp"
 #include "LightInformation.hpp"
-#include "GlobalTransformation.hpp"
+#include "GlobalTransform.hpp"
 
 void processInput(Camera& camera);
 
@@ -19,53 +19,54 @@ int main(int argc, char *argv[]) {
 
     Engine& engine = Engine::GetInstance();
 
-    engine.EnableUniformBuffer<LightInformation>();
-    engine.EnableUniformBuffer<GlobalTransformation>();
+     engine.EnableUniformBuffer<LightInformation>();
+     engine.EnableUniformBuffer<GlobalTransform>();
 
     Scene& scene = engine.CreateScene();
     engine.MakeCurrentScene(scene);
 
     // --1--
-    GameObject& sphere = scene.CreateGameObject();
-    sphere.CreateComponent<Mesh>(SimpleMesh::Sphere());
-    auto& m_sphere = sphere.CreateComponent<Material>(); {
-        m_sphere.SetShader(engine.GetTestShader());
-        m_sphere.SetAlbedo(1, 1, 1);
-        m_sphere.SetMetallic(0.1);
-        m_sphere.SetRoughness(0.8);
+    GameObject& sphere = scene.CreateGameObject(); {
+        sphere.CreateComponent<Mesh>(SimpleMesh::Sphere());
+        auto& material = sphere.CreateComponent<Material>();
+        material.SetShader(engine.GetDefaultShader());
+        material.SetAlbedo(1, 1, 1);
+        material.SetMetallic(0.1);
+        material.SetRoughness(0.8);
+        auto& transform = sphere.CreateComponent<Transform>();
+        transform.SetPosition(0, 0, -10);
     }
-    auto& tr_sphere = sphere.CreateComponent<Transform>(); {
-        tr_sphere.SetPosition(0, 0, -10);
-    }
+
     // --2--
-    GameObject& ground = scene.CreateGameObject();
-    ground.CreateComponent<Mesh>(SimpleMesh::Quad());
-    auto& m_ground = ground.CreateComponent<Material>(); {
-        m_ground.SetShader(engine.GetTestShader());
-        m_ground.SetAlbedo(1, 1, 1);
-        m_ground.SetMetallic(0.3);
-        m_ground.SetRoughness(0.5);
+    GameObject& ground = scene.CreateGameObject(); {
+        ground.CreateComponent<Mesh>(SimpleMesh::Quad());
+        auto& material = ground.CreateComponent<Material>();
+        material.SetShader(engine.GetDefaultShader());
+        material.SetAlbedo(1, 1, 1);
+        material.SetMetallic(0.3);
+        material.SetRoughness(0.5);
+        auto& transform = ground.CreateComponent<Transform>();
+        transform.SetPosition(0, -2, -10);
+        transform.SetRotation(1, 0, 0, -90);
+        transform.SetScale(10, 10, 10);
     }
-    auto& tr_ground = ground.CreateComponent<Transform>(); {
-        tr_ground.SetPosition(0, -2, -10);
-        tr_ground.SetRotation(1, 0, 0, -90);
-        tr_ground.SetScale(10, 10, 10);
-    }
+
     // --3--
     auto light_color = glm::vec3 {100, 100, 0 };
     auto light_position = glm::vec3 {0, 6, -6};
     scene.CreateLight(PointLight(light_position, light_color));
 
-    GameObject& lamp = scene.CreateGameObject();
-    lamp.CreateComponent<Mesh>(SimpleMesh::Sphere());
-    auto& m_lamp = lamp.CreateComponent<Material>(); {
-        m_lamp.SetShader(engine.GetTestShader());
-        m_lamp.SetEmissive(light_color);
+    GameObject& lamp = scene.CreateGameObject(); {
+        lamp.CreateComponent<Mesh>(SimpleMesh::Sphere());
+        auto& material = lamp.CreateComponent<Material>();
+        material.SetShader(engine.GetDefaultShader());
+        material.SetEmissive(light_color);
+
+        auto& transform = lamp.CreateComponent<Transform>();
+        transform.SetPosition(light_position);
+        transform.SetScale(0.33);
     }
-    auto& tr_lamp = lamp.CreateComponent<Transform>(); {
-        tr_lamp.SetPosition(light_position);
-        tr_lamp.SetScale(0.33);
-    }
+
 
     scene.CreateSkybox();
 
@@ -75,6 +76,12 @@ int main(int argc, char *argv[]) {
     while (!renderer.ShouldEnd()) {
         renderer.UpdateBeforeRendering();
         processInput(scene.GetCurrentCamera());
+
+//        auto& camera = scene.GetCurrentCamera();
+//        glm::mat4 projection = camera.GetProjectionMatrix();
+//        glm::mat4 view = camera.GetViewMatrix();
+//        sphere.GetComponent<Material>().GetShader().Set("projection", projection);
+//        sphere.GetComponent<Material>().GetShader().Set("view", view);
 
         scene.Update();
 

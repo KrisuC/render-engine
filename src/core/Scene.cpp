@@ -4,7 +4,7 @@
 
 
 #include "Scene.hpp"
-#include "GlobalTransformation.hpp"
+#include "GlobalTransform.hpp"
 #include "LightInformation.hpp"
 #include "Engine.hpp"
 #include "GameObject.hpp"
@@ -27,7 +27,7 @@ void Scene::Build() {
 
             shader.UseShaderProgram();
         } catch (NoComponent&) {
-            // TODO: Change with better mechanism
+            // TODO: better mechanism
             continue;
         }
 
@@ -52,7 +52,7 @@ void Scene::Update() {
     // Updating Shared GPU memory
     Engine& engine = Engine::GetInstance();
     // GLobalTransform Uniform Block
-    auto& globalTransform = engine.GetUniformBuffer<GlobalTransformation>();
+    auto& globalTransform = engine.GetUniformBuffer<GlobalTransform>();
     auto [w, h] = engine.GetRenderer().GetWindowSize();
     glm::mat4 projection = glm::perspective(glm::radians(camera.GetFovy()),
                                             static_cast<float>(w)/h, 0.1f, 1000.0f);
