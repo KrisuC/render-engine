@@ -14,7 +14,6 @@ layout (std140) uniform GlobalTransform {
     mat4 projection;
     mat4 view;
 };
-
 uniform mat4 model;
 
 void main() {

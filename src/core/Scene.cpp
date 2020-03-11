@@ -49,30 +49,23 @@ GameObject &Scene::CreateGameObject() {
 }
 
 void Scene::Update() {
-    // Updating Shared GPU memory
+    /* Updating Shared GPU memory */
     Engine& engine = Engine::GetInstance();
-    // GLobalTransform Uniform Block
+
+    /* GLobalTransform Uniform Block */
     auto& globalTransform = engine.GetUniformBuffer<GlobalTransform>();
-    auto [w, h] = engine.GetRenderer().GetWindowSize();
-    glm::mat4 projection = glm::perspective(glm::radians(camera.GetFovy()),
-                                            static_cast<float>(w)/h, 0.1f, 1000.0f);
-    glm::mat4 view = camera.GetViewMatrix();
+    globalTransform.UpdateView(camera.GetViewMatrix());
+    globalTransform.UpdateProjeciton(camera.GetProjectionMatrix());
 
-    globalTransform.UpdateView(view);
-    globalTransform.UpdateProjeciton(projection);
-
-    // LightInformation Uniform Block
+    /* LightInformation Uniform Block */
     auto& lightInfo = engine.GetUniformBuffer<LightInformation>();
-    const int N = sizeof(float);
-    using glm::value_ptr;
     for (int i = 0; i < lights.size(); i++) {
-        const int elem_offset = 240 * N * i; // element of struct's size
         lightInfo.UpdateLight(i, lights[i]);
     }
     lightInfo.UpdateLightSize(lights.size());
     lightInfo.UpdateCameraPosition(camera.Position());
 
-    // Scene update
+    /* Scene update */
     auto& renderer = engine.GetRenderer();
     for (auto& up_gameObject : up_gameObjects) {
         // BEFORE

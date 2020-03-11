@@ -13,14 +13,40 @@
 #include "LightInformation.hpp"
 #include "GlobalTransform.hpp"
 
-void processInput(Camera& camera);
+void processInput(Camera &camera) {
+    float speed = 20.0f * Engine::GetInstance().GetRenderer().GetDeltaTime();
+    if (io::KeyPress(Key::w)) {
+        camera.Translate(camera.Front() * speed);
+    }
+    if (io::KeyPress(Key::s)) {
+        camera.Translate(camera.Front() * -speed);
+    }
+    if (io::KeyPress(Key::a)) {
+        camera.Translate(camera.Right() * -speed);
+    }
+    if (io::KeyPress(Key::d)) {
+        camera.Translate(camera.Right() * speed);
+    }
+    if (io::KeyPress(Key::escape)) {
+        Engine::GetInstance().GetRenderer().Close();
+    }
+
+    MousePos current = io::GetMousePosition();
+    static MousePos last = current;
+    if (io::MouseButtonClick(MouseButton::right)) {
+        MousePos offset = current - last;
+        camera.ProcessMouseMovement(offset.x, offset.y);
+    }
+    last = current;
+}
+
 
 int main(int argc, char *argv[]) {
 
     Engine& engine = Engine::GetInstance();
 
-     engine.EnableUniformBuffer<LightInformation>();
-     engine.EnableUniformBuffer<GlobalTransform>();
+    engine.EnableUniformBuffer<LightInformation>();
+    engine.EnableUniformBuffer<GlobalTransform>();
 
     Scene& scene = engine.CreateScene();
     engine.MakeCurrentScene(scene);
@@ -67,7 +93,6 @@ int main(int argc, char *argv[]) {
         transform.SetScale(0.33);
     }
 
-
     scene.CreateSkybox();
 
     scene.Build();
@@ -77,45 +102,10 @@ int main(int argc, char *argv[]) {
         renderer.UpdateBeforeRendering();
         processInput(scene.GetCurrentCamera());
 
-//        auto& camera = scene.GetCurrentCamera();
-//        glm::mat4 projection = camera.GetProjectionMatrix();
-//        glm::mat4 view = camera.GetViewMatrix();
-//        sphere.GetComponent<Material>().GetShader().Set("projection", projection);
-//        sphere.GetComponent<Material>().GetShader().Set("view", view);
-
         scene.Update();
 
         renderer.UpdateAfterRendering();
     }
 
     return 0;
-}
-
-
-
-void processInput(Camera &camera) {
-    float speed = 20.0f * Engine::GetInstance().GetRenderer().GetDeltaTime();
-    if (io::KeyPress(Key::w)) {
-        camera.Translate(camera.Front() * speed);
-    }
-    if (io::KeyPress(Key::s)) {
-        camera.Translate(camera.Front() * -speed);
-    }
-    if (io::KeyPress(Key::a)) {
-        camera.Translate(camera.Right() * -speed);
-    }
-    if (io::KeyPress(Key::d)) {
-        camera.Translate(camera.Right() * speed);
-    }
-    if (io::KeyPress(Key::escape)) {
-        Engine::GetInstance().GetRenderer().Close();
-    }
-
-    MousePos current = io::GetMousePosition();
-    static MousePos last = current;
-    if (io::MouseButtonClick(MouseButton::right)) {
-        MousePos offset = current - last;
-        camera.ProcessMouseMovement(offset.x, offset.y);
-    }
-    last = current;
 }
