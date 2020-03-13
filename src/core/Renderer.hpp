@@ -55,5 +55,4 @@ private:
 
 
 
-
 #endif //RENDER_ENGINE_RENDERER_HPP

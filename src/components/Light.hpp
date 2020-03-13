@@ -49,7 +49,7 @@ public:
     }
 
 public:
-    explicit Light(LightType lightType) : ltype(lightType) { }
+    explicit Light() = default;
 
     inline void SetConeAngleInRadian(float cone);
 
@@ -60,7 +60,7 @@ public:
     // deprecated:
 
 public:
-    LightType ltype;
+    LightType ltype{};
 
     float cone_angle_in_radian {};
     glm::vec3 color{};

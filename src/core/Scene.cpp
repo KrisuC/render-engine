@@ -14,6 +14,7 @@
 #include "Renderer.hpp"
 #include "Mesh.hpp"
 #include "Shadow.hpp"
+#include "Transform.hpp"
 
 
 void Scene::Build() {
@@ -58,33 +59,7 @@ void Scene::Update() {
     this->UpdateUniformBlocks();
 
     /* 2 - Rendering Shadow map */
-    Shadow shadow(1024, 1024);
-
-    glViewport(0, 0, 1024, 1024);
-    glBindFramebuffer(GL_FRAMEBUFFER, shadow.depthMapFBO);
-    glClear(GL_DEPTH_BUFFER_BIT);
-    static Shader shadowMapGen { "shader/shadow-map-gen.vert",
-                                 "shader/shadow-map-gen.frag"};
-    // only for one light...
-    assert(lights.size() == 1);
-    for (auto const& light : lights) {
-        // Treat it as directional light for now...
-        glm::mat4 lightProjection = glm::ortho<float>(
-                -10, 10, -10, 10,
-                1.0, 100
-                );
-        glm::mat4 lightView = glm::lookAt(
-                light.position,
-                glm::vec3(0, 1, 0),
-                glm::vec3(0, 1, 0));
-        glm::mat4 lightSpaceTransform = lightProjection * lightView;
-        shadowMapGen.Set("lightSpaceTransform", lightSpaceTransform);
-        for (auto& up_game_obj : up_game_objects) {
-            auto& mesh = up_game_obj->GetComponent<Mesh>();
-            mesh.DrawCall();
-        }
-    }
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    this->UpdateShadowMaps();
 
     /* 3 - Scene update */
     auto [w, h] = renderer.GetWindowSize();
@@ -104,7 +79,7 @@ void Scene::Update() {
             auto& material = up_game_obj->GetComponent<Material>();
             material.GetShader().UseShaderProgram();
             mesh.DrawCall();
-        } catch(NoComponent&) {
+        } catch (NoComponent&) {
             return ;
         }
         up_skybox->Draw();
@@ -132,5 +107,49 @@ void Scene::UpdateUniformBlocks() {
     lightInfo.UpdateLightSize(lights.size());
     lightInfo.UpdateCameraPosition(camera.Position());
 }
+
+
+void Scene::UpdateShadowMaps() {
+    Shadow shadow(1024, 1024);
+
+    glViewport(0, 0, 1024, 1024);
+    glBindFramebuffer(GL_FRAMEBUFFER, shadow.depthMapFBO);
+    glClear(GL_DEPTH_BUFFER_BIT);
+    static Shader shadowMapGenShader {"shader/shadow-map-gen.vert",
+                                      "shader/shadow-map-gen.frag"};
+    // only for one light...
+    assert(lights.size() == 1);
+    for (auto const& light : lights) {
+        // Treat it as directional light for now...
+        glm::mat4 lightProjection = glm::ortho<float>(
+                -10, 10, -10, 10,
+                1.0, 1000
+        );
+        glm::vec3 global_up {0, 1, 0};
+        glm::vec3 right = glm::cross(light.direction, global_up);
+        glm::vec3 up = glm::cross(right, light.direction);
+        glm::mat4 lightView = glm::lookAt(
+                light.position,
+                light.direction,
+                up);
+
+        // fuck you
+//        lightProjection = camera.GetProjectionMatrix();
+//        lightView = camera.GetViewMatrix();
+
+        glm::mat4 lightSpaceTransform = lightProjection * lightView;
+        shadowMapGenShader.UseShaderProgram();
+        shadowMapGenShader.Set("lightSpaceTransform", lightSpaceTransform);
+        for (auto& up_game_obj : up_game_objects) {
+            auto& mesh = up_game_obj->GetComponent<Mesh>();
+            auto& transform = up_game_obj->GetComponent<Transform>();
+            shadowMapGenShader.Set("model", transform.GetMatrix());
+            mesh.DrawCall();
+        }
+    }
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    DEBUG_SHADOW_MAP(shadow);
+}
+
 
 

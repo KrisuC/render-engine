@@ -39,15 +39,15 @@ void Mesh::setupMesh() {
         glBufferData(GL_ELEMENT_ARRAY_BUFFER,
                      indices.size()*sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
 
-        // Positions
+        // Positions (location = 0)
         glEnableVertexAttribArray(0); // parameter is the position.
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
                               nullptr);
-        // Normals
+        // Normals (location = 1)
         glEnableVertexAttribArray(1);
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
                               (void *)offsetof(Vertex, normal));
-        // Texture coords
+        // Texture coords (location = 2)
         glEnableVertexAttribArray(2);
         glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
                               (void *)offsetof(Vertex, texCoords));

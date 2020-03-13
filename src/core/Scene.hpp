@@ -69,6 +69,8 @@ public:
 private:
     void UpdateUniformBlocks();
 
+    void UpdateShadowMaps();
+
 private:
     /* Using a pointer to GameObject is a must because when vector change
        size. Reference of GameObject will fail!!! */

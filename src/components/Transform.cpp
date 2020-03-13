@@ -6,12 +6,18 @@
 #include "Material.hpp"
 #include "Scene.hpp"
 
-void Transform::BeforeRenderPass() {
-    auto& shader = GetGameObject().GetComponent<Material>().GetShader();
-
+glm::mat4 Transform::GetMatrix() {
     glm::mat4 model = glm::translate(glm::mat4(1), this->position);
     model = glm::rotate(model, this->rotation_angle, this->rotation_axis);
     model = glm::scale(model, this->scale);
+    return model;
+}
+
+
+void Transform::BeforeRenderPass() {
+    auto& shader = GetGameObject().GetComponent<Material>().GetShader();
+
+    auto model = GetMatrix();
 
     shader.UseShaderProgram();
     shader.SetModel(model);
@@ -54,3 +60,4 @@ void Transform::SetScale(glm::vec3 s) {
 void Transform::SetScale(float factor) {
     this->scale = glm::vec3 {factor};
 }
+

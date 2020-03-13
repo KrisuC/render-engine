@@ -8,11 +8,7 @@
 #include <iostream>
 
 class Texture;
-
-template <typename T, typename...Args>
-void DEBUG_LOG(T first, Args...args);
-
-void DEBUG_TEXTURE2D(const Texture &t);
+class Shadow;
 
 #ifdef ENGINE_DEBUG
 
@@ -29,10 +25,16 @@ void DEBUG_LOG(T first, Args...args) {
     }
 }
 
+void DEBUG_TEXTURE2D(const Texture &t);
+
+void DEBUG_SHADOW_MAP(const Shadow &s);
+
 #else
 
 template <typename T, typename...Args>
 void DEBUG_LOG(T first, Args...args) { /* empty */ }
+
+void DEBUG_TEXTURE2D(const Texture &t) { }
 
 #endif
 

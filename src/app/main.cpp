@@ -78,21 +78,21 @@ int main(int argc, char *argv[]) {
     }
 
     // --3--
-    auto light_color = glm::vec3 {100, 100, 0 };
-    auto light_position = glm::vec3 {0, 6, -6};
-    auto light = PointLight(light_position, light_color);
-    // Set direction
-    light.direction = {0, 0, 10}; - light_position;
+    Light light;
+    light.color = {10, 10, 0 };
+    light.position = glm::vec3 {-1, 3, 1} * 5.0f;
+    light.direction = {0, 0, -10}; - light.position;
+    light.ltype = LightType::Directional;
     scene.CreateLight(light);
 
     GameObject& lamp = scene.CreateGameObject(); {
         lamp.CreateComponent<Mesh>(SimpleMesh::Sphere());
         auto& material = lamp.CreateComponent<Material>();
         material.SetShader(engine.GetDefaultShader());
-        material.SetEmissive(light_color);
+        material.SetEmissive(light.color);
 
         auto& transform = lamp.CreateComponent<Transform>();
-        transform.SetPosition(light_position);
+        transform.SetPosition(light.position);
         transform.SetScale(0.33);
     }
 

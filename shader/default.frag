@@ -91,6 +91,9 @@ void main() {
         vec3  H            =   normalize(V + L); // half-way vector
         float dist         =   length(lights[i].position - frag.worldPos);
         float attenuation  =   1.0 / (dist * dist);
+        if (lights[i].ltype == DIRECTIONAL) {
+            attenuation = 1.0;
+        }
         vec3  radiance     =   lights[i].color * attenuation;
 
         float NdotL = max(dot(N, L), 0.0);
