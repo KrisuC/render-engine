@@ -116,11 +116,12 @@ vec3 GetNormalFromMap() {
     return normalize(TBN * tangentNormal);
 }
 
-float ShadowCalculation(vec4 lightSpacePos) {
-    vec3 projCoords = lightSpacePos.xyz / lightSpacePos.w;
+float ShadowCalculation(vec4 lightSpacePos, float bias) {
+    vec3 projCoords = lightSpacePos.xyz / lightSpacePos.w; // [-1, 1]
+    projCoords = projCoords * 0.5 + 0.5; // to [0, 1]
     float closestDepth = texture(shadowMap, projCoords.xy).r;
     float currentDepth = projCoords.z;
-    return currentDepth > closestDepth ? 1.0 : 0.0;
+    return currentDepth - bias > closestDepth ? 1.0 : 0.0;
 }
 
 vec3 GetAlbedoFromMaterial() {
@@ -206,8 +207,8 @@ void main() {
 
         vec3 diffuse = kD * albedo / PI;
 
-        float occlusion = ShadowCalculation(frag.lightSpacePos);
-        FragColor = vec4(occlusion);
+        float bias = max(0.05 * (1.0 - NdotL), 0.005);
+        float occlusion = ShadowCalculation(frag.lightSpacePos, bias);
 
         Lo += (diffuse + specular) * (1.0 - occlusion) * radiance * NdotL;
     }
