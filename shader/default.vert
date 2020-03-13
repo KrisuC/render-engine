@@ -8,6 +8,7 @@ out FROM_VS_TO_FS {
     vec2 texCoords;
     vec3 worldPos;
     vec3 normal;
+    vec4 lightSpacePos;
 } frag;
 
 layout (std140) uniform GlobalTransform {
@@ -16,11 +17,15 @@ layout (std140) uniform GlobalTransform {
 };
 uniform mat4 model;
 
+uniform mat4 lightSpaceTransform;
+
 void main() {
     frag.texCoords = aTexCoords;
     frag.worldPos = vec3(model * vec4(aPos, 1.0));
     // The scale must be uniform
     frag.normal = mat3(model) * aNormal;
+
+    frag.lightSpacePos = lightSpaceTransform * vec4(frag.worldPos, 1.0);
 
     gl_Position = projection * view * vec4(frag.worldPos, 1.0);
 }
