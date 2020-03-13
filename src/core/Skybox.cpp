@@ -15,7 +15,7 @@
 #include "Engine.hpp"
 
 
-void Skybox::Render() {
+void Skybox::Draw() {
     renderShader.UseShaderProgram();
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap);

@@ -35,8 +35,6 @@ public:
 
     bool ShouldEnd();
 
-    void Render(GameObject& gameObject);
-
     double GetDeltaTime() const;
 
     void InitializeOpenGL();
@@ -54,6 +52,7 @@ private:
 
     friend class GUI;
 };
+
 
 
 

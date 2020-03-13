@@ -67,9 +67,12 @@ public:
     inline Camera& GetCurrentCamera() { return camera; }
 
 private:
+    void UpdateUniformBlocks();
+
+private:
     /* Using a pointer to GameObject is a must because when vector change
        size. Reference of GameObject will fail!!! */
-    std::vector<std::unique_ptr<GameObject>> up_gameObjects;
+    std::vector<std::unique_ptr<GameObject>> up_game_objects;
     std::vector<Light> lights;
     std::unique_ptr<Skybox> up_skybox;
     Camera camera {};

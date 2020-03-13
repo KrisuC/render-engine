@@ -80,7 +80,10 @@ int main(int argc, char *argv[]) {
     // --3--
     auto light_color = glm::vec3 {100, 100, 0 };
     auto light_position = glm::vec3 {0, 6, -6};
-    scene.CreateLight(PointLight(light_position, light_color));
+    auto light = PointLight(light_position, light_color);
+    // Set direction
+    light.direction = {0, 0, 10}; - light_position;
+    scene.CreateLight(light);
 
     GameObject& lamp = scene.CreateGameObject(); {
         lamp.CreateComponent<Mesh>(SimpleMesh::Sphere());

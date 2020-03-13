@@ -93,17 +93,6 @@ std::pair<int, int> Renderer::GetWindowSize() const {
     return size;
 }
 
-void Renderer::Render(GameObject& gameObject) {
-    try {
-        auto& mesh = gameObject.GetComponent<Mesh>();
-        auto& material = gameObject.GetComponent<Material>();
-        material.GetShader().UseShaderProgram();
-        mesh.Draw();
-    } catch(NoComponent&) {
-        return ;
-    }
-}
-
 double Renderer::GetDeltaTime() const {
     static double last_frame;
     auto this_frame = glfwGetTime();

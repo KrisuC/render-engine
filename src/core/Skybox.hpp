@@ -20,7 +20,7 @@ public:
     Skybox(Skybox const&) = delete;
     Skybox& operator=(Skybox const&) = delete;
 
-    void Render();
+    void Draw();
 
     inline IBL const& GetIBL() { return ibl; }
 
