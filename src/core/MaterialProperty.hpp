@@ -35,14 +35,14 @@ namespace {
     /* Material uniform name */
     constexpr const char* mp_uniform_str[]
             {
-                    "m.albedo",
-                    "m.normal",
-                    "m.specular",
-                    "m.metallic",
-                    "m.roughness",
-                    "m.emissive",
-                    "m.ao",
-                    "m.height"
+                    "m_albedo",
+                    "m_normal",
+                    "m_specular",
+                    "m_metallic",
+                    "m_roughness",
+                    "m_emissive",
+                    "m_ao",
+                    "m_height"
             };
 
     /* This assert will fail if number of mp_uniform_str's element not equal to

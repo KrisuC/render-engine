@@ -5,6 +5,8 @@
 #ifndef RENDER_ENGINE_UNIFORMBLOCK_HPP
 #define RENDER_ENGINE_UNIFORMBLOCK_HPP
 
+#include <string>
+
 #include "Renderer.hpp"
 
 /*

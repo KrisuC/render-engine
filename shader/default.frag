@@ -13,13 +13,17 @@ in FROM_VS_TO_FS {
 const float PI = 3.14159265359;
 
 /*********** Material Configuration **************/
-uniform struct Material {
-    struct Vec3fMap { sampler2D map; vec3 value; bool use_map; }
-        albedo,     normal,     specular,   emissive;
+uniform struct Vec3fMap { sampler2D map; vec3 value; bool use_map; }
+m_albedo,
+m_normal,
+m_specular,
+m_emissive;
 
-    struct FloatMap { sampler2D map; float value; bool use_map; }
-        metallic,   roughness,  ao,         height;
-} m;
+uniform struct FloatMap { sampler2D map; float value; bool use_map; }
+m_metallic,
+m_roughness,
+m_ao,
+m_height;
 
 /************* Lights Configuration **************/
 const int DIRECTIONAL = 0, POINT = 1, SPOT = 2;
@@ -101,7 +105,7 @@ float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness) {
 
 
 vec3 GetNormalFromMap() {
-    vec3 tangentNormal = texture(m.normal.map, frag.texCoords).xyz * 2.0 - 1.0;
+    vec3 tangentNormal = texture(m_normal.map, frag.texCoords).xyz * 2.0 - 1.0;
 
     vec3 Q1  = dFdx(frag.worldPos);
     vec3 Q2  = dFdy(frag.worldPos);
@@ -125,31 +129,31 @@ float ShadowCalculation(vec4 lightSpacePos, float bias) {
 }
 
 vec3 GetAlbedoFromMaterial() {
-    return m.albedo.use_map?    texture(m.albedo.map, frag.texCoords).rgb :
-    m.albedo.value;
+    return m_albedo.use_map?    texture(m_albedo.map, frag.texCoords).rgb :
+    m_albedo.value;
 }
 
 float GetMetallicFromMaterial() {
-    return m.metallic.use_map?  texture(m.metallic.map, frag.texCoords).r :
-    m.metallic.value;
+    return m_metallic.use_map?  texture(m_metallic.map, frag.texCoords).r :
+    m_metallic.value;
 }
 
 float GetRoughnessFromMaterial() {
-    return m.roughness.use_map? texture(m.roughness.map, frag.texCoords).r :
-    m.roughness.value;
+    return m_roughness.use_map? texture(m_roughness.map, frag.texCoords).r :
+    m_roughness.value;
 }
 
 vec3 GetNormalFromMaterial() {
-    return m.normal.use_map? GetNormalFromMap() : frag.normal;
+    return m_normal.use_map? GetNormalFromMap() : frag.normal;
 }
 
 float GetAOFromMaterial() {
-    return m.ao.use_map? texture(m.ao.map, frag.texCoords).r :1.0f;
+    return m_ao.use_map? texture(m_ao.map, frag.texCoords).r :1.0f;
 }
 
 vec3 GetEmissiveFromMaterial() {
-    return m.emissive.use_map? texture(m.emissive.map, frag.texCoords).rgb :
-    m.emissive.value;
+    return m_emissive.use_map? texture(m_emissive.map, frag.texCoords).rgb :
+    m_emissive.value;
 }
 
 

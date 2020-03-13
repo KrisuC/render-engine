@@ -95,6 +95,7 @@ int main(int argc, char *argv[]) {
 
         auto& light = lamp.CreateComponent<DirectionalLight>();
         light.SetColor(light_color);
+        // TODO: fix with Transform
         light.position = light_position;
         light.direction = {0, 0, -10}; - light.position;
     }

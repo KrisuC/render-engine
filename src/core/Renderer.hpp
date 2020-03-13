@@ -9,7 +9,6 @@
 #include <GLFW/glfw3.h>
 #include <type_traits>
 
-#include "GameObject.hpp"
 #include "IO.hpp"
 
 

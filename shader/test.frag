@@ -3,22 +3,29 @@
 out vec4 FragColor;
 
 
+out vec4 FragColor;
+
+in FROM_VS_TO_FS {
+    vec2 texCoords;
+    vec3 worldPos;
+    vec3 normal;
+    vec4 lightSpacePos;
+} frag;
+
 const float PI = 3.14159265359;
 
 /*********** Material Configuration **************/
-uniform struct Material {
-    struct Vec3fMap { sampler2D map; vec3 value; bool use_map; }
-    albedo,     normal,     specular,   emissive;
+uniform struct Vec3fMap { sampler2D map; vec3 value; bool use_map; }
+m_albedo,
+m_normal,
+m_specular,
+m_emissive;
 
-    struct FloatMap { sampler2D map; float value; bool use_map; }
-    metallic,   roughness,  ao,         height;
-} m;
-vec3 GetAlbedoFromMaterial();
-float GetMetallicFromMaterial();
-float GetRoughnessFromMaterial();
-vec3 GetNormalFromMaterial();
-float GetAOFromMaterial();
-vec3 GetEmissiveFromMaterial();
+uniform struct FloatMap { sampler2D map; float value; bool use_map; }
+m_metallic,
+m_roughness,
+m_ao,
+m_height;
 
 /************* Lights Configuration **************/
 const int DIRECTIONAL = 0, POINT = 1, SPOT = 2;
@@ -41,6 +48,8 @@ layout (std140) uniform LightInformation {
 // 244 * 4 < 1024 bytes
 };
 
+uniform sampler2D shadowMap;
+
 /**********************IBL*************************/
 uniform struct IBL {
     samplerCube irradiance;
@@ -49,7 +58,6 @@ uniform struct IBL {
 } ibl;
 
 /*************************************************/
-
 
 
 void main() {
