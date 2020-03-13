@@ -105,6 +105,14 @@ void Renderer::Close() {
     glfwSetWindowShouldClose(window, true);
 }
 
+void Renderer::ResetViewport() {
+    auto [w, h] = this->GetWindowSize();
+#if __APPLE__
+    w *= 2; h *= 2;
+#endif
+    glViewport(0, 0, w, h);
+}
+
 
 
 

@@ -5,34 +5,24 @@
 #ifndef RENDER_ENGINE_LIGHT_HPP
 #define RENDER_ENGINE_LIGHT_HPP
 
-#include <glm/glm.hpp>
-#include <stdexcept>
 
-#include "Component.hpp"
+#include <stdexcept>
+#include <utility>
+
+#include <glm/glm.hpp>
+
+#include "DirectionalShadow.hpp"
+#include "PointShadow.hpp"
+#include "SpotShadow.hpp"
+#include "Transform.hpp"
+#include "Material.hpp"
+#include "Shader.hpp"
+#include "Engine.hpp"
+#include "Scene.hpp"
+#include "Debug.hpp"
 
 /*
- * Light is responsible for holding a specific Type of light
- * 3 types of lights are supported
- *
- * 1. Point light: position and color
- * 2. Directional light: direction and color
- * 3. Spot light: position, direction (of the cone center), color and cone angle
- *    measured in radian
- *
- * usage:
- * 1. create light using class interface (on stack)
- *
- * Light plight(LightType::Point);
- * plight.SetPosition(...);
- * plight.SetColor(...);
- *
- * 2. create light using helper function (on stack)
- *
- * auto position = {...};
- * auto color = {...};
- * Light plight = PointLight(position, color);
- *
- * Required: Transform
+ * Light, yes, light.
  */
 
 enum class LightType {
@@ -41,59 +31,105 @@ enum class LightType {
     Spot = 2
 };
 
-class Light : public Component {
+
+/* LightType::Point -> PointShadow etc... */
+template <LightType lightType>
+using ShadowGen =
+        std::conditional_t<lightType==LightType::Point,
+            PointShadow,
+            std::conditional_t<lightType==LightType::Directional,
+                DirectionalShadow,
+                SpotShadow>
+>;
+
+
+class LightManager {
+    static int total_cnt;
+    template <LightType lightType,
+             typename ShadowMapGenerator> friend class Light;
+
 public:
-    /* Setting lighting information before render loop */
-    void BeforeRenderLoop() {
-
-    }
-
-public:
-    explicit Light() = default;
-
-    inline void SetConeAngleInRadian(float cone);
-
-    inline void SetColor(float r, float g, float b);
-
-    inline void SetCastShadows(bool cast);
-
-    // deprecated:
-
-public:
-    LightType ltype{};
-
-    float cone_angle_in_radian {};
-    glm::vec3 color{};
-    bool castShadows = true;
-
-    // deprecated:
-    glm::vec3 position{};
-    glm::vec3 direction{};
-
-    friend class Shader;
+    static int GetLightsCount() { return total_cnt; }
 };
 
 
-void Light::SetConeAngleInRadian(float cone) {
-    assert(ltype == LightType::Spot);
-    cone_angle_in_radian = cone;
-}
+template <LightType lightType,
+          typename ShadowMapGenerator = ShadowGen<lightType>>
+class Light : public Component {
+    static_assert(std::is_base_of_v<Shadow, ShadowMapGenerator>,
+                  "Error: ShadowMapGenerator must be derived class of Shadow");
 
-void Light::SetCastShadows(bool cast) {
-    castShadows = cast;
-}
+public:
 
-void Light::SetColor(float r, float g, float b) {
-    color = {r, g, b};
-}
+    void BeforeRenderPass() override {
+        this->GenerateShadow(position, direction, cone_angle_in_radian);
+
+        /* Updating shadow maps -- should be done for all object */
+        for (auto& up_game_obj : Engine::GetInstance().GetCurrentScene().GetListOfObeject()) {
+            Shader& shader = up_game_obj->GetComponent<Material>().GetShader();
+            shader.UseShaderProgram();
+            shader.Set("lightSpaceTransform", shadow.lightSpaceTransform);
+            int unit = 14;
+            glActiveTexture(GL_TEXTURE0 + unit);
+            glBindTexture(GL_TEXTURE_2D, shadow.depthMap);
+            shader.Set("shadowMap", unit);
+        }
+
+        /* Updating LightInformation Uniform Block */
+        auto& lightInfo = Engine::GetInstance().GetUniformBuffer<LightInformation>();
+        lightInfo.UpdateLightColor(index, color);
+        lightInfo.UpdateLightCone(index, cone_angle_in_radian);
+        lightInfo.UpdateLightDirection(index, direction);
+        lightInfo.UpdateLightType(index, static_cast<int>(lightType));
+        lightInfo.UpdateLightPosition(index, position);
+
+        // DEBUG_TEXTURE2D(shadow.depthMap);
+    }
+
+public:
+    Light() {
+        this->index = LightManager::total_cnt;
+        LightManager::total_cnt++;
+    }
+
+    void SetConeAngleInRadian(float cone) {
+        static_assert(lightType == LightType::Spot, "Only Spot light has cone to set");
+        cone_angle_in_radian = cone;
+    };
+
+    void SetColor(float r, float g, float b) { color = {r, g, b}; }
+    void SetColor(glm::vec3 color_) { color = color_; }
+
+    void SetCastShadows(bool cast) { cast_shadows = cast; }
+
+    void GenerateShadow(glm::vec3 position, glm::vec3 direction,
+                        float cone_in_degree) {
+        shadow.GenerateShadowMap(position, direction, cone_in_degree);
+    }
+
+private:
+    float cone_angle_in_radian { glm::radians(45.f) };
+
+    glm::vec3 color {1.0f };
+
+    bool cast_shadows = true;
+
+    ShadowMapGenerator shadow {};
+
+    int index = -1;
+
+    friend ShadowMapGenerator;
+
+public:
+    // TODO: fix these with Transform
+    glm::vec3 position {};
+    glm::vec3 direction {};
+};
 
 
-Light PointLight(glm::vec3 position, glm::vec3 color);
-
-Light DirectionalLight(glm::vec3 direction, glm::vec3 color);
-
-Light SpotLight(glm::vec3 position, glm::vec3 direction, glm::vec3 color,
-                float cone_angle_in_radian);
+using PointLight      = Light<LightType::Point>;
+using SpotLight       = Light<LightType::Spot>;
+using DirectionalLight = Light<LightType::Directional>;
 
 
 #endif //RENDER_ENGINE_LIGHT_HPP

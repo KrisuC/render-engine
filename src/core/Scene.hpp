@@ -39,7 +39,6 @@
 
 class Renderer;
 class GameObject;
-class Light;
 
 class Scene {
 public:
@@ -53,8 +52,6 @@ public:
 
     GameObject& CreateGameObject();
 
-    void CreateLight(const Light &light);
-
     template <typename... Args> void CreateSkybox(Args... args);
 
     inline Skybox& GetSkybox() { return *up_skybox; }
@@ -66,20 +63,19 @@ public:
 
     inline Camera& GetCurrentCamera() { return camera; }
 
+    auto& GetListOfObeject() { return up_game_objects; }
+
 private:
     void UpdateUniformBlocks();
-
-    void UpdateShadowMaps();
 
 private:
     /* Using a pointer to GameObject is a must because when vector change
        size. Reference of GameObject will fail!!! */
     std::vector<std::unique_ptr<GameObject>> up_game_objects;
-    std::vector<Light> lights;
+    // std::vector<Light> lights;
     std::unique_ptr<Skybox> up_skybox;
     Camera camera {};
 
-    friend class Renderer;
 };
 
 

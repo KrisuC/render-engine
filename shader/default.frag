@@ -188,6 +188,7 @@ void main() {
         }
         vec3  radiance     =   lights[i].color * attenuation;
 
+
         float NdotL = max(dot(N, L), 0.0);
         float HdotV = max(dot(H, V), 0.0);
 

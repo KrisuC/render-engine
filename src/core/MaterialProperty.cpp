@@ -3,3 +3,4 @@
 //
 
 #include "MaterialProperty.hpp"
+#include "Shader.hpp"

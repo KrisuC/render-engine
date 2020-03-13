@@ -6,7 +6,6 @@
 #include <glm/glm.hpp>
 #include <string>
 
-#include "Light.hpp"
 #include "UniformBlock.hpp"
 
 enum class ShaderType {
@@ -47,11 +46,6 @@ public:
     void Set(const string &name, mat2 const& mat) const;
     void Set(const string &name, mat3 const& mat) const;
     void Set(const string &name, mat4 const& mat) const;
-
-    // Specific Uniform Settings
-    void SetLight(Light const &light, int light_index);
-    void SetCameraPosition(vec3 cameraPosition);
-    void SetModel(mat4 model) { Set("model", model); }
 
 private:
     int getUniformLocation(string const& name) const;

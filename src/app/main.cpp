@@ -12,6 +12,7 @@
 #include "IO.hpp"
 #include "LightInformation.hpp"
 #include "GlobalTransform.hpp"
+#include "Light.hpp"
 
 void processInput(Camera &camera) {
     float speed = 20.0f * Engine::GetInstance().GetRenderer().GetDeltaTime();
@@ -42,6 +43,7 @@ void processInput(Camera &camera) {
 
 
 int main(int argc, char *argv[]) {
+    static_assert(std::is_base_of_v<Component, DirectionalLight>, "fuck");
 
     Engine& engine = Engine::GetInstance();
 
@@ -78,22 +80,23 @@ int main(int argc, char *argv[]) {
     }
 
     // --3--
-    Light light;
-    light.color = {10, 10, 0 };
-    light.position = glm::vec3 {-1, 3, 1} * 5.0f;
-    light.direction = {0, 0, -10}; - light.position;
-    light.ltype = LightType::Directional;
-    scene.CreateLight(light);
-
     GameObject& lamp = scene.CreateGameObject(); {
+        glm::vec3 light_color = glm::vec3 { 1, 1, 1 } * 2.0f;
+        glm::vec3 light_position = glm::vec3{-1, 3, 1} * 5.0f;
+
         lamp.CreateComponent<Mesh>(SimpleMesh::Sphere());
         auto& material = lamp.CreateComponent<Material>();
         material.SetShader(engine.GetDefaultShader());
-        material.SetEmissive(light.color);
+        material.SetEmissive(light_color);
 
         auto& transform = lamp.CreateComponent<Transform>();
-        transform.SetPosition(light.position);
+        transform.SetPosition(glm::vec3{-1, 3, 1} * 5.0f);
         transform.SetScale(0.33);
+
+        auto& light = lamp.CreateComponent<DirectionalLight>();
+        light.SetColor(light_color);
+        light.position = light_position;
+        light.direction = {0, 0, -10}; - light.position;
     }
 
     scene.CreateSkybox();

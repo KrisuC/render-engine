@@ -185,19 +185,6 @@ Shader::checkCompileErrors(GLuint shader, const std::string& type, std::string p
     }
 }
 
-void Shader::SetLight(Light const &light, int light_index) {
-    static const std::string lstr =
-            "lights[" + std::to_string(light_index) + "]";
-
-    this->Set(lstr + ".position", light.position);
-    this->Set(lstr + ".direction", light.direction);
-    this->Set(lstr + ".color", light.color);
-    this->Set(lstr + ".cone_angle_in_radian", light.cone_angle_in_radian);
-
-    this->Set("lights_cnt", light_index + 1);
-    DEBUG_LOG("Adding light...", light_index);
-}
-
 void Shader::processShaderFile(char const *filePath, ShaderType shaderType) {
     std::ifstream file;
     file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
@@ -210,10 +197,6 @@ void Shader::processShaderFile(char const *filePath, ShaderType shaderType) {
     } catch(std::ifstream::failure& e) {
         // TODO
     }
-}
-
-void Shader::SetCameraPosition(Shader::vec3 cameraPosition) {
-    Set("cameraPosition", cameraPosition);
 }
 
 int Shader::getUniformLocation(const Shader::string &name) const {

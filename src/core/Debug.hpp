@@ -8,7 +8,7 @@
 #include <iostream>
 
 class Texture;
-class Shadow;
+class DirectionalShadow;
 
 #ifdef ENGINE_DEBUG
 
@@ -25,9 +25,7 @@ void DEBUG_LOG(T first, Args...args) {
     }
 }
 
-void DEBUG_TEXTURE2D(const Texture &t);
-
-void DEBUG_SHADOW_MAP(const Shadow &s);
+void DEBUG_TEXTURE2D(unsigned texture);
 
 #else
 

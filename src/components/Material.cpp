@@ -6,6 +6,12 @@
 #include "Debug.hpp"
 #include "Engine.hpp"
 
+#include "Texture.hpp"
+#include "IBL.hpp"
+#include "Component.hpp"
+#include "Shader.hpp"
+
+
 Material::Material() {
     DEBUG_LOG("Creating Material...");
 

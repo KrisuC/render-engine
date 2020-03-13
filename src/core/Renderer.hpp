@@ -39,6 +39,8 @@ public:
 
     void InitializeOpenGL();
 
+    void ResetViewport();;
+
     std::pair<int, int> GetWindowSize() const;
 
     void Close();

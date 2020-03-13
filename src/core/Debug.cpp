@@ -6,27 +6,17 @@
 #include "Mesh.hpp"
 #include "Shader.hpp"
 #include "Texture.hpp"
-#include "Shadow.hpp"
+#include "DirectionalShadow.hpp"
 
 #ifdef ENGINE_DEBUG
 
-void DEBUG_TEXTURE2D(const Texture &t) {
+void DEBUG_TEXTURE2D(unsigned texture) {
     static Shader debugShader {"shader/debug-texture.vert",
                                "shader/debug-texture.frag"};
     debugShader.UseShaderProgram();
     debugShader.Set("map", 0);
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(static_cast<int>(t.Type()), t.ID());
-    SimpleMesh::renderQuad();
-}
-
-void DEBUG_SHADOW_MAP(const Shadow &s) {
-    static Shader debugShader {"shader/debug-texture.vert",
-                               "shader/debug-shadow-map.frag"};
-    debugShader.UseShaderProgram();
-    debugShader.Set("map", 0);
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, s.depthMap);
+    glBindTexture(GL_TEXTURE_2D, texture);
     SimpleMesh::renderQuad();
 }
 

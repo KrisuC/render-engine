@@ -5,6 +5,7 @@
 #include "Transform.hpp"
 #include "Material.hpp"
 #include "Scene.hpp"
+#include "Camera.hpp"
 
 glm::mat4 Transform::GetMatrix() {
     glm::mat4 model = glm::translate(glm::mat4(1), this->position);
@@ -13,17 +14,13 @@ glm::mat4 Transform::GetMatrix() {
     return model;
 }
 
-
 void Transform::BeforeRenderPass() {
     auto& shader = GetGameObject().GetComponent<Material>().GetShader();
 
     auto model = GetMatrix();
 
     shader.UseShaderProgram();
-    shader.SetModel(model);
-
-    auto& camera = Engine::GetInstance().GetCurrentScene().GetCurrentCamera();
-    shader.SetCameraPosition(camera.Position());
+    shader.Set("model", model);
 }
 
 void Transform::Translate(float dx, float dy, float dz) {

@@ -1,21 +1,26 @@
 #include <vector>
 #include <iostream>
 #include <variant>
+#include <type_traits>
 
 using namespace std;
 
-template <typename T>
-class MyClass {
-public:
-    T value;
-    MyClass *ptr;
+class Base {
+
 };
 
-using FC = MyClass<float>;
-using IC = MyClass<int>;
+template <int i>
+using Shit = std::conditional_t<(i > 0),
+        int,
+        std::conditional_t<(i < 20),
+                char,
+                double>>;
+
+template <int i, typename Fuck = Shit<i>>
+class Derived : public Base {
+
+};
 
 int main() {
-    variant<FC, IC> v;
-    std::get<IC>(v).value;
-    v.index();
+    static_assert(std::is_base_of_v<Base, Derived<1>>, "shit");
 }

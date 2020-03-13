@@ -3,3 +3,6 @@
 //
 
 #include "LightInformation.hpp"
+
+#include "Light.hpp"
+

@@ -9,7 +9,6 @@
 
 #include "Component.hpp"
 #include "Engine.hpp"
-#include "Camera.hpp"
 
 class EulerAngle {
 public:

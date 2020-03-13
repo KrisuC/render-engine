@@ -15,14 +15,10 @@
 
 #include <glm/glm.hpp>
 
-#include "Texture.hpp"
-#include "IBL.hpp"
-#include "Component.hpp"
-#include "Shader.hpp"
 #include "MaterialProperty.hpp"
+#include "Component.hpp"
 
-
-
+class IBL;
 
 class Material : public Component {
 public:

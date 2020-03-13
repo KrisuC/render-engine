@@ -9,9 +9,10 @@
 
 #include <glm/glm.hpp>
 
-#include "Texture.hpp"
 #include "Shader.hpp"
+#include "Texture.hpp"
 
+class Shader;
 
 namespace {
     /* Number represent GL_TEXTUREx used for glActiveTexture */
