@@ -47,15 +47,11 @@ If you success, you will see something like these:
 
 - Scene graph
   - Acceleration data structure (BVH)
-    - View frustum culling
-  - External scene description File & Scene Parser
-- Shadow mapping
+- External Scene description (with RapidJSON)
+- External Material description (with RapidJSON)
+- Better model loader (with Assimp)
+- Shadow mapping (for point light and spot light)
 - SSAO
-- Message queue (Signal/Slots)
-- Fix Texture to support PBR pipeline
-- Fix Mesh and Model
-- ...
-- Scripting Engine
-- General Purpose World/Scene Editor
-- More BxDF, more lighting models, yes, yes!
+- Bloom
+- Cloth BRDF
 
