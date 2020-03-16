@@ -206,3 +206,12 @@ int Shader::getUniformLocation(const Shader::string &name) const {
     }
     return loc;
 }
+
+Shader::Shader(const Shader::string &vp, const Shader::string &fp,
+               const Shader::string &gp) {
+    if (!gp.empty()) {
+        Shader(vp.c_str(), fp.c_str());
+    } else {
+        Shader(vp.c_str(), fp.c_str(), gp.c_str());
+    }
+}

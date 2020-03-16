@@ -9,7 +9,7 @@
 
 class Shadow {
 public:
-    virtual void GenerateShadowMap(glm::vec3 position, glm::vec3 direction,
+    virtual void GenerateShadowMap(const glm::vec3 &position, const glm::vec3 &direction,
                                    float cone_in_degree) = 0;
     virtual ~Shadow() = default;
 };

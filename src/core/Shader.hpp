@@ -24,6 +24,7 @@ class Shader {
     using string = std::string;
 
 public:
+    Shader(string const& vp, string const& fp, string const& gp = "");
     Shader(const GLchar *vertexPath,
            const GLchar *fragmentPath,
            const GLchar *geometryPath = nullptr);
