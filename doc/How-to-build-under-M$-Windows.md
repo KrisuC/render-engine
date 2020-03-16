@@ -30,7 +30,7 @@
 
 ![cmake-change-lib-output-path](cmake-change-lib-output-path.png)
 
-![cmake-Build-ms-debug-dir](cmake-Build-ms-debug-dir.png)
+![cmake-Build-ms-debug-dir](cmake-build-ms-debug-dir.png)
 
 9. 再点一下 Configure，再点一下 Generate，然后 OpenProject，再build一遍
 
