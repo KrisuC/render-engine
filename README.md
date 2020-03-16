@@ -16,7 +16,7 @@ make -j16
 
 To Build on windows, see:
 
-[Build for visual studio on windows](./doc/How-to-Build-under-M$-Windows.md)
+[Build for visual studio on windows](./doc/How-to-build-under-M$-Windows.md)
 
 If you success, you will see something like these:
 
