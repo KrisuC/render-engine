@@ -25,20 +25,20 @@ public:
     inline IBL const& GetIBL() { return ibl; }
 
 private:
-    Shader renderShader {"shader/skybox.vert",
-                         "shader/skybox.frag"};
+    Shader renderShader {"shader/skybox-and-IBL/skybox.vert",
+                         "shader/skybox-and-IBL/skybox.frag"};
 
-    Shader equirectToCubemapShader {"shader/cubemap.vert",
-                                    "shader/equirectangular-to-cubemap.frag"};
+    Shader equirectToCubemapShader {"shader/skybox-and-IBL/cubemap.vert",
+                                    "shader/skybox-and-IBL/equirectangular-to-cubemap.frag"};
 
-    Shader irradianceShader {"shader/cubemap.vert",
-                             "shader/irradiance-convolution.frag"};
+    Shader irradianceShader {"shader/skybox-and-IBL/cubemap.vert",
+                             "shader/skybox-and-IBL/irradiance-convolution.frag"};
 
-    Shader prefilterShader {"shader/cubemap.vert",
-                            "shader/prefilter-map.frag"};
+    Shader prefilterShader {"shader/skybox-and-IBL/cubemap.vert",
+                            "shader/skybox-and-IBL/prefilter-map.frag"};
 
-    Shader brdfLUTShader {"shader/brdflut.vert",
-                          "shader/brdflut.frag"};
+    Shader brdfLUTShader {"shader/skybox-and-IBL/brdflut.vert",
+                          "shader/skybox-and-IBL/brdflut.frag"};
 
     unsigned int envCubemap = 0;
 

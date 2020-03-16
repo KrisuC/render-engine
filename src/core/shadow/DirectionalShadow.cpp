@@ -42,8 +42,8 @@ DirectionalShadow::GenerateShadowMap(glm::vec3 position, glm::vec3 direction,
     glViewport(0, 0, width, height);
 
     glClear(GL_DEPTH_BUFFER_BIT);
-    static Shader shadowMapGenShader {"shader/shadow-map-gen.vert",
-                                      "shader/shadow-map-gen.frag"};
+    static Shader shadowMapGenShader {"shader/shadow-mapping/directional-shadow.vert",
+                                      "shader/shadow-mapping/directional-shadow.frag"};
     glm::mat4 lightProjection = glm::ortho<float>(
             -10, 10, -10, 10,
             1.0, 50

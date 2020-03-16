@@ -13,7 +13,7 @@ in FROM_VS_TO_FS {
 const float PI = 3.14159265359;
 
 /*********** Material Configuration **************/
-uniform struct Vec3fMap { sampler2D map; vec3 value; bool use_map; }
+uniform struct Vec3fMap { sampler2D map; vec3  value; bool use_map; }
 m_albedo,
 m_normal,
 m_specular,
@@ -29,17 +29,18 @@ m_height;
 const int DIRECTIONAL = 0, POINT = 1, SPOT = 2;
 const int MAX_LIGHT = 20;
 
+struct Light {
+    vec3 position;               // 0-4N (N: 4 byte - a float)
+    float cone_angle_in_radian;  // 3-4N
+
+    vec3 direction;              // 4-8N
+    int ltype;                   // 7-8N
+
+    vec3 color;                  // 8-12N
+};
+
 layout (std140) uniform LightInformation {
-    struct Lights {
-        vec3 position;               // 0-4N (N: 4 byte - a float)
-        float cone_angle_in_radian;  // 3-4N
-
-        vec3 direction;              // 4-8N
-        int ltype;                   // 7-8N
-
-        vec3 color;                  // 8-12N
-
-    } lights[MAX_LIGHT];             // 0-240N [12N * MAX_LIGHT(20) == 240N]
+    Light lights[MAX_LIGHT];             // 0-240N [12N * MAX_LIGHT(20) == 240N]
 
     vec3 cameraPosition;             // 240-244N
     int lights_cnt;                  // 243-244N

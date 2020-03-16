@@ -67,8 +67,8 @@ Shader &Engine::CreateShader(Args &&... args) {
 
 
 Shader &Engine::GetDefaultShader() {
-    static Shader& default_ = CreateShader("shader/default.vert",
-                                           "shader/default.frag");
+    static Shader& default_ = CreateShader("shader/standard.vert",
+                                           "shader/standard.frag");
     return default_;
 }
 
