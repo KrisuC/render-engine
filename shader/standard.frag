@@ -47,6 +47,7 @@ layout (std140) uniform LightInformation {
 }; // 244 * 4 < 1024 bytes
 
 uniform sampler2D shadowMap;
+uniform samplerCube shadowCubeMap;
 
 /**********************IBL*************************/
 uniform struct IBL {

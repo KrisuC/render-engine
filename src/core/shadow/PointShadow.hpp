@@ -25,7 +25,9 @@ public:
     void GenerateShadowMap(const glm::vec3 &position, const glm::vec3 &direction,
                            float cone_in_degree) override;
 
-private:
+    ~PointShadow();
+
+public:
     unsigned depthMapFBO = 0;
     unsigned depthCubemap = 0;
 
