@@ -97,7 +97,7 @@ int main(int argc, char *argv[]) {
         light.SetColor(light_color);
         // TODO: fix with Transform
         light.position = light_position;
-        light.direction = {0, 0, -10}; - light.position;
+        light.direction = glm::vec3{0, 0, -10} - light.position;
     }
 
     scene.CreateSkybox();

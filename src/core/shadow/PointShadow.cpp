@@ -36,20 +36,20 @@ void PointShadow::GenerateShadowMap(const glm::vec3 &position,
     glClear(GL_DEPTH_BUFFER_BIT);
     /* Configure shader and Matrices */
     float aspect = static_cast<float>(width) / height;
-    float near = 1.0f, far = 50.f;
+    float near = 1.0f, far = shadow_depth;
     glm::mat4 shadowProj = glm::perspective(glm::radians(90.f),
                                             aspect, near, far);
-    static const glm::vec3 z {0, 0, 1},
-            y {0, 1, 0},
-            x { 1, 0, 0 };
+    static const glm::vec3 Z {0, 0, 1},
+            Y {0, 1, 0},
+            X {1, 0, 0 };
 
     std::array<glm::mat4, 6> shadowViews {
-            glm::lookAt(position, position +  x, -y),
-            glm::lookAt(position, position + -x, -y),
-            glm::lookAt(position, position +  y,  z),
-            glm::lookAt(position, position + -y,  z),
-            glm::lookAt(position, position +  z, -x),
-            glm::lookAt(position, position + -z, -x)
+            glm::lookAt(position, position +  X, -Y),
+            glm::lookAt(position, position + -X, -Y),
+            glm::lookAt(position, position +  Y,  Z),
+            glm::lookAt(position, position + -Y,  Z),
+            glm::lookAt(position, position +  Z, -X),
+            glm::lookAt(position, position + -Z, -X)
     };
     static const std::string dir("shader/shadow-mapping/point-shadow");
     static Shader shadowGenShader {dir + ".vert", dir + ".frag", dir + ".geom" };

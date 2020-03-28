@@ -65,6 +65,11 @@ public:
 
     auto& GetListOfObeject() { return up_game_objects; }
 
+    GameObject* GetCurrentPointingGameObject(float viewport_x, float viewport_y) {
+
+        return nullptr;
+    }
+
 private:
     void UpdateUniformBlocks();
 

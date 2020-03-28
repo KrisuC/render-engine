@@ -46,7 +46,7 @@ DirectionalShadow::GenerateShadowMap(const glm::vec3 &position, const glm::vec3 
                                    "shader/shadow-mapping/directional-shadow.frag"};
     glm::mat4 lightProjection = glm::ortho<float>(
             -10, 10, -10, 10,
-            1.0, 50
+            1.0, shadow_depth
     );
     static const glm::vec3 global_up {0, 1, 0};
     glm::vec3 right = glm::cross(direction, global_up);
