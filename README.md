@@ -48,7 +48,7 @@ If you success, you will see something like these:
 - Scene graph
   - Acceleration data structure (BVH)
 - External Scene description (with RapidJSON)
-- External Material description (with RapidJSON)
+- External PBR_Material description (with RapidJSON)
 - Better model loader (with Assimp)
 - Shadow mapping (for point light and spot light)
 - SSAO

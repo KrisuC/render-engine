@@ -2,8 +2,8 @@
 // Created by Krisu on 2019-12-29.
 //
 
-#ifndef RENDER_ENGINE_MATERIAL_HPP
-#define RENDER_ENGINE_MATERIAL_HPP
+#ifndef RENDER_ENGINE_PBR_MATERIAL_HPP
+#define RENDER_ENGINE_PBR_MATERIAL_HPP
 
 #include <utility>
 #include <string>
@@ -16,20 +16,15 @@
 #include <glm/glm.hpp>
 
 #include "MaterialProperty.hpp"
-#include "Component.hpp"
+#include "Material.hpp"
 
 class IBL;
 
-class Material : public Component {
+class PBR_Material : public Material {
 public:
-    void BeforeRenderPass() override {
-        /* updating shader uniform before each object rendered */
-        updateShaderUniform();
-    }
+    PBR_Material();
 
-public:
-    Material();
-
+    // TODO: fix this macro shit
     /* Just saving me from some typing :> */
     template <MaterialPropertyType XXX, typename... Args>
     void SetMaterialProperty(Args&&... args) {
@@ -50,20 +45,11 @@ public:
 
     inline void AppendTexture(const std::string &name, Texture const*t);
 
-    void SetShader(Shader &ns);
-    inline Shader& GetShader() { return *p_shader; }
+    void UpdateShaderUniform() override;
+
+    void SetIBLTextures(IBL const& ibl);
 
 private:
-    void setIBLTextures(IBL const& ibl);
-
-    void updateShaderUniform();
-
-    friend class Scene;
-
-private:
-    /* Shader responsible for rendering this Material */
-    Shader *p_shader;
-
     /* All material properties */
     std::array<MaterialProperty, MaterialPropertyTypeCount> materialProperties {};
 
@@ -81,9 +67,5 @@ private:
 
 
 
-// ----------------------Inline functions----------------------------
-void Material::AppendTexture(const std::string &name, Texture const *t) {
-    extra_textures.push_back({name, t});
-}
 
-#endif //RENDER_ENGINE_MATERIAL_HPP
+#endif //RENDER_ENGINE_PBR_MATERIAL_HPP

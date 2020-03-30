@@ -54,7 +54,7 @@ public:
 
     template <typename... Args> void CreateSkybox(Args... args);
 
-    inline Skybox& GetSkybox() { return *up_skybox; }
+    inline Skybox& GetSkybox() { return *upSkybox; }
 
     /* Setting Shader component due to scene configuration */
     void Build();
@@ -63,22 +63,21 @@ public:
 
     inline Camera& GetCurrentCamera() { return camera; }
 
-    auto& GetListOfObeject() { return up_game_objects; }
+    auto& GetListOfObeject() { return upGameObjects; }
 
-    GameObject* GetCurrentPointingGameObject(float viewport_x, float viewport_y) {
+    void RenderMeshes(Shader &shader);
 
-        return nullptr;
-    }
-
+    // TODO: 3d picking
+    GameObject* GetCurrentPointingGameObject(float viewport_x, float viewport_y);
 private:
     void UpdateUniformBlocks();
 
 private:
     /* Using a pointer to GameObject is a must because when vector change
        size. Reference of GameObject will fail!!! */
-    std::vector<std::unique_ptr<GameObject>> up_game_objects;
+    std::vector<std::unique_ptr<GameObject>> upGameObjects;
     // std::vector<Light> lights;
-    std::unique_ptr<Skybox> up_skybox;
+    std::unique_ptr<Skybox> upSkybox;
     Camera camera {};
 
 };
@@ -86,8 +85,9 @@ private:
 
 template<typename... Args>
 void Scene::CreateSkybox(Args... args) {
-    up_skybox = std::make_unique<Skybox>(args...);
+    upSkybox = std::make_unique<Skybox>(args...);
 }
+
 
 
 

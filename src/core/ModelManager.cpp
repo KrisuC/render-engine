@@ -38,7 +38,7 @@ ModelManager::initFromScene(const aiScene *pScene, const std::string &file_name)
     return initMaterials(pScene, file_name);
 }
 
-void ModelManager::initMesh(Mesh *p_mesh, const aiMesh *p_aiMesh) {
+void ModelManager::initMesh(StaticMesh *p_mesh, const aiMesh *p_aiMesh) {
     // Assign material to mesh
 
     std::vector<Vertex> vertices;
@@ -71,7 +71,7 @@ void ModelManager::initMesh(Mesh *p_mesh, const aiMesh *p_aiMesh) {
     DEBUG_LOG("Generating mesh...", vertices.size(), "vertices. ",
               indicies.size(), "indicies");
 
-    p_mesh = new Mesh {std::move(vertices), std::move(indicies)};
+    p_mesh = new StaticMesh {std::move(vertices), std::move(indicies)};
     p_mesh->material_index = p_aiMesh->mMaterialIndex;
 }
 

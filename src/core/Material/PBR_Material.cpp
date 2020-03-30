@@ -2,7 +2,7 @@
 // Created by Krisu on 2019-12-29.
 //
 
-#include "Material.hpp"
+#include "PBR_Material.hpp"
 #include "Debug.hpp"
 #include "Engine.hpp"
 
@@ -12,21 +12,25 @@
 #include "Shader.hpp"
 
 
-Material::Material() {
-    DEBUG_LOG("Creating Material...");
+PBR_Material::PBR_Material() {
+    DEBUG_LOG("Creating PBR_Material...");
 
-    p_shader = &Engine::GetInstance().GetDefaultShader();
+    SetShader(Engine::GetInstance().CreateStandardShader());
 
     SetAlbedo(1, 1, 1);
     SetMetallic(0);
     SetEmissive(0, 0, 0);
 }
 
-void Material::updateShaderUniform() {
-    /* Binding Material Properties */
+void PBR_Material::AppendTexture(const std::string &name, Texture const *t) {
+    extra_textures.push_back({name, t});
+}
+
+void PBR_Material::UpdateShaderUniform() {
+    /* Binding PBR_Material Properties */
     for (int i = 0; i < materialProperties.size(); i++) {
         auto& materialProperty = materialProperties[i];
-        materialProperty.SetShaderUniform(*p_shader,
+        materialProperty.SetShaderUniform(GetShader(),
                 static_cast<MaterialPropertyType>(i));
     }
 
@@ -40,22 +44,18 @@ void Material::updateShaderUniform() {
                 static_cast<unsigned>(texture->Type()), /* target */
                 texture->ID() /* texture */
         );
-        p_shader->Set(str, textureUnit);
+        GetShader().Set(str, textureUnit);
     };
 
     unsigned tot = MaterialPropertyTypeCount;
 
-    p_shader->UseShaderProgram();
+    GetShader().UseShaderProgram();
     for (const auto &t : extra_textures) {
         bind_texture(t.name, t.texture, ++tot);
     }
 }
 
-void Material::SetShader(Shader & ns) {
-    p_shader = &ns;
-}
-
-void Material::setIBLTextures(IBL const &ibl) {
+void PBR_Material::SetIBLTextures(IBL const &ibl) {
     AppendTexture("ibl.irradiance", &ibl.irradiance);
     AppendTexture("ibl.prefilter", &ibl.prefilter);
     AppendTexture("ibl.brdfLUT", &ibl.brdfLUT);

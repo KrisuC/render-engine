@@ -21,7 +21,7 @@
 #include <string>
 
 #include "Shader.hpp"
-#include "Mesh.hpp"
+#include "StaticMesh.hpp"
 
 // Model encapsulate Material and Mesh
 class Model {

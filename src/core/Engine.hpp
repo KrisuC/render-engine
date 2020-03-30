@@ -39,9 +39,7 @@ public:
     template <typename...Args>
     Shader& CreateShader(Args &&... args);
 
-    Shader& GetDefaultShader();
-
-    Shader& GetTestShader();
+    Shader& CreateStandardShader();
 
     WindowManager& GetRenderer();
 

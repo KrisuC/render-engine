@@ -14,7 +14,7 @@
 #include "Shader.hpp"
 #include "Scene.hpp"
 #include "Engine.hpp"
-#include "Mesh.hpp"
+#include "StaticMesh.hpp"
 #include "Transform.hpp"
 
 

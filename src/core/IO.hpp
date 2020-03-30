@@ -162,7 +162,7 @@ private:
 private:
     static GLFWwindow *current_glfw_window;
 
-    friend class Renderer;
+    friend class WindowManager;
 };
 
 

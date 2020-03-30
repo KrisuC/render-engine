@@ -10,12 +10,12 @@
 
 #include "Skybox.hpp"
 #include "Texture.hpp"
-#include "Mesh.hpp"
+#include "StaticMesh.hpp"
 #include "Scene.hpp"
 #include "Engine.hpp"
 
 
-void Skybox::Draw() {
+void Skybox::Render() {
     renderShader.UseShaderProgram();
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap);
@@ -29,7 +29,7 @@ void Skybox::Draw() {
     renderShader.Set("view", view);
     renderShader.Set("projection", projection);
 
-    SimpleMesh::renderCube();
+    BuiltinMesh::RenderCube();
 }
 
 Skybox::Skybox(Texture const& skyboxTexture) : texture(skyboxTexture)  {
@@ -95,7 +95,7 @@ Skybox::Skybox(Texture const& skyboxTexture) : texture(skyboxTexture)  {
                                GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, envCubemap, 0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        SimpleMesh::renderCube();
+        BuiltinMesh::RenderCube();
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -140,7 +140,7 @@ Skybox::Skybox(Texture const& skyboxTexture) : texture(skyboxTexture)  {
                                        irradianceMapID, 0);
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-                SimpleMesh::renderCube();
+                BuiltinMesh::RenderCube();
             }
         }
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -190,7 +190,7 @@ Skybox::Skybox(Texture const& skyboxTexture) : texture(skyboxTexture)  {
                                            prefilterMapID, mip);
 
                     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-                    SimpleMesh::renderCube();
+                    BuiltinMesh::RenderCube();
                 }
             }
         }
@@ -219,7 +219,7 @@ Skybox::Skybox(Texture const& skyboxTexture) : texture(skyboxTexture)  {
             glViewport(0, 0, 512, 512);
             brdfLUTShader.UseShaderProgram();
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            SimpleMesh::renderQuad();
+            BuiltinMesh::RenderQuad();
         }
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }

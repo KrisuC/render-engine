@@ -3,6 +3,7 @@
 //
 
 #include "PointShadow.hpp"
+#include "MeshRenderer.hpp"
 
 
 PointShadow::PointShadow(int map_width, int map_height) :
@@ -51,7 +52,7 @@ void PointShadow::GenerateShadowMap(const glm::vec3 &position,
             glm::lookAt(position, position +  Z, -X),
             glm::lookAt(position, position + -Z, -X)
     };
-    static const std::string dir("shader/shadow-mapping/point-shadow");
+    static const std::string dir("shader/Shadow-mapping/point-Shadow");
     static Shader shadowGenShader {dir + ".vert", dir + ".frag", dir + ".geom" };
     for (int i = 0; i < shadowTransformsPV.size(); i++) {
         shadowTransformsPV[i] = shadowProj * shadowViews[i];
@@ -61,19 +62,10 @@ void PointShadow::GenerateShadowMap(const glm::vec3 &position,
     shadowGenShader.UseShaderProgram();
     shadowGenShader.Set("lightPos", position);
     shadowGenShader.Set("far_plane", far);
-    /* Rendering scene to shadow map */
+    /* Rendering scene to Shadow map */
     glCullFace(GL_FRONT); // fix peter panning
     auto& scene = Engine::GetInstance().GetCurrentScene();
-    for (auto& up_game_obj : scene.GetListOfObeject()) {
-        try {
-            auto& mesh = up_game_obj->GetComponent<Mesh>();
-            auto& transform = up_game_obj->GetComponent<Transform>();
-            shadowGenShader.Set("model", transform.GetMatrix());
-            mesh.DrawCall();
-        } catch (NoComponent &) {
-            continue;
-        }
-    }
+    scene.RenderMeshes(shadowGenShader);
     glCullFace(GL_BACK);
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);

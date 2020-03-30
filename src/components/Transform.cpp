@@ -3,7 +3,7 @@
 //
 
 #include "Transform.hpp"
-#include "Material.hpp"
+#include "MeshRenderer.hpp"
 #include "Scene.hpp"
 #include "Camera.hpp"
 
@@ -14,10 +14,9 @@ glm::mat4 Transform::GetMatrix() {
     return model;
 }
 
-void Transform::BeforeRenderPass() {
-    auto& shader = GetGameObject().GetComponent<Material>().GetShader();
-
+void Transform::Update() {
     auto model = GetMatrix();
+    auto& shader = GetGameObject().GetComponent<MeshRenderer>().material.GetShader();
 
     shader.UseShaderProgram();
     shader.Set("model", model);

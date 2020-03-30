@@ -8,8 +8,8 @@
 #include "IO.hpp"
 #include "GameObject.hpp"
 #include "Scene.hpp"
-#include "Mesh.hpp"
-#include "Material.hpp"
+#include "StaticMesh.hpp"
+#include "PBR_Material.hpp"
 
 namespace {
     void ErrorCallBack(int error, const char* description) {

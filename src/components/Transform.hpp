@@ -20,7 +20,7 @@ public:
 class Transform : public Component {
 public:
     /* Update all Transform of GameObject before render called */
-    void BeforeRenderPass() override;
+    void Update() override;
 
 public:
     Transform() = default;

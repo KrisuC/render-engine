@@ -10,8 +10,10 @@ file(GLOB engine_src
         "src/basic/*.cpp"
         "src/core/*.cpp"
         "src/components/*.cpp"
-        "src/core/uniform-blocks/*cpp"
-        "src/core/shadow/*cpp"
+        "src/core/UniformBlock/*cpp"
+        "src/core/Shadow/*cpp"
+        "src/core/Mesh/*cpp"
+        "src/core/Material/*cpp"
         )
 
 add_executable(engine ${engine_src})
@@ -20,8 +22,10 @@ add_executable(test src/app/test.cpp)
 target_include_directories(engine PRIVATE
         ${PROJECT_SOURCE_DIR}/src/core
         ${PROJECT_SOURCE_DIR}/src/components
-        ${PROJECT_SOURCE_DIR}/src/core/uniform-blocks
-        ${PROJECT_SOURCE_DIR}/src/core/shadow
+        ${PROJECT_SOURCE_DIR}/src/core/UniformBlock
+        ${PROJECT_SOURCE_DIR}/src/core/Shadow
+        ${PROJECT_SOURCE_DIR}/src/core/Mesh
+        ${PROJECT_SOURCE_DIR}/src/core/Material
         )
 
 add_compile_definitions(ENGINE_DEBUG)

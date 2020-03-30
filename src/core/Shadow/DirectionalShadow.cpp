@@ -4,7 +4,7 @@
 
 #include "DirectionalShadow.hpp"
 #include "WindowManager.hpp"
-#include "Mesh.hpp"
+#include "StaticMesh.hpp"
 #include "Scene.hpp"
 #include "Transform.hpp"
 
@@ -42,8 +42,8 @@ DirectionalShadow::GenerateShadowMap(const glm::vec3 &position, const glm::vec3 
     glViewport(0, 0, width, height);
 
     glClear(GL_DEPTH_BUFFER_BIT);
-    static Shader shadowGenShader {"shader/shadow-mapping/directional-shadow.vert",
-                                   "shader/shadow-mapping/directional-shadow.frag"};
+    static Shader shadowGenShader {"shader/Shadow-mapping/directional-Shadow.vert",
+                                   "shader/Shadow-mapping/directional-Shadow.frag"};
     glm::mat4 lightProjection = glm::ortho<float>(
             -10, 10, -10, 10,
             1.0, shadow_depth
@@ -56,19 +56,10 @@ DirectionalShadow::GenerateShadowMap(const glm::vec3 &position, const glm::vec3 
     this->lightSpaceTransform = lightProjection * lightView;
     shadowGenShader.UseShaderProgram();
     shadowGenShader.Set("lightSpaceTransform", lightSpaceTransform);
-    glCullFace(GL_FRONT); // fix peter panning
     /* Rendering scene at light's space */
+    glCullFace(GL_FRONT); // fix peter panning
     auto& scene = Engine::GetInstance().GetCurrentScene();
-    for (auto& up_game_obj : scene.GetListOfObeject()) {
-        try {
-            auto& mesh = up_game_obj->GetComponent<Mesh>();
-            auto& transform = up_game_obj->GetComponent<Transform>();
-            shadowGenShader.Set("model", transform.GetMatrix());
-            mesh.DrawCall();
-        } catch (NoComponent &) {
-            continue;
-        }
-    }
+    scene.RenderMeshes(shadowGenShader);
     glCullFace(GL_BACK);
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);

@@ -3,7 +3,7 @@
 //
 
 #include "Debug.hpp"
-#include "Mesh.hpp"
+#include "StaticMesh.hpp"
 #include "Shader.hpp"
 #include "Texture.hpp"
 #include "DirectionalShadow.hpp"
@@ -17,7 +17,7 @@ void DEBUG_TEXTURE2D(unsigned texture) {
     debugShader.Set("map", 0);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
-    SimpleMesh::renderQuad();
+    BuiltinMesh::RenderQuad();
 }
 
 

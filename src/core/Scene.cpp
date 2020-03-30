@@ -10,73 +10,50 @@
 #include "GameObject.hpp"
 #include "Skybox.hpp"
 #include "Light.hpp"
-#include "Material.hpp"
+#include "PBR_Material.hpp"
 #include "WindowManager.hpp"
-#include "Mesh.hpp"
+#include "StaticMesh.hpp"
 #include "DirectionalShadow.hpp"
 #include "Transform.hpp"
 
-
-void Scene::Build() {
-    IBL const& ibl = up_skybox->GetIBL();
-    for (auto& up_game_object : up_game_objects) {
-        /* Check if it's renderable */
-        try {
-            auto& material = up_game_object->GetComponent<Material>();
-            material.setIBLTextures(ibl);
-            material.updateShaderUniform();
-        } catch (NoComponent&) {
-            // TODO: better mechanism
-            continue;
-        }
-
-        /* Call BeforeRenderLoop() for all components */
-        for (auto &up_component : up_game_object->components_map) {
-            auto & component = up_component.second;
-            component->BeforeRenderLoop();
-        }
-    }
-}
-
 GameObject &Scene::CreateGameObject() {
-    up_game_objects.emplace_back(std::make_unique<GameObject>());
-    return *up_game_objects.back();
+    upGameObjects.emplace_back(std::make_unique<GameObject>());
+    return *upGameObjects.back();
 }
 
 void Scene::Update() {
     Engine& engine = Engine::GetInstance();
     auto& renderer = engine.GetRenderer();
 
+    /* run Start for all components only once */
+    static bool first_frame = true;
+    if (first_frame) {
+        /* Call Start() for all components */
+        for (auto& up_gameObject : upGameObjects) {
+            for (auto &up_component : up_gameObject->components_map) {
+                auto & component = up_component.second;
+                component->Start();
+            }
+        }
+        first_frame = false;
+    }
+
     /* 1 - Updating Shared GPU memory */
     this->UpdateUniformBlocks();
 
     /* 2 - Scene update */
     renderer.ResetViewport();
-    for (auto& up_game_obj : up_game_objects) {
-        // BEFORE
-        for (auto &it : up_game_obj->components_map) {
+    for (auto& upGameObject : upGameObjects) {
+        for (auto &it : upGameObject->components_map) {
             auto & component = it.second;
-            component->BeforeRenderPass();
+            component->Update();
         }
-
-        // RENDERING
-        try {
-            auto& mesh = up_game_obj->GetComponent<Mesh>();
-            auto& material = up_game_obj->GetComponent<Material>();
-            auto& shader = material.GetShader();
-            shader.UseShaderProgram();
-            mesh.DrawCall();
-        } catch (NoComponent&) {
-            return ;
-        }
-        up_skybox->Draw();
-
-        // AFTER
-        for (auto &it : up_game_obj->components_map) {
+        for (auto &it : upGameObject->components_map) {
             auto & component = it.second;
-            component->AfterRenderPass();
+            component->LateUpdate();
         }
     }
+    upSkybox->Render();
 }
 
 
@@ -94,5 +71,17 @@ void Scene::UpdateUniformBlocks() {
 }
 
 
-
+void Scene::RenderMeshes(Shader &shader) {
+    shader.UseShaderProgram();
+    for (auto& pGameObject : upGameObjects) {
+        try {
+            auto& mesh = pGameObject->GetComponent<MeshRenderer>().mesh;
+            auto& transform = pGameObject->GetComponent<Transform>();
+            shader.Set("model", transform.GetMatrix());
+            mesh.DrawCall();
+        } catch (NoComponent &) {
+            continue;
+        }
+    }
+}
 

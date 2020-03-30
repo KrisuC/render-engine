@@ -32,7 +32,7 @@ namespace {
     constexpr const unsigned MaterialPropertyTypeCount
             = static_cast<unsigned>(MaterialPropertyType::count);
 
-    /* Material uniform name */
+    /* PBR_Material uniform name */
     constexpr const char* mp_uniform_str[]
             {
                     "m_albedo",
@@ -57,7 +57,7 @@ class MaterialProperty {
     std::variant<float, glm::vec3, Texture*> property;
 
 public:
-    /* Setting property from application side (Material) */
+    /* Setting property from application side (PBR_Material) */
     void SetProperty(float x, float y, float z) {
         property = glm::vec3 {x, y, z};
     }

@@ -15,11 +15,11 @@
 #include "PointShadow.hpp"
 #include "SpotShadow.hpp"
 #include "Transform.hpp"
-#include "Material.hpp"
 #include "Shader.hpp"
 #include "Engine.hpp"
 #include "Scene.hpp"
 #include "Debug.hpp"
+#include "MeshRenderer.hpp"
 
 /*
  * Light, yes, light.
@@ -61,7 +61,7 @@ class Light : public Component {
 
 public:
 
-    void BeforeRenderPass() override;
+    void Update() override;
 
 public:
     Light();
@@ -110,12 +110,13 @@ Light<lightType, ShadowMapGenerator>::Light() {
 
 
 template<LightType lightType, typename ShadowMapGenerator>
-void Light<lightType, ShadowMapGenerator>::BeforeRenderPass() {
+void Light<lightType, ShadowMapGenerator>::Update() {
     this->GenerateShadow(position, direction, cone_angle_in_radian);
 
-    /* Updating shadow maps -- should be done for all object */
+    // TODO: support multiple shadow
+    /* Updating Shadow maps -- should be done for all object */
     for (auto& up_game_obj : Engine::GetInstance().GetCurrentScene().GetListOfObeject()) {
-        Shader& shader = up_game_obj->GetComponent<Material>().GetShader();
+        Shader& shader = up_game_obj->GetComponent<MeshRenderer>().material.GetShader();
         shader.UseShaderProgram();
         shader.Set("lightSpaceTransform", shadow.lightSpaceTransform);
         int unit = 14;

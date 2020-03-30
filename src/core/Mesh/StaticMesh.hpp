@@ -2,8 +2,8 @@
 // Created by Krisu on 2019-11-19.
 //
 
-#ifndef RENDER_ENGINE_MESH_HPP
-#define RENDER_ENGINE_MESH_HPP
+#ifndef RENDER_ENGINE_STATICMESH_HPP
+#define RENDER_ENGINE_STATICMESH_HPP
 
 #include <glad/glad.h>
 
@@ -21,22 +21,16 @@
 #include "Shader.hpp"
 #include "Texture.hpp"
 #include "Component.hpp"
+#include "Mesh.hpp"
 
-class Vertex {
+class StaticMesh : public Mesh {
 public:
-    glm::vec3 position;
-    glm::vec3 normal;
-    glm::vec2 texCoords;
-};
+    StaticMesh() = default;
+    StaticMesh(std::vector<Vertex> vertices,
+               std::vector<unsigned int> indices,
+               unsigned int mesh_type = GL_TRIANGLES);
 
-class Mesh : public Component {
-public:
-    Mesh() = default;
-    Mesh(std::vector<Vertex> vertices,
-         std::vector<unsigned int> indices,
-         unsigned int mesh_type = GL_TRIANGLES);
-
-    void DrawCall() const;
+    void DrawCall() override;
 
 public:
     unsigned int VAO = 0, VBO = 0, EBO = 0;
@@ -54,15 +48,15 @@ private:
 
 
 // Rendering some fixed size primitive
-namespace SimpleMesh {
+namespace BuiltinMesh {
     // Unit == 2 :)
-    Mesh Sphere();
-    Mesh Cube();
-    Mesh Quad();
+    StaticMesh& GetSphere();
+    StaticMesh& GetCube();
+    StaticMesh& GetQuad();
 
-    void renderCube();
-    void renderSphere();
-    void renderQuad();
+    void RenderCube();
+    void RenderSphere();
+    void RenderQuad();
 }
 
-#endif //RENDER_ENGINE_MESH_HPP
+#endif //RENDER_ENGINE_STATICMESH_HPP

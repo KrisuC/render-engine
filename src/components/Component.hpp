@@ -9,17 +9,16 @@
  * In a typical rendering application:
  *
  *
- * All Components' BeforeRenderLoop() called...
+ * All Components' Start() called...
  *
  * while renderLoop not end {
  *
  *      for object in objectList {
  *          for component in object {
- *              component.BeforeRenderPass
+ *              component.Update
  *          }
- *          render(object)
  *          for component in object {
- *              component.AfterRenderPass
+ *              component.LateUpdate
  *          }
  *      }
  *
@@ -31,13 +30,13 @@ class GameObject;
 class Component {
 public:
     /*  will be called before render loop for all components */
-    virtual void BeforeRenderLoop() { }
+    virtual void Start() { }
 
     /* will be called in the render loop, before each frame rendererd */
-    virtual void BeforeRenderPass() { }
+    virtual void Update() { }
 
     /* will be called in the render loop, after each frame rendererd */
-    virtual void AfterRenderPass() { }
+    virtual void LateUpdate() { }
 
     /* get the owner of the Component */
     GameObject& GetGameObject() { return *owner; }
