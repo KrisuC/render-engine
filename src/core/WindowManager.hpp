@@ -2,8 +2,8 @@
 // Created by Krisu on 2019-12-29.
 //
 
-#ifndef RENDER_ENGINE_RENDERER_HPP
-#define RENDER_ENGINE_RENDERER_HPP
+#ifndef RENDER_ENGINE_WINDOWMANAGER_HPP
+#define RENDER_ENGINE_WINDOWMANAGER_HPP
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -12,21 +12,13 @@
 #include "IO.hpp"
 
 
-/*
- * Renderer encapsulates OpenGL loader, OpenGL API and main window
- * It's a middle layer between OpenGL API and the Render core, i.e., a
- * platform-independent layer
- *
- * Each Renderer is a window.
- */
-
-class Renderer {
+class WindowManager {
 public:
-    Renderer();
-    ~Renderer();
+    WindowManager();
+    ~WindowManager();
 
-    Renderer(Renderer const&) = delete;
-    Renderer& operator=(Renderer const&) = delete;
+    WindowManager(WindowManager const&) = delete;
+    WindowManager& operator=(WindowManager const&) = delete;
 
     void SetVsync(bool on);
 
@@ -56,4 +48,4 @@ private:
 
 
 
-#endif //RENDER_ENGINE_RENDERER_HPP
+#endif //RENDER_ENGINE_WINDOWMANAGER_HPP

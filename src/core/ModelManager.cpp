@@ -33,14 +33,13 @@ ModelManager::initFromScene(const aiScene *pScene, const std::string &file_name)
 
     for (int index = 0; index < p_meshes.size(); index++) {
         const aiMesh *paiMesh = pScene->mMeshes[index];
-        initMesh(*p_meshes[index], paiMesh);
+        initMesh(p_meshes[index], paiMesh);
     }
     return initMaterials(pScene, file_name);
 }
 
-void ModelManager::initMesh(Mesh &mesh, const aiMesh *p_aiMesh) {
+void ModelManager::initMesh(Mesh *p_mesh, const aiMesh *p_aiMesh) {
     // Assign material to mesh
-    mesh.material_index = p_aiMesh->mMaterialIndex;
 
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indicies;
@@ -72,7 +71,8 @@ void ModelManager::initMesh(Mesh &mesh, const aiMesh *p_aiMesh) {
     DEBUG_LOG("Generating mesh...", vertices.size(), "vertices. ",
               indicies.size(), "indicies");
 
-    mesh = {std::move(vertices), std::move(indicies)};
+    p_mesh = new Mesh {std::move(vertices), std::move(indicies)};
+    p_mesh->material_index = p_aiMesh->mMaterialIndex;
 }
 
 bool
@@ -94,15 +94,24 @@ ModelManager::initMaterials(const aiScene *pScene, const std::string &file_name)
         p_textures[i] = nullptr;
         if (pMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0) {
 
-            aiString path;
-            if (pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &path,
+            aiString relative_path;
+            if (pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &relative_path,
                                       nullptr, nullptr, nullptr, nullptr,
                                       nullptr) == AI_SUCCESS) {
-                std::string full_path = directory + "/" + path.data;
+                std::string full_path = directory + "/" + relative_path.data;
                 DEBUG_LOG("Loading diffuse texture...", full_path);
-                p_textures[i] = new Texture(path.data, false);
+                p_textures[i] = new Texture(full_path, false);
             }
         }
     }
     return true;
+}
+
+ModelManager::~ModelManager() {
+    for (auto &p : p_meshes) {
+        delete p;
+    }
+    for (auto &p : p_textures) {
+        delete p;
+    }
 }

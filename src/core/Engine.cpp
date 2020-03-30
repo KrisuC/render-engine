@@ -19,7 +19,7 @@ Scene& Engine::CreateScene() {
     return *scenes.back();
 }
 
-Renderer& Engine::GetRenderer() {
+WindowManager& Engine::GetRenderer() {
     return renderer;
 }
 

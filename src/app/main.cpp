@@ -3,7 +3,7 @@
 #include <iostream>
 
 #include "Scene.hpp"
-#include "Renderer.hpp"
+#include "WindowManager.hpp"
 #include "Engine.hpp"
 #include "Mesh.hpp"
 #include "Transform.hpp"
@@ -13,6 +13,7 @@
 #include "LightInformation.hpp"
 #include "GlobalTransform.hpp"
 #include "Light.hpp"
+#include "ModelManager.hpp"
 
 void processInput(Camera &camera) {
     float speed = 20.0f * Engine::GetInstance().GetRenderer().GetDeltaTime();
@@ -43,8 +44,6 @@ void processInput(Camera &camera) {
 
 
 int main(int argc, char *argv[]) {
-    static_assert(std::is_base_of_v<Component, DirectionalLight>, "fuck");
-
     Engine& engine = Engine::GetInstance();
 
     engine.EnableUniformBuffer<LightInformation>();
@@ -100,19 +99,22 @@ int main(int argc, char *argv[]) {
         light.direction = glm::vec3{0, 0, -10} - light.position;
     }
 
-    scene.CreateSkybox();
+    ModelManager sponza;
+    sponza.LoadModel("asset/sponza/sponza.obj");
 
-    scene.Build();
-
-    Renderer& renderer = engine.GetRenderer();
-    while (!renderer.ShouldEnd()) {
-        renderer.UpdateBeforeRendering();
-        processInput(scene.GetCurrentCamera());
-
-        scene.Update();
-
-        renderer.UpdateAfterRendering();
-    }
+//    scene.CreateSkybox();
+//
+//    scene.Build();
+//
+//    Renderer& renderer = engine.GetRenderer();
+//    while (!renderer.ShouldEnd()) {
+//        renderer.UpdateBeforeRendering();
+//        processInput(scene.GetCurrentCamera());
+//
+//        scene.Update();
+//
+//        renderer.UpdateAfterRendering();
+//    }
 
     return 0;
 }

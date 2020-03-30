@@ -7,7 +7,7 @@
 
 #include <string>
 
-#include "Renderer.hpp"
+#include "WindowManager.hpp"
 
 /*
  * shared uniform block across all shader instance

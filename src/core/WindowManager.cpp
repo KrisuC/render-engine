@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-#include "Renderer.hpp"
+#include "WindowManager.hpp"
 #include "IO.hpp"
 #include "GameObject.hpp"
 #include "Scene.hpp"
@@ -19,11 +19,11 @@ namespace {
 }
 
 
-Renderer::Renderer() {
+WindowManager::WindowManager() {
     InitializeOpenGL();
 }
 
-void Renderer::InitializeOpenGL() {
+void WindowManager::InitializeOpenGL() {
     if (!glfwInit()) {
         std::cerr << "GLFW failed to init\n";
         exit(-1);
@@ -53,12 +53,12 @@ void Renderer::InitializeOpenGL() {
 }
 
 
-void Renderer::SetVsync(bool on) {
+void WindowManager::SetVsync(bool on) {
     glfwSwapInterval(static_cast<int>(on));
 }
 
 
-void Renderer::SetMSAA(int samples) {
+void WindowManager::SetMSAA(int samples) {
     glfwWindowHint(GLFW_SAMPLES, samples);
     if (samples) {
         glEnable(GL_MULTISAMPLE);
@@ -67,33 +67,33 @@ void Renderer::SetMSAA(int samples) {
     }
 }
 
-Renderer::~Renderer() {
+WindowManager::~WindowManager() {
     glfwDestroyWindow(window);
     glfwTerminate();
 }
 
-bool Renderer::ShouldEnd() {
+bool WindowManager::ShouldEnd() {
     return glfwWindowShouldClose(window);
 }
 
-void Renderer::UpdateBeforeRendering() {
+void WindowManager::UpdateBeforeRendering() {
     glfwPollEvents();
     glEnable(GL_DEPTH_TEST);
     glClearColor(0.1, 0.1, 0.1, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void Renderer::UpdateAfterRendering() {
+void WindowManager::UpdateAfterRendering() {
     glfwSwapBuffers(window);
 }
 
-std::pair<int, int> Renderer::GetWindowSize() const {
+std::pair<int, int> WindowManager::GetWindowSize() const {
     std::pair<int, int> size;
     glfwGetWindowSize(window, &size.first, &size.second);
     return size;
 }
 
-double Renderer::GetDeltaTime() const {
+double WindowManager::GetDeltaTime() const {
     static double last_frame;
     auto this_frame = glfwGetTime();
     auto offset = this_frame - last_frame;
@@ -101,11 +101,11 @@ double Renderer::GetDeltaTime() const {
     return offset;
 }
 
-void Renderer::Close() {
+void WindowManager::Close() {
     glfwSetWindowShouldClose(window, true);
 }
 
-void Renderer::ResetViewport() {
+void WindowManager::ResetViewport() {
     auto [w, h] = this->GetWindowSize();
 #if __APPLE__
     w *= 2; h *= 2;

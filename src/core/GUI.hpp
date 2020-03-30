@@ -15,11 +15,11 @@
  * GUI is using imgui, while window is using glfw in implementation
  */
 
-#include "Renderer.hpp"
+#include "WindowManager.hpp"
 
 class GUI {
 public:
-    explicit GUI(const Renderer &renderer) : renderer(renderer) {
+    explicit GUI(const WindowManager &renderer) : renderer(renderer) {
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
         ImGuiIO &io = ImGui::GetIO();
@@ -49,7 +49,7 @@ public:
     };
 
 private:
-    const Renderer &renderer;
+    const WindowManager &renderer;
 };
 
 #endif //RENDER_ENGINE_GUI_HPP

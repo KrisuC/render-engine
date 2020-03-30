@@ -10,7 +10,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "Shadow.hpp"
-#include "Renderer.hpp"
+#include "WindowManager.hpp"
 #include "Shader.hpp"
 #include "Scene.hpp"
 #include "Engine.hpp"

@@ -17,6 +17,8 @@ class ModelManager {
 public:
     ModelManager() = default;
 
+    ~ModelManager();
+
     bool LoadModel(const std::string &file_name);
 
 
@@ -24,13 +26,13 @@ private:
     bool initFromScene(const aiScene *pScene, const std::string &file_name);
 
 
-    static void initMesh(Mesh &mesh, const aiMesh *p_aiMesh);
+    static void initMesh(Mesh *p_mesh, const aiMesh *p_aiMesh);
 
 
     bool initMaterials(const aiScene *pScene, const std::string &file_name);
 
-private:
 
+public:
     std::vector<Mesh*> p_meshes;
     std::vector<Texture*> p_textures;
 };

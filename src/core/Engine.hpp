@@ -10,7 +10,7 @@
 #include <type_traits>
 #include <unordered_map>
 
-#include "Renderer.hpp"
+#include "WindowManager.hpp"
 #include "Shader.hpp"
 #include "UniformBlock.hpp"
 #include "GlobalTransform.hpp"
@@ -43,7 +43,7 @@ public:
 
     Shader& GetTestShader();
 
-    Renderer& GetRenderer();
+    WindowManager& GetRenderer();
 
     Scene& GetScene(std::vector<Scene>::size_type index);
 
@@ -76,7 +76,7 @@ private:
     > uniform_blocks;
 
     Scene* currentScene = nullptr;
-    Renderer renderer {};
+    WindowManager renderer {};
 
     friend Scene;
 };

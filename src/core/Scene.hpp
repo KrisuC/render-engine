@@ -37,7 +37,7 @@
  * TODO: Save/Load Scene in a JSON file
  */
 
-class Renderer;
+class WindowManager;
 class GameObject;
 
 class Scene {

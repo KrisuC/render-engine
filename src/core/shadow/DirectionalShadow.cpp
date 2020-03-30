@@ -3,7 +3,7 @@
 //
 
 #include "DirectionalShadow.hpp"
-#include "Renderer.hpp"
+#include "WindowManager.hpp"
 #include "Mesh.hpp"
 #include "Scene.hpp"
 #include "Transform.hpp"

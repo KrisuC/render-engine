@@ -34,7 +34,7 @@ public:
     Mesh() = default;
     Mesh(std::vector<Vertex> vertices,
          std::vector<unsigned int> indices,
-         unsigned int mesh_type=GL_TRIANGLES);
+         unsigned int mesh_type = GL_TRIANGLES);
 
     void DrawCall() const;
 

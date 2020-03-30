@@ -5,7 +5,7 @@
 #ifndef RENDER_ENGINE_PICKING_HPP
 #define RENDER_ENGINE_PICKING_HPP
 
-#include "Renderer.hpp"
+#include "WindowManager.hpp"
 
 class Picking {
 public:

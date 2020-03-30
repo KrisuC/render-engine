@@ -11,7 +11,7 @@
 #include "Skybox.hpp"
 #include "Light.hpp"
 #include "Material.hpp"
-#include "Renderer.hpp"
+#include "WindowManager.hpp"
 #include "Mesh.hpp"
 #include "DirectionalShadow.hpp"
 #include "Transform.hpp"
