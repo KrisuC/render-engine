@@ -33,8 +33,7 @@ enum class LightType {
 
 class LightManager {
     static int total_cnt;
-    template <LightType lightType,
-             typename ShadowMapGenerator> friend class Light;
+    template <LightType lightType, typename ShadowMapGenerator> friend class Light;
 
 public:
     static int GetLightsCount() { return total_cnt; }
@@ -43,8 +42,7 @@ public:
 
 /************************************************************/
 
-template <LightType lightType,
-          typename ShadowMapGenerator>
+template <LightType lightType, typename ShadowMapGenerator>
 class Light : public Component {
     static_assert(std::is_base_of_v<Shadow, ShadowMapGenerator>,
                   "Error: ShadowMapGenerator must be derived class of Shadow");
