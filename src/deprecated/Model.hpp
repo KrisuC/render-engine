@@ -30,7 +30,7 @@ public:
     std::vector<Texture> textures_loaded;
 
     explicit Model(const std::string &directory);
-    void render();
+    void DrawCall();
 
 private:
     std::string directory;

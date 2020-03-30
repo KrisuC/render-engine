@@ -6,8 +6,6 @@
 #include "Mesh.hpp"
 #include "Debug.hpp"
 
-Mesh::Mesh() : Mesh({}, {}, GL_TRIANGLES) {}
-
 Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices,
            unsigned int mesh_type) :
             vertices(std::move(vertices)), indices(std::move(indices)),

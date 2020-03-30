@@ -18,10 +18,6 @@
 #include <string>
 #include <sstream>
 
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
-
 #include "Shader.hpp"
 #include "Texture.hpp"
 #include "Component.hpp"
@@ -35,7 +31,7 @@ public:
 
 class Mesh : public Component {
 public:
-    Mesh();
+    Mesh() = default;
     Mesh(std::vector<Vertex> vertices,
          std::vector<unsigned int> indices,
          unsigned int mesh_type=GL_TRIANGLES);
@@ -46,12 +42,13 @@ public:
     unsigned int VAO = 0, VBO = 0, EBO = 0;
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
+    unsigned int material_index = -1;
 
 private:
     // Called in constructor
     void setupMesh();
 
-    unsigned int mesh_type;
+    unsigned int mesh_type = GL_TRIANGLES;
 };
 
 

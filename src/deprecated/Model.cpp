@@ -43,10 +43,9 @@ Model::Model(const std::string &directory) {
     loadModel(directory);
 }
 
-void Model::render() {
-    // TODO: Bind texture
+void Model::DrawCall() {
     for (auto &mesh : meshes) {
-        mesh.Render();
+        mesh.DrawCall();
     }
 }
 
@@ -55,26 +54,25 @@ std::vector<Texture> Model::loadMaterialTextures(
         aiTextureType type,
         const std::string &typeName) {
 
-    //TODO: Fix Texture issues
     std::vector<Texture> textures;
-//    for (unsigned int i = 0; i < mat->GetTextureCount(Type); i++) {
-//        aiString str;
-//        mat->GetTexture(Type, i, &str);
-//        bool skip = false;
-//        for (auto &t : textures_loaded) {
-//            if (std::strcmp(t.path().c_str(), str.C_Str()) == 0) {
-//                texture.push_back(t);
-//                skip = true;
-//                break;
-//            }
-//        }
-//        if (!skip) {
-//            // not already loaded before
-//            Texture texture(str.C_Str(), typeName);
-//            texture.push_back(texture);
-//            textures_loaded.push_back(texture);
-//        }
-//    }
+    for (unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
+        aiString str;
+        mat->GetTexture(type, i, &str);
+        bool skip = false;
+        for (auto &t : textures_loaded) {
+            if (std::strcmp(t.path().c_str(), str.C_Str()) == 0) {
+                texture.push_back(t);
+                skip = true;
+                break;
+            }
+        }
+        if (!skip) {
+            // not already loaded before
+            Texture texture(str, typeName);
+            texture.push_back(texture);
+            textures_loaded.push_back(texture);
+        }
+    }
     return textures;
 }
 
@@ -115,15 +113,15 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene) {
 
     // TODO: fix with rust-steel pipeline
     // process material
-//    aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
-//    std::vector<Texture> diffuseMaps = loadMaterialTextures(material,
-//                                                            aiTextureType_DIFFUSE,
-//                                                            "texture_diffuse");
-//    texture.insert(texture.end(), diffuseMaps.begin(), diffuseMaps.End());
-//    std::vector<Texture> specularMaps = loadMaterialTextures(material,
-//                                                             aiTextureType_SPECULAR,
-//                                                             "texture_specular");
-//    texture.insert(texture.end(), specularMaps.begin(), specularMaps.End());
+    aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
+    std::vector<Texture> diffuseMaps = loadMaterialTextures(material,
+                                                            aiTextureType_DIFFUSE,
+                                                            "texture_diffuse");
+    texture.insert(texture.end(), diffuseMaps.begin(), diffuseMaps.End());
+    std::vector<Texture> specularMaps = loadMaterialTextures(material,
+                                                             aiTextureType_SPECULAR,
+                                                             "texture_specular");
+    texture.insert(texture.end(), specularMaps.begin(), specularMaps.End());
     return Mesh(vertices, indices);
 }
 

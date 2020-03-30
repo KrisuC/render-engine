@@ -23,8 +23,8 @@ enum class TextureType {
 class Texture {
 public:
     Texture() = default;
-    explicit Texture(const std::string& path,
-                     bool float_data=false);
+    explicit Texture(const std::string& path, bool float_data=false);
+    explicit Texture(unsigned id, TextureType type);
 
     Texture(Texture const&) = delete;
     Texture& operator=(Texture const&) = delete;
@@ -33,7 +33,6 @@ public:
     Texture& operator=(Texture && rhs) noexcept;
 
 
-    explicit Texture(unsigned id, TextureType type);
 
     inline unsigned int ID() const { return id; }
 
