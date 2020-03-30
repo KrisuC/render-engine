@@ -41,11 +41,9 @@ public:
     ~Texture();
 
 private:
-    void load_and_bind(const std::string &path, bool data_is_float);
-
-private:
 
     unsigned int id = 0;
+    bool gamma = false;
     TextureType textureType = TextureType::Texture2D;
 };
 

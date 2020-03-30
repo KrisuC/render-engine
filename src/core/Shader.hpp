@@ -29,27 +29,44 @@ public:
            const GLchar *fragmentPath,
            const GLchar *geometryPath = nullptr);
 
-    // "Activate" the shader
     void UseShaderProgram();
 
-    /* Uniform setting : const because Set will not change which shader program
-     * Shader holds */
-    void Set(const string &name, bool value) const;
-    void Set(const string &name, int value) const;
-    void Set(const string &name, unsigned value) const;
-    void Set(const string &name, float value) const;
-    void Set(const string &name, vec2 const& value) const;
-    void Set(const string &name, float x, float y) const;
-    void Set(const string &name, vec3 const& value) const;
-    void Set(const string &name, float x, float y, float z) const;
-    void Set(const string &name, vec4 const& value) const;
-    void Set(const string &name, float x, float y, float z, float w) const;
-    void Set(const string &name, mat2 const& mat) const;
-    void Set(const string &name, mat3 const& mat) const;
-    void Set(const string &name, mat4 const& mat) const;
+    /* with check */
+    template <typename... Args>
+    void Set(const string& name, Args&& ...args) {
+        this->UseShaderProgram();
+        int loc = glGetUniformLocation(this->id, name.c_str());
+        if (loc == -1) {
+            throw std::runtime_error("Shader uniform not exist: " + name);
+        }
+        this->setUniform(loc, std::forward<Args>(args)...);
+    }
+
+    template <typename... Args>
+    void SetWithoutCheck(const string& name, Args&& ...args) {
+        this->UseShaderProgram();
+        int loc = glGetUniformLocation(this->id, name.c_str());
+        this->setUniform(loc, std::forward<Args>(args)...);
+    }
 
 private:
-    int getUniformLocation(string const& name) const;
+    /* Uniform setting : const because setUniform will not change which shader program
+     * Shader holds */
+    void setUniform(int location, bool value) const;
+    void setUniform(int location, int value) const;
+    void setUniform(int location, unsigned value) const;
+    void setUniform(int location, float value) const;
+    void setUniform(int location, vec2 const& value) const;
+    void setUniform(int location, float x, float y) const;
+    void setUniform(int location, vec3 const& value) const;
+    void setUniform(int location, float x, float y, float z) const;
+    void setUniform(int location, vec4 const& value) const;
+    void setUniform(int location, float x, float y, float z, float w) const;
+    void setUniform(int location, mat2 const& mat) const;
+    void setUniform(int location, mat3 const& mat) const;
+    void setUniform(int location, mat4 const& mat) const;
+
+private:
     // TODO:
     void processShaderFile(char const* filePath, ShaderType shaderType);
 

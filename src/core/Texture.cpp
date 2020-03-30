@@ -9,20 +9,6 @@
 
 Texture::Texture(const std::string& path, bool data_is_float):
         textureType(TextureType::Texture2D) {
-
-    this->load_and_bind(path, data_is_float);
-}
-
-Texture::Texture(unsigned int id, TextureType type) :
-        id(id), textureType(type) { }
-
-Texture::~Texture() {
-    if (id != 0) {
-        glDeleteTextures(1, &id);
-    }
-}
-
-void Texture::load_and_bind(const std::string &path, bool data_is_float) {
     // unsigned char (byte) for normal jpg, float for hdr image
     void *data = nullptr;
 
@@ -74,9 +60,21 @@ void Texture::load_and_bind(const std::string &path, bool data_is_float) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+    glBindTexture(GL_TEXTURE_2D, 0); // unbind
+
     stbi_image_free(data);
     data = nullptr;
 }
+
+Texture::Texture(unsigned int id, TextureType type) :
+        id(id), textureType(type) { }
+
+Texture::~Texture() {
+    if (id != 0) {
+        glDeleteTextures(1, &id);
+    }
+}
+
 
 Texture::Texture(Texture &&rhs) noexcept: id(rhs.id), textureType(rhs.textureType) {
     rhs.id = 0;

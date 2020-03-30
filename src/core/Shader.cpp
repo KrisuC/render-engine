@@ -105,57 +105,57 @@ void Shader::UseShaderProgram() {
     glUseProgram(this->id);
 }
 
-void Shader::Set(const std::string &name, bool value) const {
-    glUniform1i(getUniformLocation(name), (int)value);
+void Shader::setUniform(int location, bool value) const {
+    glUniform1i(location, (int)value);
 }
 
-void Shader::Set(const std::string &name, int value) const {
-    glUniform1i(getUniformLocation(name), value);
+void Shader::setUniform(int location, int value) const {
+    glUniform1i(location, value);
 }
 
-void Shader::Set(const std::string &name, unsigned value) const {
-    glUniform1i(getUniformLocation(name), value);
+void Shader::setUniform(int location, unsigned value) const {
+    glUniform1i(location, value);
 }
 
-void Shader::Set(const std::string &name, float value) const {
-    glUniform1f(getUniformLocation(name), value);
+void Shader::setUniform(int location, float value) const {
+    glUniform1f(location, value);
 }
 
-void Shader::Set(const std::string &name, const glm::vec2 &value) const {
-    glUniform2fv(getUniformLocation(name), 1, &value[0]);
+void Shader::setUniform(int location, const glm::vec2 &value) const {
+    glUniform2fv(location, 1, &value[0]);
 }
 
-void Shader::Set(const std::string &name, float x, float y) const {
-    glUniform2f(getUniformLocation(name), x, y);
+void Shader::setUniform(int location, float x, float y) const {
+    glUniform2f(location, x, y);
 }
 
-void Shader::Set(const std::string &name, const glm::vec3 &value) const {
-    glUniform3fv(getUniformLocation(name), 1, &value[0]);
+void Shader::setUniform(int location, const glm::vec3 &value) const {
+    glUniform3fv(location, 1, &value[0]);
 }
 
-void Shader::Set(const std::string &name, float x, float y, float z) const {
-    glUniform3f(getUniformLocation(name), x, y, z);
+void Shader::setUniform(int location, float x, float y, float z) const {
+    glUniform3f(location, x, y, z);
 }
 
-void Shader::Set(const std::string &name, const glm::vec4 &value) const {
-    glUniform4fv(getUniformLocation(name), 1, &value[0]);
+void Shader::setUniform(int location, const glm::vec4 &value) const {
+    glUniform4fv(location, 1, &value[0]);
 }
 
-void Shader::Set(const std::string &name, float x, float y, float z,
+void Shader::setUniform(int location, float x, float y, float z,
                  float w) const {
-    glUniform4f(getUniformLocation(name), x, y, z, w);
+    glUniform4f(location, x, y, z, w);
 }
 
-void Shader::Set(const std::string &name, const glm::mat2 &mat) const {
-    glUniformMatrix2fv(getUniformLocation(name), 1, GL_FALSE, &mat[0][0]);
+void Shader::setUniform(int location, const glm::mat2 &mat) const {
+    glUniformMatrix2fv(location, 1, GL_FALSE, &mat[0][0]);
 }
 
-void Shader::Set(const std::string &name, const glm::mat3 &mat) const {
-    glUniformMatrix3fv(getUniformLocation(name), 1, GL_FALSE, &mat[0][0]);
+void Shader::setUniform(int location, const glm::mat3 &mat) const {
+    glUniformMatrix3fv(location, 1, GL_FALSE, &mat[0][0]);
 }
 
-void Shader::Set(const std::string &name, const glm::mat4 &mat) const {
-    glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, &mat[0][0]);
+void Shader::setUniform(int location, const glm::mat4 &mat) const {
+    glUniformMatrix4fv(location, 1, GL_FALSE, &mat[0][0]);
 }
 
 
@@ -197,14 +197,6 @@ void Shader::processShaderFile(char const *filePath, ShaderType shaderType) {
     } catch(std::ifstream::failure& e) {
         // TODO
     }
-}
-
-int Shader::getUniformLocation(const Shader::string &name) const {
-    int loc = glGetUniformLocation(this->id, name.c_str());
-    if (loc == -1) {
-        // throw std::runtime_error("Shader uniform not exist: " + name);
-    }
-    return loc;
 }
 
 Shader::Shader(const Shader::string &vp, const Shader::string &fp,

@@ -14,11 +14,8 @@ public:
     MeshRenderer(Mesh &mesh, Material &material) : mesh(mesh),
                                                    material(material) {}
 
-    void Start() override {
-        material.UpdateShaderUniform();
-    }
-
     void Update() override {
+        material.UpdateShaderUniform();
         material.GetShader().UseShaderProgram();
         mesh.DrawCall();
     }

@@ -56,9 +56,6 @@ public:
 
     inline Skybox& GetSkybox() { return *upSkybox; }
 
-    /* Setting Shader component due to scene configuration */
-    void Build();
-
     void Update();
 
     inline Camera& GetCurrentCamera() { return camera; }
@@ -69,8 +66,6 @@ public:
 
     // TODO: 3d picking
     GameObject* GetCurrentPointingGameObject(float viewport_x, float viewport_y);
-private:
-    void UpdateUniformBlocks();
 
 private:
     /* Using a pointer to GameObject is a must because when vector change

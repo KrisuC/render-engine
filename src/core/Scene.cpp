@@ -29,8 +29,8 @@ void Scene::Update() {
     static bool first_frame = true;
     if (first_frame) {
         /* Call Start() for all components */
-        for (auto& up_gameObject : upGameObjects) {
-            for (auto &up_component : up_gameObject->components_map) {
+        for (auto& pGameObject : upGameObjects) {
+            for (auto &up_component : pGameObject->components_map) {
                 auto & component = up_component.second;
                 component->Start();
             }
@@ -38,38 +38,20 @@ void Scene::Update() {
         first_frame = false;
     }
 
-    /* 1 - Updating Shared GPU memory */
-    this->UpdateUniformBlocks();
-
-    /* 2 - Scene update */
+    /* Scene update */
     renderer.ResetViewport();
-    for (auto& upGameObject : upGameObjects) {
-        for (auto &it : upGameObject->components_map) {
+    for (auto& pGameObject : upGameObjects) {
+        for (auto &it : pGameObject->components_map) {
             auto & component = it.second;
             component->Update();
         }
-        for (auto &it : upGameObject->components_map) {
+        for (auto &it : pGameObject->components_map) {
             auto & component = it.second;
             component->LateUpdate();
         }
     }
     upSkybox->Render();
 }
-
-
-void Scene::UpdateUniformBlocks() {
-    Engine& engine = Engine::GetInstance();
-    /* GLobalTransform Uniform Block */
-    auto& globalTransform = engine.GetUniformBuffer<GlobalTransform>();
-    globalTransform.UpdateView(GetCurrentCamera().GetViewMatrix());
-    globalTransform.UpdateProjeciton(GetCurrentCamera().GetProjectionMatrix());
-
-    /* LightInformation Uniform Block */
-    auto& lightInfo = engine.GetUniformBuffer<LightInformation>();
-    lightInfo.UpdateLightSize(LightManager::GetLightsCount());
-    lightInfo.UpdateCameraPosition(GetCurrentCamera().Position());
-}
-
 
 void Scene::RenderMeshes(Shader &shader) {
     shader.UseShaderProgram();

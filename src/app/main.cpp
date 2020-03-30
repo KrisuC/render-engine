@@ -62,7 +62,7 @@ int main(int argc, char *argv[]) {
     m_sphere.SetAlbedo(1, 1, 1);
     m_sphere.SetMetallic(0.1);
     m_sphere.SetRoughness(0.8);
-    m_sphere.SetIBLTextures(ibl);
+    m_sphere.SetIBL(ibl);
     auto &mr_sphere = sphere.CreateComponent<MeshRenderer>(
             BuiltinMesh::GetSphere(), m_sphere);
     auto &t_sphere = sphere.CreateComponent<Transform>();
@@ -76,12 +76,13 @@ int main(int argc, char *argv[]) {
     m_ground.SetAlbedo(1, 1, 1);
     m_ground.SetMetallic(0.3);
     m_ground.SetRoughness(0.5);
-    m_ground.SetIBLTextures(ibl);
+    m_ground.SetIBL(ibl);
     auto &mr_ground = ground.CreateComponent<MeshRenderer>(BuiltinMesh::GetQuad(), m_ground);
     auto &t_ground = ground.CreateComponent<Transform>();
     t_ground.SetPosition(0, -2, -10);
     t_ground.SetRotation(1, 0, 0, -90);
     t_ground.SetScale(10, 10, 10);
+
 
     // --3--
     GameObject& lamp = scene.CreateGameObject();
@@ -91,7 +92,7 @@ int main(int argc, char *argv[]) {
     PBR_Material m_lamp;
     m_lamp.SetShader(engine.CreateStandardShader());
     m_lamp.SetEmissive(light_color);
-    m_lamp.SetIBLTextures(ibl);
+    m_lamp.SetIBL(ibl);
 
     auto &mr_lamp = lamp.CreateComponent<MeshRenderer>(BuiltinMesh::GetSphere(), m_lamp);
     auto &t_lamp = lamp.CreateComponent<Transform>();
@@ -104,7 +105,6 @@ int main(int argc, char *argv[]) {
     light.position = light_position;
     light.direction = glm::vec3{0, 0, -10} - light.position;
 
-
 //    ModelManager sponza;
 //    sponza.LoadModel("asset/sponza/sponza.obj");
 
@@ -112,6 +112,17 @@ int main(int argc, char *argv[]) {
     while (!window.ShouldEnd()) {
         window.UpdateBeforeRendering();
         processInput(scene.GetCurrentCamera());
+
+        Camera& camera = engine.GetCurrentScene().GetCurrentCamera();
+        /* GLobalTransform Uniform Block */
+        auto& globalTransform = engine.GetUniformBuffer<GlobalTransform>();
+        globalTransform.UpdateView(camera.GetViewMatrix());
+        globalTransform.UpdateProjeciton(camera.GetProjectionMatrix());
+
+        /* LightInformation Uniform Block */
+        auto& lightInfo = engine.GetUniformBuffer<LightInformation>();
+        lightInfo.UpdateLightSize(LightManager::GetLightsCount());
+        lightInfo.UpdateCameraPosition(camera.Position());
 
         scene.Update();
 

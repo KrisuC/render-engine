@@ -28,36 +28,35 @@ void PBR_Material::AppendTexture(const std::string &name, Texture const *t) {
 
 void PBR_Material::UpdateShaderUniform() {
     /* Binding PBR_Material Properties */
+    GetShader().UseShaderProgram();
     for (int i = 0; i < materialProperties.size(); i++) {
-        auto& materialProperty = materialProperties[i];
-        materialProperty.SetShaderUniform(GetShader(),
-                static_cast<MaterialPropertyType>(i));
+        auto &materialProperty = materialProperties[i];
+        materialProperty.UpdateShader(GetShader(),
+                                      static_cast<MaterialPropertyType>(i));
     }
 
     /* Binding extra texture */
-    auto bind_texture = [&]
-            (const std::string &str, Texture const *texture,
-                    unsigned int textureUnit) {
-
-        glActiveTexture(GL_TEXTURE0+textureUnit);
-        glBindTexture(
-                static_cast<unsigned>(texture->Type()), /* target */
-                texture->ID() /* texture */
-        );
-        GetShader().Set(str, textureUnit);
-    };
-
     unsigned tot = MaterialPropertyTypeCount;
 
-    GetShader().UseShaderProgram();
     for (const auto &t : extra_textures) {
-        bind_texture(t.name, t.texture, ++tot);
+        bindTexture(t.name, t.texture, ++tot);
     }
 }
 
-void PBR_Material::SetIBLTextures(IBL const &ibl) {
+void PBR_Material::SetIBL(IBL const &ibl) {
     AppendTexture("ibl.irradiance", &ibl.irradiance);
     AppendTexture("ibl.prefilter", &ibl.prefilter);
     AppendTexture("ibl.brdfLUT", &ibl.brdfLUT);
+}
+
+void PBR_Material::bindTexture(const std::string &str, Texture const *texture,
+                               unsigned int textureUnit) {
+    GetShader().UseShaderProgram();
+    glActiveTexture(GL_TEXTURE0 + textureUnit);
+    glBindTexture(
+            static_cast<unsigned>(texture->Type()), /* target */
+            texture->ID() /* texture */
+    );
+    GetShader().Set(str, textureUnit);
 }
 

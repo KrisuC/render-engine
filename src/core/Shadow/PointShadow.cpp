@@ -26,6 +26,11 @@ PointShadow::PointShadow(int map_width, int map_height) :
     glDrawBuffer(GL_NONE);
     glReadBuffer(GL_NONE);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+        throw std::runtime_error("Shadow map frame buffer not complete");
+    }
 }
 
 

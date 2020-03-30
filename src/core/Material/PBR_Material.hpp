@@ -47,7 +47,11 @@ public:
 
     void UpdateShaderUniform() override;
 
-    void SetIBLTextures(IBL const& ibl);
+    void SetIBL(IBL const& ibl);
+
+private:
+    void bindTexture(const std::string &str, Texture const *texture,
+            unsigned int textureUnit);;
 
 private:
     /* All material properties */
