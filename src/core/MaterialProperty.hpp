@@ -88,7 +88,7 @@ public:
             glBindTexture(static_cast<unsigned>(texture->Type()), texture->ID());
             shader.SetWithoutCheck(mp_name + ".map", texture_unit);
             shader.SetWithoutCheck(mp_name + ".use_map", true);
-            glBindTexture(static_cast<unsigned>(texture->Type()), 0);
+            // glBindTexture(static_cast<unsigned>(texture->Type()), 0);
         }
     }
 

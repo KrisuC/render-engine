@@ -30,21 +30,21 @@ const int DIRECTIONAL = 0, POINT = 1, SPOT = 2;
 const int MAX_LIGHT = 20;
 
 struct Light {
-    vec3 position;               // 0-4N (N: 4 byte - a float)
-    float cone_angle_in_radian;  // 3-4N
+    vec3 position;// 0-4N (N: 4 byte - a float)
+    float cone_angle_in_radian;// 3-4N
 
-    vec3 direction;              // 4-8N
-    int ltype;                   // 7-8N
+    vec3 direction;// 4-8N
+    int ltype;// 7-8N
 
-    vec3 color;                  // 8-12N
+    vec3 color;// 8-12N
 };
 
 layout (std140) uniform LightInformation {
-    Light lights[MAX_LIGHT];             // 0-240N [12N * MAX_LIGHT(20) == 240N]
+    Light lights[MAX_LIGHT];// 0-240N [12N * MAX_LIGHT(20) == 240N]
 
-    vec3 cameraPosition;             // 240-244N
-    int lights_cnt;                  // 243-244N
-}; // 244 * 4 < 1024 bytes
+    vec3 cameraPosition;// 240-244N
+    int lights_cnt;// 243-244N
+};// 244 * 4 < 1024 bytes
 
 uniform sampler2D shadowMap;
 uniform samplerCube shadowCubeMap;
@@ -110,6 +110,7 @@ vec3 GetNormalFromMap() {
 
     vec3 Q1  = dFdx(frag.worldPos);
     vec3 Q2  = dFdy(frag.worldPos);
+
     vec2 st1 = dFdx(frag.texCoords);
     vec2 st2 = dFdy(frag.texCoords);
 
@@ -122,8 +123,8 @@ vec3 GetNormalFromMap() {
 }
 
 float ShadowCalculation(vec4 lightSpacePos, float bias) {
-    vec3 projCoords = lightSpacePos.xyz / lightSpacePos.w; // [-1, 1]
-    projCoords = projCoords * 0.5 + 0.5; // to [0, 1]
+    vec3 projCoords = lightSpacePos.xyz / lightSpacePos.w;// [-1, 1]
+    projCoords = projCoords * 0.5 + 0.5;// to [0, 1]
     float closestDepth = texture(shadowMap, projCoords.xy).r;
     float currentDepth = projCoords.z;
     return currentDepth - bias > closestDepth ? 1.0 : 0.0;
@@ -177,7 +178,7 @@ void main() {
     vec3 R = reflect(-V, N);
 
     vec3 F0 = vec3(0.04);
-    F0 = mix(F0, albedo, metallic); // for non-metal, F0 is always 0.04
+    F0 = mix(F0, albedo, metallic);// for non-metal, F0 is always 0.04
 
     float NdotV = max(dot(N, V), 0.0);
 
@@ -185,7 +186,7 @@ void main() {
     vec3 Lo = emissive;
     for (int i = 0; i < lights_cnt; i++) {
         vec3  L            =   normalize(lights[i].position - frag.worldPos);
-        vec3  H            =   normalize(V + L); // half-way vector
+        vec3  H            =   normalize(V + L);// half-way vector
         float dist         =   length(lights[i].position - frag.worldPos);
         float attenuation  =   1.0 / (dist * dist);
         if (lights[i].ltype == DIRECTIONAL) {
@@ -207,9 +208,9 @@ void main() {
 
         vec3  specular = nominator / max(denominator, 0.001);
 
-        vec3 kS = F;               // specular term
-        vec3 kD = vec3(1.0) - kS;  // defuse term
-        kD *= 1.0 - metallic;      // no diffuse for metallic
+        vec3 kS = F;// specular term
+        vec3 kD = vec3(1.0) - kS;// defuse term
+        kD *= 1.0 - metallic;// no diffuse for metallic
 
         vec3 diffuse = kD * albedo / PI;
 
@@ -232,17 +233,17 @@ void main() {
     /* IBL - specular part */
     const float MAX_REFLECTION_LOD = 4.0;
     vec3 prefilterdColor
-            = textureLod(ibl.prefilter, R, roughness*MAX_REFLECTION_LOD).rgb;
+    = textureLod(ibl.prefilter, R, roughness*MAX_REFLECTION_LOD).rgb;
     vec2 brdf = texture(ibl.brdfLUT,
-                        vec2(NdotV, roughness )).rg;
+    vec2(NdotV, roughness)).rg;
     vec3 specular = prefilterdColor * (F * brdf.x + brdf.y);
 
     vec3 ambient = (kD * diffuse + specular) * ao;
     vec3 color = ambient + Lo;
 
     /* tone mapping */
-    color = color / (color + vec3(1.0));    // HDR
-    color = pow(color, vec3(1.0 / 2.2));    // gamma correction
+    color = color / (color + vec3(1.0));// HDR
+    color = pow(color, vec3(1.0 / 2.2));// gamma correction
 
     FragColor = vec4(color, 1.0);
 }

@@ -28,6 +28,7 @@ bool ModelManager::LoadModel(const std::string &file_name) {
     return ret;
 }
 
+
 bool
 ModelManager::initFromScene(const aiScene *pScene, const std::string &file_name) {
     m_meshes.resize(pScene->mNumMeshes);
@@ -40,7 +41,8 @@ ModelManager::initFromScene(const aiScene *pScene, const std::string &file_name)
     return initMaterials(pScene, file_name);
 }
 
-void ModelManager::initMesh(int mesh_index, const aiMesh *p_aiMesh) {
+
+void ModelManager::initMesh(int m_meshes_index, const aiMesh *p_aiMesh) {
     // Assign material to mesh
 
     std::vector<Vertex> vertices;
@@ -73,14 +75,14 @@ void ModelManager::initMesh(int mesh_index, const aiMesh *p_aiMesh) {
     DEBUG_LOG("Generating mesh...", vertices.size(), "vertices. ",
               indicies.size(), "indicies");
 
-    m_meshes[mesh_index] = new StaticMesh {std::move(vertices), std::move(indicies)};
-    m_meshes[mesh_index]->material_index = p_aiMesh->mMaterialIndex;
+    m_meshes[m_meshes_index] = new StaticMesh {std::move(vertices), std::move(indicies)};
+    m_meshes[m_meshes_index]->material_index = p_aiMesh->mMaterialIndex;
 }
 
+
 bool
-ModelManager::initMaterials(const aiScene *pScene, const std::string &file_name) {
+ModelManager::initMaterials(const aiScene *p_aiScene, const std::string &file_name) {
     std::string::size_type slash_pos = file_name.find_last_of('/');
-    std::string directory;
 
     if (slash_pos == std::string::npos) {
         directory = ".";
@@ -90,33 +92,59 @@ ModelManager::initMaterials(const aiScene *pScene, const std::string &file_name)
         directory = file_name.substr(0, slash_pos);
     }
 
-    for (int i = 0; i < pScene->mNumMaterials; i++) {
-        const aiMaterial *p_aiMaterial = pScene->mMaterials[i];
+    DEBUG_LOG("total materials for model:", p_aiScene->mNumMaterials);
+    for (int i = 0; i < p_aiScene->mNumMaterials; i++) {
+        const aiMaterial *p_aiMaterial = p_aiScene->mMaterials[i];
 
         m_materials[i] = new PBR_Material;
         m_materials[i]->SetShader(Engine::GetInstance().GetStandardShader());
-        if (p_aiMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0) {
+        m_materials[i]->SetIBL(Engine::GetInstance().GetCurrentScene().GetSkybox().GetIBL());
 
-            aiString relative_path;
-            if (p_aiMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &relative_path,
-                                         nullptr, nullptr, nullptr, nullptr,
-                                         nullptr) == AI_SUCCESS) {
-                /* fix relative path */
-                for (int i = 0; i < relative_path.length; i++) {
-                    if (relative_path.data[i] == '\\') {
-                        relative_path.data[i] = '/';
-                    }
-                }
-
-                std::string full_path = directory + "/" + relative_path.data;
-                auto *diffuse = new Texture(full_path);
-                m_materials[i]->SetAlbedo(diffuse);
-                m_materials[i]->SetRoughness(1.0);
-            }
+        // !!! Only work for sponzaPBR !!!
+        if (Texture *t_albedo = initMaterialTexture(p_aiMaterial, aiTextureType_DIFFUSE)) {
+            DEBUG_LOG("Albedo texture loaded");
+            m_materials[i]->SetAlbedo(t_albedo);
+        }
+        if (Texture *t_metallic = initMaterialTexture(p_aiMaterial, aiTextureType_AMBIENT)) {
+            DEBUG_LOG("Metallic texture loaded");
+            m_materials[i]->SetMetallic(t_metallic);
+        }
+        if (Texture *t_roughness = initMaterialTexture(p_aiMaterial, aiTextureType_SHININESS)) {
+            DEBUG_LOG("Roughness texture loaded");
+            m_materials[i]->SetRoughness(t_roughness);
+        }
+        if (Texture *t_normal = initMaterialTexture(p_aiMaterial, aiTextureType_DISPLACEMENT)) {
+            DEBUG_LOG("Normal texture loaded");
+            m_materials[i]->SetNormal(t_normal);
         }
     }
     return true;
 }
+
+
+Texture* ModelManager::initMaterialTexture(const aiMaterial* p_aiMaterial,
+                                           aiTextureType textureType) {
+    if (p_aiMaterial->GetTextureCount(textureType) > 0) {
+        // now only 1 texture for each material property is supported...
+        assert(p_aiMaterial->GetTextureCount(textureType) == 1);
+        aiString relative_path;
+        // Get texture of this material
+        if (p_aiMaterial->GetTexture(textureType, 0, &relative_path,
+                                     nullptr, nullptr, nullptr, nullptr,
+                                     nullptr) == AI_SUCCESS) {
+            /* fix relative path */
+            for (int i = 0; i < relative_path.length; i++) {
+                if (relative_path.data[i] == '\\') {
+                    relative_path.data[i] = '/';
+                }
+            }
+            std::string full_path = directory + "/" + relative_path.data;
+            return new Texture(full_path);
+        }
+    }
+    return nullptr;
+}
+
 
 ModelManager::~ModelManager() {
     for (auto &p : m_meshes) {
@@ -127,13 +155,4 @@ ModelManager::~ModelManager() {
     }
 }
 
-void ModelManager::Generate(Scene &scene) {
-    for (auto & mesh : m_meshes) {
-        auto& gameObject = scene.CreateGameObject();
-        auto &mr = gameObject.CreateComponent<MeshRenderer>(
-                *mesh,
-                *m_materials[mesh->material_index]
-        );
-        gameObject.CreateComponent<Transform>();
-    }
-}
+

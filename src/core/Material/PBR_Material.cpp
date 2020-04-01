@@ -19,6 +19,7 @@ PBR_Material::PBR_Material() {
 
     SetAlbedo(1, 1, 1);
     SetMetallic(0);
+    SetRoughness(0.9);
     SetEmissive(0, 0, 0);
 }
 

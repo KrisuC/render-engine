@@ -11,13 +11,15 @@
 #include "PBR_Material.hpp"
 #include "GameObject.hpp"
 #include "Scene.hpp"
-
+#include <assimp/material.h>
 
 class aiScene;
 
 class aiMesh;
 
 class aiScene;
+
+class aiMaterial;
 
 class ModelManager {
 public:
@@ -27,20 +29,21 @@ public:
 
     bool LoadModel(const std::string &file_name);
 
-    void Generate(Scene &scene);
-
 private:
     bool initFromScene(const aiScene *pScene, const std::string &file_name);
 
+    void initMesh(int m_meshes_index, const aiMesh *p_aiMesh);
 
-    void initMesh(int mesh_index, const aiMesh *p_aiMesh);
+    bool initMaterials(const aiScene *p_aiScene, const std::string &file_name);
 
-
-    bool initMaterials(const aiScene *pScene, const std::string &file_name);
+    Texture* initMaterialTexture(const aiMaterial* p_aiMaterial, aiTextureType textureType);
 
 public:
     std::vector<StaticMesh *> m_meshes;
     std::vector<PBR_Material *> m_materials;
+
+private:
+    std::string directory;
 };
 
 

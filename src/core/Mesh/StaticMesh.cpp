@@ -41,15 +41,15 @@ void StaticMesh::setupMesh() {
         // Positions (location = 0)
         glEnableVertexAttribArray(0); // parameter is the position.
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                              nullptr);
+                              (void*)offsetof(Vertex, position));
         // Normals (location = 1)
         glEnableVertexAttribArray(1);
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                              (void *)offsetof(Vertex, normal));
+                              (void*)offsetof(Vertex, normal));
         // Texture coords (location = 2)
         glEnableVertexAttribArray(2);
         glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                              (void *)offsetof(Vertex, texCoords));
+                              (void*)offsetof(Vertex, texCoords));
     }
     glBindVertexArray(0);  // Unbind
 }
@@ -60,7 +60,7 @@ namespace BuiltinMesh {
     // TODO: Replace with a better Sphere
     StaticMesh& GetSphere() {
         static std::unique_ptr<StaticMesh> up_mesh;
-        if (up_mesh.get() == nullptr) {
+        if (up_mesh == nullptr) {
             std::vector<Vertex> vertices;
             std::vector<unsigned int> indices;
 
@@ -71,9 +71,9 @@ namespace BuiltinMesh {
                 for (unsigned int x = 0; x <= X_SEGMENTS; ++x) {
                     float xSegment = (float) x / (float) X_SEGMENTS;
                     float ySegment = (float) y / (float) Y_SEGMENTS;
-                    float xPos = std::cos(xSegment*2.f*PI) * std::sin(ySegment*PI);
-                    float yPos = std::cos(ySegment*PI);
-                    float zPos = std::sin(xSegment*2.0f*PI) * std::sin(ySegment*PI);
+                    float xPos = std::cos(xSegment * 2.0f * PI) * std::sin(ySegment * PI);
+                    float yPos = std::cos(ySegment * PI);
+                    float zPos = std::sin(xSegment * 2.0f * PI) * std::sin(ySegment * PI);
                     vertices.push_back({ {xPos, yPos, zPos},
                                          {xPos, yPos, zPos},
                                          {xSegment, ySegment} });
@@ -83,13 +83,13 @@ namespace BuiltinMesh {
             for (int y = 0; y < Y_SEGMENTS; ++y) {
                 if (y % 2 == 0) {
                     for (int x = 0; x <= X_SEGMENTS; ++x) {
-                        indices.push_back(y * (X_SEGMENTS + 1) + x);
+                        indices.push_back(y       * (X_SEGMENTS + 1) + x);
                         indices.push_back((y + 1) * (X_SEGMENTS + 1) + x);
                     }
                 } else {
                     for (int x = X_SEGMENTS; x >= 0; --x) {
                         indices.push_back((y + 1) * (X_SEGMENTS + 1) + x);
-                        indices.push_back(y * (X_SEGMENTS + 1) + x);
+                        indices.push_back(y       * (X_SEGMENTS + 1) + x);
                     }
                 }
             }
@@ -101,7 +101,7 @@ namespace BuiltinMesh {
     // L = 2
     StaticMesh& GetCube() {
         static std::unique_ptr<StaticMesh> up_mesh;
-        if (up_mesh.get() == nullptr) {
+        if (up_mesh == nullptr) {
             const static float vdata[] = {
                     // position, normal, uv
                     // back face
@@ -153,7 +153,6 @@ namespace BuiltinMesh {
                 vertices.push_back({ glm::make_vec3(vdata + i*8),
                                      glm::make_vec3(vdata + i*8 + 3),
                                      glm::make_vec2(vdata + i*8 + 6) });
-                auto v = glm::make_vec3(vdata + i*8 + 3);
                 indices.push_back(i);
             }
             up_mesh = std::make_unique<StaticMesh>(std::move(vertices), std::move(indices));
@@ -164,7 +163,7 @@ namespace BuiltinMesh {
     // L = 2
     StaticMesh& GetQuad() {
         static std::unique_ptr<StaticMesh> up_mesh;
-        if (up_mesh.get() == nullptr) {
+        if (up_mesh == nullptr) {
             const static float vdata[] = {
                     // positions, normal, uv
                     -1.0f,  1.0f, 0.0f,  0.f, 0.f, 1.f, 0.0f, 1.0f,
