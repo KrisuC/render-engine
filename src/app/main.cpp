@@ -106,7 +106,7 @@ int main(int argc, char *argv[]) {
     light.direction = glm::vec3{0, 0, -10} - light.position;
 
     ModelManager sponza;
-    sponza.LoadModel("asset/sponza/sponza.obj");
+    sponza.LoadModel("asset/SunTemple/SunTemple.fbx");
 
     WindowManager& window = engine.GetRenderer();
     while (!window.ShouldEnd()) {

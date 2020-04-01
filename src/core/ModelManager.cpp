@@ -98,6 +98,13 @@ ModelManager::initMaterials(const aiScene *pScene, const std::string &file_name)
             if (pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &relative_path,
                                       nullptr, nullptr, nullptr, nullptr,
                                       nullptr) == AI_SUCCESS) {
+                /* fix relative path */
+                for (int i = 0; i < relative_path.length; i++) {
+                    if (relative_path.data[i] == '\\') {
+                        relative_path.data[i] = '/';
+                    }
+                }
+
                 std::string full_path = directory + "/" + relative_path.data;
                 DEBUG_LOG("Loading diffuse texture...", full_path);
                 p_textures[i] = new Texture(full_path, false);

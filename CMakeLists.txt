@@ -66,5 +66,10 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/3rd-party/imgui/)
 include_directories("${PROJECT_SOURCE_DIR}/3rd-party/rapidjson/include/")
 add_subdirectory(${PROJECT_SOURCE_DIR}/3rd-party/rapidjson/)
 
+# gli
+include_directories("${PROJECT_SOURCE_DIR}/3rd-party/gli/")
+add_subdirectory("${PROJECT_SOURCE_DIR}/3rd-party/gli")
+
 target_link_libraries(imgui glad glfw)
-target_link_libraries(engine assimp imgui glad glfw stb_image glm)
+target_link_libraries(engine assimp imgui glad glfw stb_image glm gli)
+
