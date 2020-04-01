@@ -1,57 +1,37 @@
-# Render-engine
+# render-engine
 
-A simple renderer.
+A toy renderer based on OpenGL. I am still working on it.    : )
 
-## How to Build
+![sponza](doc/sponza.png)
 
-To Build and run on *nix systems (macOS / Linux / FreeBSD):
+## To Build And Run
 
 ```
-mkdir cmake-Build
-cd cmake-Build
+mkdir cmake-build
+cd cmake-build
 cmake ..
 make -j16
 ./engine
 ```
 
-To Build on windows, see:
+## Features 
 
-[Build for visual studio on windows](./doc/How-to-build-under-M$-Windows.md)
+- PBR material (Cook-Torrance)
+- Transforms, camera, key/mouse input, skybox... and other basic stuffs
+- ...
 
-If you success, you will see something like these:
+## TODOs
 
-![screenshot1](doc/screenshot1.png)
-
-![screenshot3](doc/screenshot3.png)
-
-![screenshot2](doc/screenshot2.png)
-
-
-## Dependencies
-
-- glm
-- assimp
-- glfw
-- glad
-- imgui
-- stb_image
-
-## Feature List:
-
-- Cook-Torrance BRDF
-- Basic transforms
-- Camera and  interaction
-- GUI
-
-## TODO list:
-
-- Scene graph
-  - Acceleration data structure (BVH)
-- External Scene description (with RapidJSON)
-- External PBR_Material description (with RapidJSON)
-- Better model loader (with Assimp)
-- Shadow mapping (for point light and spot light)
+- BVH
 - SSAO
-- Bloom
+- Rewrite with Vulkan
 - Cloth BRDF
 
+## 3rd Party Dependencies
+
+- [glm](https://github.com/g-truc/glm)
+- [assimp](https://github.com/assimp/assimp)
+- [imgui](https://github.com/ocornut/imgui)
+- [stb_image](https://github.com/nothings/stb/blob/master/stb_image.h)
+- [glfw](https://github.com/glfw/glfw)
+- [glad](https://glad.dav1d.de/)

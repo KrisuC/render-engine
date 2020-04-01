@@ -34,14 +34,6 @@ void processInput(Camera &camera) {
     if (io::KeyPress(Key::escape)) {
         Engine::GetInstance().GetRenderer().Close();
     }
-    if (io::KeyPress(Key::q)) {
-        std::cerr << "depth: ";
-        std::cin >> DirectionalShadow::depth;
-    }
-    if (io::KeyPress(Key::e)) {
-        std::cerr << "size_of_ortho: ";
-        std::cin >> DirectionalShadow::size_of_ortho;
-    }
 
     MousePos current = io::GetMousePosition();
     static MousePos last = current;
