@@ -18,7 +18,7 @@ Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch) :
 glm::mat4 Camera::GetProjectionMatrix() {
     auto [w, h] = Engine::GetInstance().GetRenderer().GetWindowSize();
     glm::mat4 projection = glm::perspective(glm::radians(GetFovy()),
-                                            static_cast<float>(w)/h, 0.1f, 1000.0f);
+                                            static_cast<float>(w)/h, 0.1f, 10000.0f);
     return projection;
 }
 

@@ -6,7 +6,7 @@
 using namespace std;
 
 int main() {
-    string s = "abc/sd\\ddd";
-    auto pos = s.find('\\');
-
+    string path = "abcde/fuck.png";
+    std::string suffix = path.substr(path.find_last_of('.'), path.size());
+    cout << suffix << endl;
 }

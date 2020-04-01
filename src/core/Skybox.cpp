@@ -231,7 +231,7 @@ Skybox::Skybox(Texture const& skyboxTexture) : texture(skyboxTexture)  {
 }
 
 Skybox::Skybox() :
-Skybox(Texture("asset/texture/skybox/GrandCanyon.hdr",false) ) {}
+Skybox(Texture("asset/texture/skybox/GrandCanyon.hdr") ) {}
 
 
 

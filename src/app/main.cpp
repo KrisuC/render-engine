@@ -58,7 +58,7 @@ int main(int argc, char *argv[]) {
     // --1--
     GameObject &sphere = scene.CreateGameObject();
     PBR_Material m_sphere;
-    m_sphere.SetShader(engine.CreateStandardShader());
+    m_sphere.SetShader(engine.GetStandardShader());
     m_sphere.SetAlbedo(1, 1, 1);
     m_sphere.SetMetallic(0.1);
     m_sphere.SetRoughness(0.8);
@@ -72,7 +72,7 @@ int main(int argc, char *argv[]) {
     // --2--
     GameObject &ground = scene.CreateGameObject();
     PBR_Material m_ground;
-    m_ground.SetShader(engine.CreateStandardShader());
+    m_ground.SetShader(engine.GetStandardShader());
     m_ground.SetAlbedo(1, 1, 1);
     m_ground.SetMetallic(0.3);
     m_ground.SetRoughness(0.5);
@@ -90,7 +90,7 @@ int main(int argc, char *argv[]) {
     glm::vec3 light_position = glm::vec3{-1, 3, 1} * 5.0f;
 
     PBR_Material m_lamp;
-    m_lamp.SetShader(engine.CreateStandardShader());
+    m_lamp.SetShader(engine.GetStandardShader());
     m_lamp.SetEmissive(light_color);
     m_lamp.SetIBL(ibl);
 
@@ -106,7 +106,8 @@ int main(int argc, char *argv[]) {
     light.direction = glm::vec3{0, 0, -10} - light.position;
 
     ModelManager sponza;
-    sponza.LoadModel("asset/SunTemple/SunTemple.fbx");
+    sponza.LoadModel("asset/sponza/sponza.obj");
+    sponza.Generate(scene);
 
     WindowManager& window = engine.GetRenderer();
     while (!window.ShouldEnd()) {

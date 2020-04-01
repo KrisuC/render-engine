@@ -66,39 +66,34 @@ public:
                       std::is_convertible_v<T, glm::vec3>,
                       "Failed to set variant, not convertible type to float/vec3/Texture*");
         property = value;
-        updated = true;
     }
 
     /* Setting shader uniform */
     void UpdateShader(Shader & shader, MaterialPropertyType type) {
-        if (updated) {
-            auto texture_unit = static_cast<unsigned>(type);
-            std::string const& mp_name = mp_uniform_str[texture_unit];
-            auto index = property.index();
-            shader.UseShaderProgram();
-            if (index == 0) {
-                shader.Set(mp_name + ".value",
-                           std::get<0>(property));
-                shader.Set(mp_name + ".use_map", false);
-            } else if (index == 1) {
-                shader.Set(mp_name + ".value",
-                           std::get<1>(property));
-                shader.Set(mp_name + ".use_map", false);
-            } else {
-                Texture * texture = std::get<2>(property);
-                glActiveTexture(GL_TEXTURE0 + texture_unit);
-                glBindTexture(static_cast<unsigned>(texture->Type()), texture->ID());
-                shader.Set(mp_name + ".map", texture_unit);
-                shader.Set(mp_name + ".use_map", true);
-                glBindTexture(static_cast<unsigned>(texture->Type()), 0);
-            }
-            updated = false;
+        auto texture_unit = static_cast<unsigned>(type);
+        std::string const& mp_name = mp_uniform_str[texture_unit];
+        auto index = property.index();
+        shader.UseShaderProgram();
+        if (index == 0) {
+            shader.SetWithoutCheck(mp_name + ".value",
+                                   std::get<0>(property));
+            shader.SetWithoutCheck(mp_name + ".use_map", false);
+        } else if (index == 1) {
+            shader.SetWithoutCheck(mp_name + ".value",
+                                   std::get<1>(property));
+            shader.SetWithoutCheck(mp_name + ".use_map", false);
+        } else {
+            Texture * texture = std::get<2>(property);
+            glActiveTexture(GL_TEXTURE0 + texture_unit);
+            glBindTexture(static_cast<unsigned>(texture->Type()), texture->ID());
+            shader.SetWithoutCheck(mp_name + ".map", texture_unit);
+            shader.SetWithoutCheck(mp_name + ".use_map", true);
+            glBindTexture(static_cast<unsigned>(texture->Type()), 0);
         }
     }
 
 private:
     std::variant<float, glm::vec3, Texture*> property;
-    bool updated = false;
 };
 
 

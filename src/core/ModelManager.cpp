@@ -7,6 +7,8 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+#include "Transform.hpp"
+#include "MeshRenderer.hpp"
 
 bool ModelManager::LoadModel(const std::string &file_name) {
     bool ret = false;
@@ -28,17 +30,17 @@ bool ModelManager::LoadModel(const std::string &file_name) {
 
 bool
 ModelManager::initFromScene(const aiScene *pScene, const std::string &file_name) {
-    p_meshes.resize(pScene->mNumMeshes);
-    p_textures.resize(pScene->mNumMaterials);
+    m_meshes.resize(pScene->mNumMeshes);
+    m_materials.resize(pScene->mNumMaterials);
 
-    for (int index = 0; index < p_meshes.size(); index++) {
+    for (int index = 0; index < m_meshes.size(); index++) {
         const aiMesh *paiMesh = pScene->mMeshes[index];
-        initMesh(p_meshes[index], paiMesh);
+        initMesh(index, paiMesh);
     }
     return initMaterials(pScene, file_name);
 }
 
-void ModelManager::initMesh(StaticMesh *p_mesh, const aiMesh *p_aiMesh) {
+void ModelManager::initMesh(int mesh_index, const aiMesh *p_aiMesh) {
     // Assign material to mesh
 
     std::vector<Vertex> vertices;
@@ -71,8 +73,8 @@ void ModelManager::initMesh(StaticMesh *p_mesh, const aiMesh *p_aiMesh) {
     DEBUG_LOG("Generating mesh...", vertices.size(), "vertices. ",
               indicies.size(), "indicies");
 
-    p_mesh = new StaticMesh {std::move(vertices), std::move(indicies)};
-    p_mesh->material_index = p_aiMesh->mMaterialIndex;
+    m_meshes[mesh_index] = new StaticMesh {std::move(vertices), std::move(indicies)};
+    m_meshes[mesh_index]->material_index = p_aiMesh->mMaterialIndex;
 }
 
 bool
@@ -89,15 +91,16 @@ ModelManager::initMaterials(const aiScene *pScene, const std::string &file_name)
     }
 
     for (int i = 0; i < pScene->mNumMaterials; i++) {
-        const aiMaterial *pMaterial = pScene->mMaterials[i];
+        const aiMaterial *p_aiMaterial = pScene->mMaterials[i];
 
-        p_textures[i] = nullptr;
-        if (pMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0) {
+        m_materials[i] = new PBR_Material;
+        m_materials[i]->SetShader(Engine::GetInstance().GetStandardShader());
+        if (p_aiMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0) {
 
             aiString relative_path;
-            if (pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &relative_path,
-                                      nullptr, nullptr, nullptr, nullptr,
-                                      nullptr) == AI_SUCCESS) {
+            if (p_aiMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &relative_path,
+                                         nullptr, nullptr, nullptr, nullptr,
+                                         nullptr) == AI_SUCCESS) {
                 /* fix relative path */
                 for (int i = 0; i < relative_path.length; i++) {
                     if (relative_path.data[i] == '\\') {
@@ -106,8 +109,9 @@ ModelManager::initMaterials(const aiScene *pScene, const std::string &file_name)
                 }
 
                 std::string full_path = directory + "/" + relative_path.data;
-                DEBUG_LOG("Loading diffuse texture...", full_path);
-                p_textures[i] = new Texture(full_path, false);
+                auto *diffuse = new Texture(full_path);
+                m_materials[i]->SetAlbedo(diffuse);
+                m_materials[i]->SetRoughness(1.0);
             }
         }
     }
@@ -115,10 +119,21 @@ ModelManager::initMaterials(const aiScene *pScene, const std::string &file_name)
 }
 
 ModelManager::~ModelManager() {
-    for (auto &p : p_meshes) {
+    for (auto &p : m_meshes) {
         delete p;
     }
-    for (auto &p : p_textures) {
+    for (auto &p : m_materials) {
         delete p;
+    }
+}
+
+void ModelManager::Generate(Scene &scene) {
+    for (auto & mesh : m_meshes) {
+        auto& gameObject = scene.CreateGameObject();
+        auto &mr = gameObject.CreateComponent<MeshRenderer>(
+                *mesh,
+                *m_materials[mesh->material_index]
+        );
+        gameObject.CreateComponent<Transform>();
     }
 }

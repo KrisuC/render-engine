@@ -8,9 +8,15 @@
 #include <string>
 #include "StaticMesh.hpp"
 #include "Texture.hpp"
+#include "PBR_Material.hpp"
+#include "GameObject.hpp"
+#include "Scene.hpp"
+
 
 class aiScene;
+
 class aiMesh;
+
 class aiScene;
 
 class ModelManager {
@@ -21,20 +27,20 @@ public:
 
     bool LoadModel(const std::string &file_name);
 
+    void Generate(Scene &scene);
 
 private:
     bool initFromScene(const aiScene *pScene, const std::string &file_name);
 
 
-    static void initMesh(StaticMesh *p_mesh, const aiMesh *p_aiMesh);
+    void initMesh(int mesh_index, const aiMesh *p_aiMesh);
 
 
     bool initMaterials(const aiScene *pScene, const std::string &file_name);
 
-
 public:
-    std::vector<StaticMesh*> p_meshes;
-    std::vector<Texture*> p_textures;
+    std::vector<StaticMesh *> m_meshes;
+    std::vector<PBR_Material *> m_materials;
 };
 
 

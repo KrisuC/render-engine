@@ -23,8 +23,18 @@ enum class TextureType {
 class Texture {
 public:
     Texture() = default;
-    explicit Texture(const std::string& path, bool float_data=false);
-    explicit Texture(unsigned id, TextureType type);
+    explicit Texture(const std::string& path) {
+        std::string suffix = path.substr(path.find_last_of('.'), path.size());
+        if (suffix == ".png" || suffix == ".jpg" || suffix == ".tga") {
+            loadWithStbimage(path, false);
+        } else if (suffix == ".hdr") {
+            loadWithStbimage(path, true);
+        } else {
+            throw std::runtime_error("not supported texture type: " + suffix);
+        };
+        DEBUG_LOG("Loading texture: ", path);
+    }
+    explicit Texture(unsigned textureName, TextureType type);
 
     Texture(Texture const&) = delete;
     Texture& operator=(Texture const&) = delete;
@@ -32,17 +42,17 @@ public:
     Texture(Texture && rhs) noexcept;
     Texture& operator=(Texture && rhs) noexcept;
 
-
-
-    inline unsigned int ID() const { return id; }
+    inline unsigned int ID() const { return textureName; }
 
     inline TextureType Type() const { return textureType; }
 
     ~Texture();
 
 private:
+    void loadWithStbimage(const std::string& path, bool float_data);
+    void loadWithGli(const std::string& path);
 
-    unsigned int id = 0;
+    unsigned int textureName = 0;
     bool gamma = false;
     TextureType textureType = TextureType::Texture2D;
 };

@@ -15,7 +15,7 @@
 PBR_Material::PBR_Material() {
     DEBUG_LOG("Creating PBR_Material...");
 
-    SetShader(Engine::GetInstance().CreateStandardShader());
+    SetShader(Engine::GetInstance().GetStandardShader());
 
     SetAlbedo(1, 1, 1);
     SetMetallic(0);
