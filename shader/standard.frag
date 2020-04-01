@@ -130,19 +130,19 @@ float ShadowCalculation(vec4 lightSpacePos, float bias) {
     return currentDepth - bias > closestDepth ? 1.0 : 0.0;
 }
 
-vec3 GetAlbedoFromMaterial() {
-    return m_albedo.use_map?    texture(m_albedo.map, frag.texCoords).rgb :
-    m_albedo.value;
+vec4 GetAlbedoFromMaterial() {
+    return m_albedo.use_map?    texture(m_albedo.map, frag.texCoords).rgba :
+                                vec4(m_albedo.value, 1.0);
 }
 
 float GetMetallicFromMaterial() {
     return m_metallic.use_map?  texture(m_metallic.map, frag.texCoords).r :
-    m_metallic.value;
+                                m_metallic.value;
 }
 
 float GetRoughnessFromMaterial() {
     return m_roughness.use_map? texture(m_roughness.map, frag.texCoords).r :
-    m_roughness.value;
+                                m_roughness.value;
 }
 
 vec3 GetNormalFromMaterial() {
@@ -155,7 +155,7 @@ float GetAOFromMaterial() {
 
 vec3 GetEmissiveFromMaterial() {
     return m_emissive.use_map? texture(m_emissive.map, frag.texCoords).rgb :
-    m_emissive.value;
+                               m_emissive.value;
 }
 
 
@@ -165,12 +165,17 @@ vec3 GetEmissiveFromMaterial() {
 
 void main() {
     /* Fetching material information */
-    vec3 albedo = GetAlbedoFromMaterial();
+    vec4 albedo_rgba = GetAlbedoFromMaterial();
+    if (albedo_rgba.a < 1.0) {
+        discard;
+    }
+    vec3 albedo = albedo_rgba.xyz;
     float metallic  = GetMetallicFromMaterial();
     float roughness = GetRoughnessFromMaterial();
     vec3 normal     = GetNormalFromMaterial();
     float ao        = GetAOFromMaterial();
     vec3 emissive   = GetEmissiveFromMaterial();
+
 
 
     vec3 N = normalize(normal);

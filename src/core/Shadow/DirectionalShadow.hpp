@@ -13,7 +13,7 @@
 
 class DirectionalShadow : public Shadow {
 public:
-    explicit DirectionalShadow(int map_width=10240, int map_height=10240);
+    explicit DirectionalShadow(int map_width=15360, int map_height=15360);
 
     void GenerateShadowMap(const glm::vec3 &position, const glm::vec3 &direction,
                            float cone_in_degree) override;
