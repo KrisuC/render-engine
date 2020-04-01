@@ -8,6 +8,9 @@
 #include "Scene.hpp"
 #include "Transform.hpp"
 
+float DirectionalShadow::size_of_ortho = 250.f;
+float DirectionalShadow::depth = 1000.f;
+
 DirectionalShadow::DirectionalShadow(const int map_width, const int map_height)
         :
         width(map_width), height(map_height) {
@@ -46,13 +49,16 @@ DirectionalShadow::GenerateShadowMap(const glm::vec3 &position, const glm::vec3 
     static Shader shadowGenShader {"shader/Shadow-mapping/directional-Shadow.vert",
                                    "shader/Shadow-mapping/directional-Shadow.frag"};
     glm::mat4 lightProjection = glm::ortho<float>(
-            -10, 10, -10, 10,
-            1.0, shadow_depth
+            -size_of_ortho, size_of_ortho, -size_of_ortho, size_of_ortho,
+            10, depth
     );
-    static const glm::vec3 global_up {0, 1, 0};
-    glm::vec3 right = glm::cross(direction, global_up);
-    glm::vec3 up = glm::cross(right, direction);
-    glm::mat4 lightView = glm::lookAt(position, direction, up);
+    static const glm::vec3 worldUp {0, 1, 0};
+
+    glm::vec3 front = glm::normalize(direction);
+    glm::vec3 right = glm::normalize(glm::cross(front, worldUp));
+    glm::vec3 up    = glm::normalize(glm::cross(right, front));
+
+    glm::mat4 lightView = glm::lookAt(position, position + front, up);
 
     this->lightSpaceTransform = lightProjection * lightView;
     shadowGenShader.UseShaderProgram();
@@ -66,6 +72,7 @@ DirectionalShadow::GenerateShadowMap(const glm::vec3 &position, const glm::vec3 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     Engine::GetInstance().GetRenderer().ResetViewport();
+    //DEBUG_TEXTURE2D(depthMap);
 }
 
 DirectionalShadow::~DirectionalShadow() {

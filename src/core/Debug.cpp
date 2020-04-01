@@ -11,8 +11,8 @@
 #ifdef ENGINE_DEBUG
 
 void DEBUG_TEXTURE2D(unsigned texture) {
-    static Shader debugShader {"shader/debug-texture.vert",
-                               "shader/debug-texture.frag"};
+    static Shader debugShader {"shader/debug/debug-texture.vert",
+                               "shader/debug/debug-texture.frag"};
     debugShader.UseShaderProgram();
     debugShader.Set("map", 0);
     glActiveTexture(GL_TEXTURE0);

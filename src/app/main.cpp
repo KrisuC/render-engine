@@ -17,7 +17,8 @@
 #include "MeshRenderer.hpp"
 
 void processInput(Camera &camera) {
-    float speed = 20.0f * Engine::GetInstance().GetRenderer().GetDeltaTime();
+    float delta_time = Engine::GetInstance().GetRenderer().GetDeltaTime();
+    float speed = 20.0f * delta_time;
     if (io::KeyPress(Key::w)) {
         camera.Translate(camera.Front() * speed);
     }
@@ -32,6 +33,14 @@ void processInput(Camera &camera) {
     }
     if (io::KeyPress(Key::escape)) {
         Engine::GetInstance().GetRenderer().Close();
+    }
+    if (io::KeyPress(Key::q)) {
+        std::cerr << "depth: ";
+        std::cin >> DirectionalShadow::depth;
+    }
+    if (io::KeyPress(Key::e)) {
+        std::cerr << "size_of_ortho: ";
+        std::cin >> DirectionalShadow::size_of_ortho;
     }
 
     MousePos current = io::GetMousePosition();
@@ -87,9 +96,9 @@ int main(int argc, char *argv[]) {
 
     // --3--
     GameObject& lamp = scene.CreateGameObject();
-    glm::vec3 light_color = glm::vec3 {94.5, 85.5, 64.3};
-    glm::vec3 light_position = glm::vec3 { 0, 10, -10, };
-    glm::vec3 light_direction = glm::vec3 {};
+    glm::vec3 light_color = glm::vec3 {94.5, 85.5, 64.3} * 0.03f;
+    glm::vec3 light_position = glm::vec3 { -97.3522 ,  280.053 ,  6.66883 };
+    glm::vec3 light_direction = glm::vec3 { 0.34409 ,  -0.930441 ,  -0.126023 };
 
     PBR_Material m_lamp;
     m_lamp.SetShader(engine.GetStandardShader());
@@ -98,14 +107,14 @@ int main(int argc, char *argv[]) {
 
     auto &mr_lamp = lamp.CreateComponent<MeshRenderer>(BuiltinMesh::GetSphere(), m_lamp);
     auto &t_lamp = lamp.CreateComponent<Transform>();
-    t_lamp.SetPosition(glm::vec3{-1, 3, 1} * 5.0f);
-    t_lamp.SetScale(0.33);
+    t_lamp.SetPosition(light_position);
+    t_lamp.SetScale(1);
 
     auto &light = lamp.CreateComponent<DirectionalLight>();
     light.SetColor(light_color);
     // TODO: fix with Transform
     light.position = light_position;
-    light.direction = glm::vec3{0, -1, -1};
+    light.direction = light_direction;
 
     // --4--
     ModelManager sponza;
@@ -123,9 +132,17 @@ int main(int argc, char *argv[]) {
 
 
     WindowManager& window = engine.GetRenderer();
+    auto& camera = Engine::GetInstance().GetCurrentScene().GetCurrentCamera();
     while (!window.ShouldEnd()) {
         window.UpdateBeforeRendering();
         processInput(scene.GetCurrentCamera());
+
+//        light.position = camera.Position();
+//        light.direction = camera.Front();
+//
+//        DEBUG_LOG("position", light.position.x, ", ", light.position.y, ", ", light.position.z);
+//        DEBUG_LOG("direction", light.direction.x, ", ", light.direction.y, ", ", light.direction.z);
+
 
         Camera& camera = engine.GetCurrentScene().GetCurrentCamera();
         /* GLobalTransform Uniform Block */

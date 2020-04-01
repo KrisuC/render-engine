@@ -6,6 +6,6 @@ in  vec2 TexCoords;
 uniform sampler2D map;
 
 void main() {
-    vec3 albedo = texture(map, TexCoords).rgb;
-    FragColor = vec4(albedo, 1.0);
+    float albedo = texture(map, TexCoords).r;
+    FragColor = vec4(vec3(albedo), 1.0);
 }

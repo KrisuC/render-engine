@@ -34,6 +34,8 @@ public:
     std::array<glm::mat4, 6> shadowTransformsPV;
 
     const int width, height;
+
+    static constexpr const float shadow_depth = 900.f;
 };
 
 
