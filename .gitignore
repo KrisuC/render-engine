@@ -5,3 +5,4 @@ cmake-Build-ms/
 .idea
 .sln
 .vcxproj
+asset/
